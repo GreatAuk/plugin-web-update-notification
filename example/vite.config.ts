@@ -16,6 +16,11 @@ export default defineConfig({
         description: "检测到当前系统版本已更新",
         buttonText: "刷新页面",
       },
+      customNotificationHTML: `
+        <div style="background-color: #fff;padding: 24px;border-radius: 4px;position: fixed;top: 24px;right: 24px;">
+          System update, please refresh the page
+        </div>
+      `,
     }),
   ],
   resolve: {
