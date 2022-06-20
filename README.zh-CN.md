@@ -6,6 +6,8 @@
 
 > 以 git commit hash 为版本号。客户端轮询服务器（visibilitychange 事件辅助）的 git commit hash , 和本地作比较，如果不相同则通知用户刷新页面。
 
+<img src="./images/example.webp" style="border: 1px solid #ccc; border-radius: 4px;" />
+
 ## 安装
 
 ```bash
