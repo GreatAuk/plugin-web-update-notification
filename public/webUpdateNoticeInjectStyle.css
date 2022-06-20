@@ -1,3 +1,6 @@
+.vite-plugin-web-update-notice-anchor {
+  cursor: pointer;
+}
 .vite-plugin-web-update-notice {
   position: fixed;
   right: 24px;
@@ -11,7 +14,6 @@
   padding: 12px 16px;
   line-height: 1.5715;
   width: 280px;
-  cursor: pointer;
 }
 .vite-plugin-web-update-notice-content-title {
   font-weight: 500;
@@ -30,7 +32,6 @@
   padding: 8px 12px;
   line-height: 1;
   border-radius: 4px;
-  cursor: pointer;
   transition: background-color .2s linear;
   color: #1890ff;
 }

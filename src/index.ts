@@ -54,7 +54,7 @@ anchor.addEventListener('click', () => {
   }
   res = res.replace(
     '</body>',
-    `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}">${customNotificationHTML || ''}</div></body>`,
+    `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`,
   )
   return res
 }

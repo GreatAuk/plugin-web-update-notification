@@ -58,7 +58,7 @@ export default defineConfig({
     webUpdateNotice({
       // 自定义 notification UI
       customNotificationHTML: `
-        <div style="background-color: #fff;padding: 24px;border-radius: 4px;position: fixed;top: 24px;right: 24px;">
+        <div style="background-color: #fff;padding: 24px;border-radius: 4px;position: fixed;top: 24px;right: 24px;border: 1px solid;">
           System update, please refresh the page
         </div>
       `,

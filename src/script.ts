@@ -35,7 +35,7 @@ export function webUpdateCheck_checkAndNotice(options: Options) {
       .then((res) => {
         if (window.GIT_COMMIT_HASH !== res.hash) {
           if (!window.hasShowSystemUpdateNotice_vitePlugin) {
-            webUpdateCheck_showNotification(options.notificationProps)
+            webUpdateCheck_showNotification(options)
             // eslint-disable-next-line no-console
             console.log('system has update！！！')
           }
@@ -68,15 +68,23 @@ export function webUpdateCheck_bindSystemUpdateEvent(
 /**
  * show update notification
  */
-export function webUpdateCheck_showNotification(notificationProps: Options['notificationProps']) {
-  const title = notificationProps?.title || '📢 &nbsp;系统升级通知'
-  const description = notificationProps?.description || '检测到当前系统版本已更新，请刷新页面后使用。'
-  const buttonText = notificationProps?.buttonText || '刷新'
-
+export function webUpdateCheck_showNotification(options: Options) {
   window.hasShowSystemUpdateNotice_vitePlugin = true
+
+  const { notificationProps, customNotificationHTML } = options
+
   const notification = document.createElement('div')
-  notification.classList.add('vite-plugin-web-update-notice')
-  notification.innerHTML = `
+  let notificationInnerHTML = ''
+
+  if (customNotificationHTML) {
+    notificationInnerHTML = customNotificationHTML
+  }
+  else {
+    const title = notificationProps?.title || '📢 &nbsp;系统升级通知'
+    const description = notificationProps?.description || '检测到当前系统版本已更新，请刷新页面后使用。'
+    const buttonText = notificationProps?.buttonText || '刷新'
+    notification.classList.add('vite-plugin-web-update-notice')
+    notification.innerHTML = `
     <div class="vite-plugin-web-update-notice-content">
       <div class="vite-plugin-web-update-notice-content-title">
         ${title}
@@ -88,6 +96,9 @@ export function webUpdateCheck_showNotification(notificationProps: Options['noti
         ${buttonText}
       </a>
     </div>`
+  }
+
+  notification.innerHTML = notificationInnerHTML
   document
     .querySelector('.vite-plugin-web-update-notice-anchor')!
     .appendChild(notification)
