@@ -10,6 +10,12 @@ export default defineConfig({
     vue(),
     webUpdateNotice({
       logHash: true,
+      notificationProps: {
+        // do something
+        title: "更新提醒1",
+        description: "检测到当前系统版本已更新",
+        buttonText: "刷新页面",
+      },
     }),
   ],
   resolve: {
