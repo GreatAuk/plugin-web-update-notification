@@ -4,4 +4,11 @@ export interface Options {
   /** 是否在 console 输出 commit-hash */
   logHash?: boolean
   customNotificationHTML?: string
+  notificationProps?: NotificationProps
+}
+
+interface NotificationProps {
+  title?: string
+  description?: string
+  buttonText?: string
 }
