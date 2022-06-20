@@ -84,7 +84,7 @@ export function webUpdateCheck_showNotification(options: Options) {
     const description = notificationProps?.description || '检测到当前系统版本已更新，请刷新页面后使用。'
     const buttonText = notificationProps?.buttonText || '刷新'
     notification.classList.add('vite-plugin-web-update-notice')
-    notification.innerHTML = `
+    notificationInnerHTML = `
     <div class="vite-plugin-web-update-notice-content">
       <div class="vite-plugin-web-update-notice-content-title">
         ${title}
