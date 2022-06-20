@@ -44,7 +44,7 @@
     "dev": "tsup --watch --ignore-watch example",
     "example": "cd example && pnpm run build && pnpm run preview",
     "lint": "eslint .",
-    "prepublishOnly": "npm publish --registry=https://registry.npmjs.org/",
+    "publishOnly": "npm publish --registry=https://registry.npmjs.org/",
     "release": "bumpp && npm publish --registry=https://registry.npmjs.org/",
     "start": "esno src/index.ts",
     "test": "vitest",
