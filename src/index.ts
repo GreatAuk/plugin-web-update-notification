@@ -38,10 +38,10 @@ function getGitCommitHash() {
  * @returns The html of the page with the injected script and css.
  */
 function injectPluginHtml(html: string, hash: string, options: Options) {
-  const { logHash, customNotificationHTML } = options
+  const { logHash, customNotificationHTML, hiddenDefaultNotification } = options
 
   const logHtml = logHash ? `<script>console.log('git-commit-hash: %c${hash}', 'color: #1890ff');</script>` : ''
-  const cssLinkHtml = customNotificationHTML ? '' : `<link rel="stylesheet" href="${INJECT_STYLE_FILE_NAME}.css">`
+  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${INJECT_STYLE_FILE_NAME}.css">`
   let res = html
 
   res = res.replace(
@@ -53,10 +53,13 @@ function injectPluginHtml(html: string, hash: string, options: Options) {
     `,
   )
 
-  res = res.replace(
-    '</body>',
-    `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`,
-  )
+  if (!hiddenDefaultNotification) {
+    res = res.replace(
+      '</body>',
+      `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`,
+    )
+  }
+
   return res
 }
 

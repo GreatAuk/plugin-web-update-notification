@@ -1,10 +1,11 @@
 export interface Options {
-  /** 轮询间隔（ms）, 默认 10 分钟 */
+  /** polling interval（ms）, default 10*60*1000 */
   checkInterval?: number
-  /** 是否在 console 输出 commit-hash */
+  /** whether to output commit-hash in console */
   logHash?: boolean
   customNotificationHTML?: string
   notificationProps?: NotificationProps
+  hiddenDefaultNotification?: boolean
 }
 
 interface NotificationProps {

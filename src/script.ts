@@ -27,7 +27,7 @@ function webUpdateCheck_checkAndNotice(options: Options) {
             detail: options,
             bubbles: true,
           }))
-          if (!window.hasShowSystemUpdateNotice_vitePlugin) {
+          if (!window.hasShowSystemUpdateNotice_vitePlugin && !options.hiddenDefaultNotification) {
             webUpdateCheck_showNotification(options)
             // eslint-disable-next-line no-console
             console.log('system has update！！！')
@@ -40,9 +40,11 @@ function webUpdateCheck_checkAndNotice(options: Options) {
         console.log('Failed to check system update')
       })
   }
+  // check system update after page loaded
   checkSystemUpdate()
+  // polling check system update
   setInterval(checkSystemUpdate, options.checkInterval || 10 * 60 * 1000)
-  // 监听页面是否可见
+  // when page visibility change, check system update
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible')
       checkSystemUpdate()
