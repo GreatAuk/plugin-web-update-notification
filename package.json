@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-web-update-notification",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@7.2.1",
   "description": "Detect web page updates and notify",
   "author": "Utopia",
@@ -44,7 +44,7 @@
     "dev": "tsup --watch --ignore-watch example",
     "example": "cd example && pnpm run build && pnpm run preview",
     "lint": "eslint .",
-    "publishOnly": "npm publish --registry=https://registry.npmjs.org/",
+    "prepublishOnly": "nr build",
     "release": "bumpp && npm publish --registry=https://registry.npmjs.org/",
     "start": "esno src/index.ts",
     "test": "vitest",
