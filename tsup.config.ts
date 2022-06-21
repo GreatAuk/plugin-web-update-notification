@@ -1,7 +1,6 @@
 import { defineConfig } from 'tsup'
 import { INJECT_SCRIPT_FILE_NAME } from './src/constant'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineConfig((options) => { // The options here is derived from CLI flags.
   return {
     entry: {
@@ -13,6 +12,7 @@ export default defineConfig((options) => { // The options here is derived from C
     clean: true,
     dts: true,
     format: ['cjs', 'esm'],
+    minify: !options.watch,
     onSuccess: 'cp -a public/. dist',
   }
 })

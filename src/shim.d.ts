@@ -5,4 +5,5 @@ interface Window {
   GIT_COMMIT_HASH: string
   /** 是否已经显示了系统升级 notification */
   hasShowSystemUpdateNotice_vitePlugin?: boolean
+  webUpdateCheck_checkAndNotice: (any) => void
 }

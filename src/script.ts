@@ -50,6 +50,7 @@ function webUpdateCheck_checkAndNotice(options: Options) {
       checkSystemUpdate()
   })
 }
+window.webUpdateCheck_checkAndNotice = webUpdateCheck_checkAndNotice
 
 /**
  * show update notification
