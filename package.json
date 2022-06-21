@@ -53,7 +53,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "vite": "^2.9.12"
+    "vite": "*"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",

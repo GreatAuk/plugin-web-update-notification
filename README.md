@@ -2,6 +2,23 @@ English | [简体中文](./README.zh-CN.md)
 
 # vite-plugin-web-update-notification
 
+<p align="center">
+    <a href="https://unpkg.com/browse/vite-plugin-web-update-notification/dist/webUpdateNoticeInjectScript.js">
+      <img src="https://img.badgesize.io/https://unpkg.com/vite-plugin-web-update-notification/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
+    </a>
+    <a href="https://www.npmjs.com/package/vite-plugin-web-update-notification">
+      <img src="https://img.shields.io/npm/v/vite-plugin-web-update-notification.svg?style=flat-square&colorB=51C838" alt="NPM Version" />
+    </a>
+    <a href="https://github.com/GreatAuk/vite-plugin-web-update-notification/blob/master/LICENSE">
+      <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="License" />
+    </a>
+    <a href="https://github.com/GreatAuk/vite-plugin-web-update-notification/discussions">
+      <img src="https://img.shields.io/badge/discussions-on%20github-blue?style=flat-square&colorB=51C838" alt="discussions-image" />
+    </a>
+    <br>
+</p>
+
+
 Detect web page updates and notify.
 
 > Take the git commit hash as the version number. The client polls the git commit hash of the server (visibilitychange event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page.
