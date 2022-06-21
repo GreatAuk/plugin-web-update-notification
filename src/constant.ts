@@ -1,7 +1,8 @@
-/** 生产的 json 文件名 */
-export const JSON_FILE_NAME = 'git-commit-hash.json'
+export const JSON_FILE_NAME = 'git-commit-hash'
 
-export const INJECT_STYLE_FILE_NAME = 'webUpdateNoticeInjectStyle.css'
+export const INJECT_STYLE_FILE_NAME = 'webUpdateNoticeInjectStyle'
+
+export const INJECT_SCRIPT_FILE_NAME = 'webUpdateNoticeInjectScript'
 
 export const CUSTOM_UPDATE_EVENT_NAME = 'system_update_event_vite_plugin'
 

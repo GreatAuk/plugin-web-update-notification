@@ -47,6 +47,8 @@
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish --registry=https://registry.npmjs.org/",
     "start": "esno src/index.ts",
+    "test:e2e": "pnpm --filter vue-example test:e2e",
+    "test:e2e:ci": "pnpm --filter vue-example test:e2e:ci",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
   },

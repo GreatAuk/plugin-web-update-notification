@@ -1,28 +1,17 @@
-import { execSync } from 'child_process'
 import type { Options } from './type'
-import type { CUSTOM_UPDATE_EVENT_NAME } from './constant'
+import { NOTIFICATION_ANCHOR_CLASS_NAME } from './constant'
 
-/** A function that returns the hash of the current commit. */
-export function getGitCommitHash() {
-  let hash = ''
-  try {
-    hash = execSync('git rev-parse --short HEAD').toString().replace('\n', '')
-  }
-  catch (err) {
-    console.warn(`
-======================================================
-[vite-plugin-web-update-notice] Not a git repository !
-======================================================
-    `)
-  }
-  return hash
-}
+// bind notification click event
+const anchor = document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)
+anchor?.addEventListener('click', () => {
+  window.location.reload()
+})
 
 /**
  * It checks whether the system has been updated and if so, it shows a notification.
  * @param {Options} options - Options
  */
-export function webUpdateCheck_checkAndNotice(options: Options) {
+function webUpdateCheck_checkAndNotice(options: Options) {
   const checkSystemUpdate = () => {
     window
       .fetch(`./git-commit-hash.json?t=${Date.now()}`)
@@ -56,19 +45,10 @@ export function webUpdateCheck_checkAndNotice(options: Options) {
   })
 }
 
-export function webUpdateCheck_bindSystemUpdateEvent(
-  eventName: typeof CUSTOM_UPDATE_EVENT_NAME,
-) {
-  window.system_update_event_vite_plugin = new Event(eventName)
-  document.addEventListener(eventName, () => {
-    window.location.reload()
-  })
-}
-
 /**
  * show update notification
  */
-export function webUpdateCheck_showNotification(options: Options) {
+function webUpdateCheck_showNotification(options: Options) {
   window.hasShowSystemUpdateNotice_vitePlugin = true
 
   const { notificationProps, customNotificationHTML } = options
@@ -85,7 +65,7 @@ export function webUpdateCheck_showNotification(options: Options) {
     const buttonText = notificationProps?.buttonText || '刷新'
     notification.classList.add('vite-plugin-web-update-notice')
     notificationInnerHTML = `
-    <div class="vite-plugin-web-update-notice-content">
+    <div class="vite-plugin-web-update-notice-content" data-cy="notification-content">
       <div class="vite-plugin-web-update-notice-content-title">
         ${title}
       </div>
@@ -102,4 +82,9 @@ export function webUpdateCheck_showNotification(options: Options) {
   document
     .querySelector('.vite-plugin-web-update-notice-anchor')!
     .appendChild(notification)
+}
+
+// meaningless export, in order to let tsup bundle these functions
+export {
+  webUpdateCheck_checkAndNotice,
 }
