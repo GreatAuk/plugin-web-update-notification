@@ -1,4 +1,3 @@
-/** 生产的 json 文件名 */
 export const JSON_FILE_NAME = 'git-commit-hash'
 
 export const INJECT_STYLE_FILE_NAME = 'webUpdateNoticeInjectStyle'

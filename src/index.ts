@@ -4,12 +4,14 @@ import { execSync } from 'child_process'
 import type { Plugin } from 'vite'
 
 import type { Options } from './type'
+
 import {
   INJECT_SCRIPT_FILE_NAME,
   INJECT_STYLE_FILE_NAME,
   JSON_FILE_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
 } from './constant'
+export * from './constant'
 
 /** A function that returns the hash of the current commit. */
 function getGitCommitHash() {

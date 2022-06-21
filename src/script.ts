@@ -65,7 +65,7 @@ function webUpdateCheck_showNotification(options: Options) {
     const buttonText = notificationProps?.buttonText || '刷新'
     notification.classList.add('vite-plugin-web-update-notice')
     notificationInnerHTML = `
-    <div class="vite-plugin-web-update-notice-content">
+    <div class="vite-plugin-web-update-notice-content" data-cy="notification-content">
       <div class="vite-plugin-web-update-notice-content-title">
         ${title}
       </div>
