@@ -8,6 +8,11 @@
 
 <img src="./images/example.webp" style="border: 1px solid #ccc; border-radius: 4px;" />
 
+## Why
+部分用户（老板）没有关闭网页的习惯，如果前端页面有更新的话，用户页面可能会出现报错（文件404）或白屏的情况。
+
+
+
 ## 安装
 
 ```bash
@@ -75,16 +80,15 @@ export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
-			hiddenDefaultNotification: true
+      hiddenDefaultNotification: true
     }),
   ]
-});
-
+})
 
 // 在其他文件中监听自定义更新事件
-document.body.addEventListener('system_update_vite_plugin_web_update_notification', options => {
-    console.log(options)
-  	alert('System update!')
+document.body.addEventListener('system_update_vite_plugin_web_update_notification', (options) => {
+  console.log(options)
+  alert('System update!')
 })
 ```
 

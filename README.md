@@ -8,6 +8,12 @@ Detect web page updates and notify.
 
 <img src="./images/example.webp" style="border: 1px solid #ccc; border-radius: 4px;" />
 
+## Why
+
+Some users do not have the habit of closing web pages. If the front-end page is updated, the user page may report an error (file 404) or a white screen.
+
+
+
 ## Install
 
 ```bash
@@ -20,9 +26,9 @@ npm add vite-plugin-web-update-notification -D
 
 ```ts
 // vite.config.ts
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import { webUpdateNotice } from "vite-plugin-web-update-notification";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { webUpdateNotice } from 'vite-plugin-web-update-notification'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -32,7 +38,7 @@ export default defineConfig({
       logHash: true,
     }),
   ]
-});
+})
 ```
 
 ```ts
@@ -43,13 +49,13 @@ export default defineConfig({
     webUpdateNotice({
       // custom notification text
       notificationProps: {
-        title: "system update",
-        description: "System update, please refresh the page",
-        buttonText: "refresh",
+        title: 'system update',
+        description: 'System update, please refresh the page',
+        buttonText: 'refresh',
       },
     }),
   ]
-});
+})
 ```
 
 ```ts
@@ -66,7 +72,7 @@ export default defineConfig({
       `,
     }),
   ]
-});
+})
 ```
 
 ```ts
@@ -75,16 +81,15 @@ export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
-			hiddenDefaultNotification: true
+      hiddenDefaultNotification: true
     }),
   ]
-});
-
+})
 
 // other file to listener custom update event
-document.body.addEventListener('system_update_vite_plugin_web_update_notification', options => {
-    console.log(options)
-  	alert('System update!')
+document.body.addEventListener('system_update_vite_plugin_web_update_notification', (options) => {
+  console.log(options)
+    alert('System update!')
 })
 ```
 
@@ -93,22 +98,22 @@ document.body.addEventListener('system_update_vite_plugin_web_update_notificatio
 ## Options
 
 ```ts
-function webUpdateNotice(options?: Options): Plugin;
+function webUpdateNotice(options?: Options): Plugin
 
 interface Options {
-    /** polling interval（ms）, default 10*60*1000 */
-    checkInterval?: number;
-    /** whether to output commit-hash in console */
-    logHash?: boolean;
-    customNotificationHTML?: string;
-    notificationProps?: NotificationProps;
-  	hiddenDefaultNotification?: boolean
+  /** polling interval（ms）, default 10*60*1000 */
+  checkInterval?: number
+  /** whether to output commit-hash in console */
+  logHash?: boolean
+  customNotificationHTML?: string
+  notificationProps?: NotificationProps
+  hiddenDefaultNotification?: boolean
 }
 
 interface NotificationProps {
-    title?: string;
-    description?: string;
-    buttonText?: string;
+  title?: string
+  description?: string
+  buttonText?: string
 }
 ```
 
