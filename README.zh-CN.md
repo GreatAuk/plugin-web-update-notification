@@ -21,7 +21,11 @@
 
 > 以 git commit hash 为版本号。客户端轮询服务器（visibilitychange 事件辅助）的 git commit hash , 和本地作比较，如果不相同则通知用户刷新页面。
 
-<img src="./images/example.webp" style="border: 1px solid #ccc; border-radius: 4px;" />
+![vue](https://utopia1994.oss-cn-shanghai.aliyuncs.com/img-bed/202206211607688.webp)
+
+------
+
+![react](https://utopia1994.oss-cn-shanghai.aliyuncs.com/img-bed/202206211607683.webp)
 
 ## Why
 部分用户（老板）没有关闭网页的习惯，如果前端页面有更新的话，用户页面可能会出现报错（文件404）或白屏的情况。

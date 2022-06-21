@@ -23,7 +23,11 @@ Detect web page updates and notify.
 
 > Take the git commit hash as the version number. The client polls the git commit hash of the server (visibilitychange event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page.
 
-<img src="./images/example.webp" style="border: 1px solid #ccc; border-radius: 4px;" />
+![vue](./images/vue_example.webp)
+
+------
+
+![react](./images/react_example.webp)
 
 ## Why
 
