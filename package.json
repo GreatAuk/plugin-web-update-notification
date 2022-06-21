@@ -42,7 +42,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch --ignore-watch example",
-    "example": "cd example && pnpm run build && pnpm run preview",
+    "example:vue": "cd example && pnpm run build && pnpm run preview",
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish --registry=https://registry.npmjs.org/",

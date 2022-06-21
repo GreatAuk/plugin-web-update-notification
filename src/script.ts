@@ -1,5 +1,5 @@
 import type { Options } from './type'
-import { NOTIFICATION_ANCHOR_CLASS_NAME } from './constant'
+import { CUSTOM_UPDATE_EVENT_NAME, NOTIFICATION_ANCHOR_CLASS_NAME } from './constant'
 
 // bind notification click event
 const anchor = document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)
@@ -23,6 +23,10 @@ function webUpdateCheck_checkAndNotice(options: Options) {
       })
       .then((res) => {
         if (window.GIT_COMMIT_HASH !== res.hash) {
+          document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
+            detail: options,
+            bubbles: true,
+          }))
           if (!window.hasShowSystemUpdateNotice_vitePlugin) {
             webUpdateCheck_showNotification(options)
             // eslint-disable-next-line no-console
