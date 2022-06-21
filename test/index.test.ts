@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+// import { webUpdateCheck_checkAndNotice, webUpdateCheck_showNotification } from '../src/script'
 
 describe('should', () => {
   it('exported', () => {

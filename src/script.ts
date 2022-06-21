@@ -94,4 +94,5 @@ function webUpdateCheck_showNotification(options: Options) {
 // meaningless export, in order to let tsup bundle these functions
 export {
   webUpdateCheck_checkAndNotice,
+  webUpdateCheck_showNotification,
 }
