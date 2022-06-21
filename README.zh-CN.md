@@ -69,6 +69,27 @@ export default defineConfig({
 })
 ```
 
+```ts
+// vite.config.ts
+export default defineConfig({
+  plugins: [
+    vue(),
+    webUpdateNotice({
+			hiddenDefaultNotification: true
+    }),
+  ]
+});
+
+
+// 在其他文件中监听自定义更新事件
+document.body.addEventListener('system_update_vite_plugin_web_update_notification', options => {
+    console.log(options)
+  	alert('System update!')
+})
+```
+
+
+
 ## Options
 
 ```ts

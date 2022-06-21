@@ -58,6 +58,7 @@ export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
+      // custom notification UI
       customNotificationHTML: `
         <div style="background-color: #fff;padding: 24px;border-radius: 4px;position: fixed;top: 24px;right: 24px;border: 1px solid;">
           System update, please refresh the page
@@ -66,6 +67,25 @@ export default defineConfig({
     }),
   ]
 });
+```
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  plugins: [
+    vue(),
+    webUpdateNotice({
+			hiddenDefaultNotification: true
+    }),
+  ]
+});
+
+
+// other file to listener custom update event
+document.body.addEventListener('system_update_vite_plugin_web_update_notification', options => {
+    console.log(options)
+  	alert('System update!')
+})
 ```
 
 
@@ -78,10 +98,11 @@ function webUpdateNotice(options?: Options): Plugin;
 interface Options {
     /** polling interval（ms）, default 10*60*1000 */
     checkInterval?: number;
-    /** wheather to output commit-hash in console */
+    /** whether to output commit-hash in console */
     logHash?: boolean;
     customNotificationHTML?: string;
     notificationProps?: NotificationProps;
+  	hiddenDefaultNotification?: boolean
 }
 
 interface NotificationProps {
