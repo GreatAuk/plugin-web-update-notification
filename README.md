@@ -21,13 +21,13 @@ English | [简体中文](./README.zh-CN.md)
 
 Detect web page updates and notify.
 
-> Take the git commit hash as the version number. The client polls the git commit hash of the server (visibilitychange event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page.
+> Take the git commit hash as the version number, and write hash into json file. The client polls the git commit hash of the server (visibilitychange event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page.
 
-![vue](./images/vue_example.webp)
-
-------
-
-![react](./images/react_example.webp)
+<p style="display: flex;justify-content: space-between;">
+  <img width="180" src="./images/vue_example.webp">
+  <img width="180" src="./images/react_example.webp">
+  <img width="180" src="./images/svelte_example.webp">
+</p>
 
 ## Why
 
@@ -97,6 +97,7 @@ export default defineConfig({
 ```
 
 ```ts
+// hidden default notification, listener to update event custom behavir.
 // vite.config.ts
 export default defineConfig({
   plugins: [

@@ -19,13 +19,13 @@
 
 检测网页更新并通知用户刷新
 
-> 以 git commit hash 为版本号。客户端轮询服务器（visibilitychange 事件辅助）的 git commit hash , 和本地作比较，如果不相同则通知用户刷新页面。
+> 以 git commit hash 为版本号，打包时将 hash 写入 json 文件。客户端轮询服务器的 git commit hash （窗口的 visibilitychange 事件做辅助）, 和本地作比较，如果不相同则通知用户刷新页面。
 
-![vue](https://utopia1994.oss-cn-shanghai.aliyuncs.com/img-bed/202206211607688.webp)
-
-------
-
-![react](https://utopia1994.oss-cn-shanghai.aliyuncs.com/img-bed/202206211607683.webp)
+<p style="display: flex;justify-content: space-between;">
+  <img width="180" src="./images/vue_example.webp">
+  <img width="180" src="./images/react_example.webp">
+  <img width="180" src="./images/svelte_example.webp">
+</p>
 
 ## Why
 部分用户（老板）没有关闭网页的习惯，如果前端页面有更新的话，用户页面可能会出现报错（文件404）或白屏的情况。
@@ -94,6 +94,7 @@ export default defineConfig({
 ```
 
 ```ts
+// 取消默认的通知栏，监听更新事件自定义行为
 // vite.config.ts
 export default defineConfig({
   plugins: [
