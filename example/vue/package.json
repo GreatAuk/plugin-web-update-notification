@@ -6,8 +6,7 @@
     "build": "run-p type-check build-only",
     "preview": "pnpm build && vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
-    "test:e2e": "start-server-and-test preview http://127.0.0.1:4173/ 'cypress open --e2e'",
-    "test:e2e:ci": "start-server-and-test preview http://127.0.0.1:4173/ 'cypress run --e2e'",
+    "test:e2e": "start-server-and-test preview http://127.0.0.1:4173/ 'PW_EXPERIMENTAL_TS_ESM=1 npx playwright test'",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
@@ -18,6 +17,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
+    "@playwright/test": "^1.24.0-alpha-1655882451000",
     "@types/jsdom": "^16.2.14",
     "@types/node": "^16.11.36",
     "@vitejs/plugin-vue": "^2.3.3",
