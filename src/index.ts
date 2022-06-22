@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
-import { resolve } from 'path'
+import { dirname, resolve } from 'path'
+import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
 import type { Plugin } from 'vite'
 
@@ -12,6 +13,16 @@ import {
   NOTIFICATION_ANCHOR_CLASS_NAME,
 } from './constant'
 export * from './constant'
+
+/**
+ * It returns the directory name of the current file.
+ * @returns __dirname
+ */
+function get__Dirname() {
+  if (import.meta?.url)
+    return dirname(fileURLToPath(import.meta.url))
+  return __dirname
+}
 
 /** A function that returns the hash of the current commit. */
 function getGitCommitHash() {
@@ -100,7 +111,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
           isAsset: true,
           type: 'asset',
           name: undefined,
-          source: readFileSync(`${resolve(__dirname, INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString(),
+          source: readFileSync(`${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString(),
           fileName: `${INJECT_STYLE_FILE_NAME}.css`,
         }
         // inject js file
@@ -109,7 +120,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
           type: 'asset',
           name: undefined,
           source:
-          `${readFileSync(`${resolve(__dirname, INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
+          `${readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
           window.GIT_COMMIT_HASH = "${commitHash}";
           webUpdateCheck_checkAndNotice(${JSON.stringify(options)});`,
           fileName: `${INJECT_SCRIPT_FILE_NAME}.js`,
