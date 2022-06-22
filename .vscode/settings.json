@@ -1,0 +1,3 @@
+{
+  "vitest.exclude": ["**/node_modules/**", "**/dist/**", "**/cypress/**", "**/.{idea,git,cache,output,temp}/**", "**/example/**"]
+}
