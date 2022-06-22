@@ -44,6 +44,7 @@
     "dev": "tsup --watch --ignore-watch example",
     "example:vue": "pnpm --filter vue-example preview",
     "example:react": "pnpm --filter react-example preview",
+    "example:svelte": "pnpm --filter svelte-example preview",
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish --registry=https://registry.npmjs.org/",

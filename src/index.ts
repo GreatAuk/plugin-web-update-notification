@@ -15,9 +15,8 @@ export * from './constant'
 
 /** A function that returns the hash of the current commit. */
 function getGitCommitHash() {
-  let hash = ''
   try {
-    hash = execSync('git rev-parse --short HEAD').toString().replace('\n', '')
+    return execSync('git rev-parse --short HEAD').toString().replace('\n', '')
   }
   catch (err) {
     console.warn(`
@@ -25,8 +24,8 @@ function getGitCommitHash() {
 [vite-plugin-web-update-notice] Not a git repository !
 ======================================================
     `)
+    return ''
   }
-  return hash
 }
 
 /**
