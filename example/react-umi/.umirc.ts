@@ -6,8 +6,11 @@ export default {
   plugins: ['@umijs/plugin-web-update-notification'],
   webUpdateNotification: {
     logHash: true,
+    checkInterval: 0.5 * 60 * 1000,
     notificationProps: {
-      title: '更新了！！'
-    }
+      title: "system update",
+      description: "System update, please refresh the page",
+      buttonText: "refresh",
+    },
   } as WebUpdateNotificationOptions
 }
