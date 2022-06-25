@@ -1,4 +1,5 @@
 {
+  "name": "react-umi-example",
   "private": true,
   "scripts": {
     "dev": "umi dev",

@@ -11,7 +11,7 @@ test.describe('test vite-plugin-web-update-notification', () => {
     await page.goto('/')
   })
   test('page access', async ({ page }) => {
-    await expect(page).toHaveURL('http://127.0.0.1:4176/')
+    await expect(page).toHaveURL('http://localhost:4176/')
   })
   test('script and css file inject success', async ({ page }) => {
     const scriptTag = page.locator(
