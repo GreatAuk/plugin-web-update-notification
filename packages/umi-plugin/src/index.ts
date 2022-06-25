@@ -41,8 +41,8 @@ export default (api: IApi) => {
         })
       },
     },
-    enableBy({ userConfig }) {
-      return api.env === 'production' && userConfig.webUpdateNotification
+    enableBy() {
+      return api.env === 'production' && api?.userConfig.webUpdateNotification
     },
   })
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
@@ -76,7 +76,7 @@ export default (api: IApi) => {
     return scriptList
   })
 
-  api.onBuildHtmlComplete(() => {
+  api.onBuildComplete(() => {
     // copy file from web-update-notification-core/dist/??.css */ to dist/
     const scriptFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
     copyFileSync(scriptFilePath, `dist/${INJECT_STYLE_FILE_NAME}.css`)
