@@ -1,5 +1,5 @@
 {
-  "name": "plugin-web-update-notification/monorepo",
+  "name": "plugin-web-update-notification",
   "type": "module",
   "version": "0.1.1",
   "packageManager": "pnpm@7.2.1",
@@ -40,7 +40,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm -r --filter=./packages/** build",
+    "build": "pnpm --filter=./packages/** build",
     "dev:vite": "pnpm --filter=vite-plugin-web-update-notification dev",
     "dev:umi": "pnpm --filter=@umijs/plugin-web-update-notification dev",
     "example:vue-vite": "pnpm --filter=vue-vite-example preview",
@@ -49,10 +49,11 @@
     "example:react-umi": "pnpm --filter react-umi-example preview",
     "lint": "eslint .",
     "prepublishOnly": "nr build",
-    "release": "bumpp package.json packages/**/package.json && npm publish --registry=https://registry.npmjs.org/",
+    "release": "bumpp package.json packages/**/package.json",
     "test:e2e": "pnpm --filter vue-example test:e2e",
     "test:unit": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "t": "pnpm -r --filter=./packages/** publish --access public --no-git-checks"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
