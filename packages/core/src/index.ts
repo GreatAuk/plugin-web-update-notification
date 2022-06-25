@@ -1,10 +1,11 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
+import { name as pkgName_ } from '../package.json'
 
-export { name as pkgName } from '../package.json'
 export * from './constant'
 export type { Options } from './type'
+export const pkgName = pkgName_
 
 /**
  * It returns the directory name of the current file.
@@ -32,13 +33,14 @@ export function getGitCommitHash() {
 }
 
 /**
- * generate json file for git commit hash
+ * generate json file content for git commit hash
  * @param {string} hash - git commit hash
  * @returns A string
  */
-export function generateJSONFile(hash: string) {
+export function generateJSONFileContent(hash: string) {
   return `
 {
   "hash": "${hash}"
 }`.replace('\n', '')
 }
+

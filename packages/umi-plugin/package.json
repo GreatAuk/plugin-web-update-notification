@@ -1,32 +1,34 @@
 {
-  "name": "@web-update-notification/core",
-  "type": "module",
+  "name": "@umijs/plugin-web-update-notification",
   "version": "0.1.1",
-  "description": "Detect web page updates and notify",
+  "description": "Vite plugin for detect  web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
   "homepage": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
   "repository": {
     "type": "git",
     "url": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
-    "directory": "packages/core"
+    "directory": "packages/vite-plugin"
   },
   "bugs": {
     "url": "https://github.com/GreatAuk/vite-plugin-web-update-notification/issues"
   },
   "keywords": [
+    "vite",
+    "vite-plugin",
+    "vite-plugin-web-update-notification",
     "web-update-notification"
   ],
   "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
     }
   },
   "main": "dist/index.js",
-  "module": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -36,6 +38,13 @@
     "build": "tsup",
     "dev": "tsup --watch"
   },
+  "peerDependencies": {
+    "umi": "*"
+  },
+  "dependencies": {
+    "@web-update-notification/core": "workspace:*"
+  },
   "devDependencies": {
+    "umi": "^4.0.2"
   }
 }

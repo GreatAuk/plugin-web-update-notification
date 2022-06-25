@@ -87,7 +87,7 @@ function webUpdateCheck_showNotification(options: Options) {
 
   notification.innerHTML = notificationInnerHTML
   document
-    .querySelector('.vite-plugin-web-update-notice-anchor')!
+    .querySelector('.plugin-web-update-notice-anchor')!
     .appendChild(notification)
 }
 
