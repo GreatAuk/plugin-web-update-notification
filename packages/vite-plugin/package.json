@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "start": "esno src/index.ts",
-    "dev:vite": "tsup --watch",
+    "dev": "tsup --watch",
     "build": "tsup"
   },
   "peerDependencies": {

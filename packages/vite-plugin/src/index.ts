@@ -7,7 +7,7 @@ import {
   INJECT_STYLE_FILE_NAME,
   JSON_FILE_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
-  generateJSONFile,
+  generateJSONFileContent,
   getGitCommitHash,
   get__Dirname,
 } from '@web-update-notification/core'
@@ -64,7 +64,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
           isAsset: true,
           type: 'asset',
           name: undefined,
-          source: generateJSONFile(commitHash),
+          source: generateJSONFileContent(commitHash),
           fileName: `${JSON_FILE_NAME}.json`,
         }
         // inject css file

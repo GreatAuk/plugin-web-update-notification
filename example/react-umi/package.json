@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "start": "npm run dev",
+    "preview": "pnpm build && vite preview"
+  },
+  "dependencies": {
+    "umi": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@umijs/plugin-web-update-notification": "workspace:*",
+    "typescript": "^4.1.2"
+  }
+}

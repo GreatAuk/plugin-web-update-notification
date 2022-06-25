@@ -42,7 +42,7 @@
   "scripts": {
     "build": "pnpm -r --filter=./packages/** build",
     "dev:vite": "pnpm --filter=vite-plugin-web-update-notification dev",
-    "dev:umi": "pnpm --filter=umi-plugin-web-update-notification dev",
+    "dev:umi": "pnpm --filter=@umijs/plugin-web-update-notification dev",
     "example:vue": "pnpm --filter=vue-example preview",
     "example:react": "pnpm --filter=react-example preview",
     "example:svelte": "pnpm --filter svelte-example preview",

@@ -109,7 +109,7 @@ export default defineConfig({
 })
 
 // other file to listener custom update event
-document.body.addEventListener('system_update_vite_plugin_web_update_notification', (options) => {
+document.body.addEventListener('system_update_plugin_web_update_notification', (options) => {
   console.log(options)
   alert('System update!')
 })
