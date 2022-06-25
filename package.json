@@ -13,9 +13,7 @@
   },
   "bugs": "https://github.com/GreatAuk/vite-plugin-web-update-notification/issues",
   "keywords": [
-    "vite",
-    "vite-plugin",
-    "vite-plugin-web-update-notification"
+    "plugin-web-update-notification"
   ],
   "sideEffects": false,
   "exports": {

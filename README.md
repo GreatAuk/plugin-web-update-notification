@@ -1,6 +1,6 @@
 English | [简体中文](./README.zh-CN.md)
 
-# vite-plugin-web-update-notification
+# plugin-web-update-notification
 
 <p align="center">
     <a href="https://unpkg.com/browse/vite-plugin-web-update-notification/dist/webUpdateNoticeInjectScript.js">
@@ -19,31 +19,34 @@ English | [简体中文](./README.zh-CN.md)
 </p>
 
 
-Detect web page updates and notify.
+Detect webpage updates and notify user to reload. support vite and umijs.
 
 > Take the git commit hash as the version number, and write hash into json file. The client polls the git commit hash of the server (visibilitychange event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page.
 
-<p style="display: flex;justify-content: space-between;">
+<p align="center">
   <img width="180" src="./images/vue_example.webp">
   <img width="180" src="./images/react_example.webp">
   <img width="180" src="./images/svelte_example.webp">
+  <img width="180" src="./images/react_umi_example.webp">
 </p>
 
 ## Why
 
 Some users do not have the habit of closing web pages. If the front-end page is updated, the user page may report an error (file 404) or a white screen.
 
-
-
 ## Install
 
 ```bash
-npm add vite-plugin-web-update-notification -D
-# yarn add vite-plugin-web-update-notification -D
-# pnpm add vite-plugin-web-update-notification -D
+# vite
+pnpm add vite-plugin-web-update-notification -D
+
+# umijs
+pnpm add umijs-plugin-web-update-notification -D
 ```
 
 ## Usage
+
+### Vite
 
 ```ts
 // vite.config.ts
@@ -115,7 +118,26 @@ document.body.addEventListener('system_update_plugin_web_update_notification', (
 })
 ```
 
+### Umijs
 
+```ts
+// .umirc.ts
+import { defineConfig } from 'umi'
+import type { Options as WebUpdateNotificationOptions } from 'umijs-plugin-web-update-notification'
+
+export default {
+  plugins: ['umijs-plugin-web-update-notification'],
+  webUpdateNotification: {
+    logHash: true,
+    checkInterval: 0.5 * 60 * 1000,
+    notificationProps: {
+      title: 'system update',
+      description: 'System update, please refresh the page',
+      buttonText: 'refresh',
+    },
+  } as WebUpdateNotificationOptions
+}
+```
 
 ## Options
 
@@ -138,8 +160,6 @@ interface NotificationProps {
   buttonText?: string
 }
 ```
-
-
 
 ## License
 

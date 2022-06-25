@@ -1,6 +1,6 @@
 [English](./README.md) | 简体中文
 
-# vite-plugin-web-update-notification
+# plugin-web-update-notification
 <p align="center">
     <a href="https://unpkg.com/browse/vite-plugin-web-update-notification/dist/webUpdateNoticeInjectScript.js">
       <img src="https://img.badgesize.io/https://unpkg.com/vite-plugin-web-update-notification/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
@@ -17,20 +17,19 @@
     <br>
 </p>
 
-检测网页更新并通知用户刷新
+检测网页更新并通知用户刷新，支持 vite 和 umijs。
 
 > 以 git commit hash 为版本号，打包时将 hash 写入 json 文件。客户端轮询服务器的 git commit hash （窗口的 visibilitychange 事件做辅助）, 和本地作比较，如果不相同则通知用户刷新页面。
 
-<p style="display: flex;justify-content: space-between;">
+<p align="center">
   <img width="180" src="./images/vue_example.webp">
   <img width="180" src="./images/react_example.webp">
   <img width="180" src="./images/svelte_example.webp">
+  <img width="180" src="./images/react_umi_example.webp">
 </p>
 
 ## Why
 部分用户（老板）没有关闭网页的习惯，如果前端页面有更新的话，用户页面可能会出现报错（文件404）或白屏的情况。
-
-
 
 ## 安装
 
@@ -41,6 +40,8 @@ npm add vite-plugin-web-update-notification -D
 ```
 
 ## 快速上手
+
+### Vite
 
 ```ts
 // vite.config.ts
@@ -112,7 +113,26 @@ document.body.addEventListener('system_update_plugin_web_update_notification', (
 })
 ```
 
+### Umijs
 
+```ts
+// .umirc.ts
+import { defineConfig } from 'umi'
+import type { Options as WebUpdateNotificationOptions } from 'umijs-plugin-web-update-notification'
+
+export default {
+  plugins: ['umijs-plugin-web-update-notification'],
+  webUpdateNotification: {
+    logHash: true,
+    checkInterval: 0.5 * 60 * 1000,
+    notificationProps: {
+      title: 'system update',
+      description: 'System update, please refresh the page',
+      buttonText: 'refresh',
+    },
+  } as WebUpdateNotificationOptions
+}
+```
 
 ## Options
 
