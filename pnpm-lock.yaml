@@ -55,17 +55,21 @@ importers:
 
   example/react-umi:
     specifiers:
+      '@playwright/test': ^1.24.0-alpha-1655882451000
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
       '@umijs/plugin-web-update-notification': workspace:*
+      '@web-update-notification/core': workspace:*
       typescript: ^4.1.2
       umi: ^4.0.2
     dependencies:
       umi: 4.0.2_typescript@4.7.4
     devDependencies:
+      '@playwright/test': 1.24.0-alpha-1655882451000
       '@types/react': 18.0.14
       '@types/react-dom': 18.0.5
       '@umijs/plugin-web-update-notification': link:../../packages/umi-plugin
+      '@web-update-notification/core': link:../../packages/core
       typescript: 4.7.4
 
   example/svelte:
