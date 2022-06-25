@@ -7,7 +7,7 @@ const config: PlaywrightTestConfig = {
   retries: process.env.CI ? 2 : 0,
   use: {
     trace: 'on-first-retry',
-    baseURL: 'http://127.0.0.1:4176',
+    baseURL: 'http://localhost:4176',
   },
   projects: [
     {

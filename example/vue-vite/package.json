@@ -1,12 +1,12 @@
 {
-  "name": "vue-example",
+  "name": "vue-vite-example",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "pnpm build && vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
-    "test:e2e": "start-server-and-test preview http://127.0.0.1:4173/ 'PW_EXPERIMENTAL_TS_ESM=1 npx playwright test'",
+    "test:e2e": "start-server-and-test preview http://localhost:4173/ 'PW_EXPERIMENTAL_TS_ESM=1 npx playwright test'",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
