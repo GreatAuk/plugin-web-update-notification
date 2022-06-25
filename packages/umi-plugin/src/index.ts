@@ -1,11 +1,11 @@
 import { resolve } from 'path'
 import { copyFileSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
-import type { Options } from '@web-update-notification/core'
-import { INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getGitCommitHash } from '@web-update-notification/core'
+import type { Options } from 'web-update-notification-core'
+import { INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getGitCommitHash } from 'web-update-notification-core'
 import { name as pkgName } from '../package.json'
 
-export type { Options } from '@web-update-notification/core'
+export type { Options } from 'web-update-notification-core'
 
 const logHashTpl = (commitHash: string) => {
   return `
@@ -77,7 +77,7 @@ export default (api: IApi) => {
   })
 
   api.onBuildHtmlComplete(() => {
-    // copy file from @web-update-notification/core/dist/??.css */ to dist/
+    // copy file from web-update-notification-core/dist/??.css */ to dist/
     const scriptFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
     copyFileSync(scriptFilePath, `dist/${INJECT_STYLE_FILE_NAME}.css`)
 

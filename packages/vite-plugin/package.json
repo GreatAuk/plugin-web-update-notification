@@ -43,7 +43,7 @@
     "vite": ">2.0.0-0"
   },
   "dependencies": {
-    "@web-update-notification/core": "workspace:*"
+    "web-update-notification-core": "workspace:*"
   },
   "devDependencies": {}
 }
