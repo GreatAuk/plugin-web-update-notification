@@ -32,7 +32,26 @@ importers:
       vite: 2.9.12
       vitest: 0.15.1
 
-  example/react:
+  example/react-umi:
+    specifiers:
+      '@playwright/test': ^1.24.0-alpha-1655882451000
+      '@types/react': ^18.0.0
+      '@types/react-dom': ^18.0.0
+      '@umijs/plugin-web-update-notification': workspace:*
+      '@web-update-notification/core': workspace:*
+      typescript: ^4.1.2
+      umi: ^4.0.2
+    dependencies:
+      umi: 4.0.2_typescript@4.7.4
+    devDependencies:
+      '@playwright/test': 1.24.0-alpha-1655882451000
+      '@types/react': 18.0.14
+      '@types/react-dom': 18.0.5
+      '@umijs/plugin-web-update-notification': link:../../packages/umi-plugin
+      '@web-update-notification/core': link:../../packages/core
+      typescript: 4.7.4
+
+  example/react-vite:
     specifiers:
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
@@ -53,26 +72,7 @@ importers:
       vite: 2.9.12
       vite-plugin-web-update-notification: link:../../packages/vite-plugin
 
-  example/react-umi:
-    specifiers:
-      '@playwright/test': ^1.24.0-alpha-1655882451000
-      '@types/react': ^18.0.0
-      '@types/react-dom': ^18.0.0
-      '@umijs/plugin-web-update-notification': workspace:*
-      '@web-update-notification/core': workspace:*
-      typescript: ^4.1.2
-      umi: ^4.0.2
-    dependencies:
-      umi: 4.0.2_typescript@4.7.4
-    devDependencies:
-      '@playwright/test': 1.24.0-alpha-1655882451000
-      '@types/react': 18.0.14
-      '@types/react-dom': 18.0.5
-      '@umijs/plugin-web-update-notification': link:../../packages/umi-plugin
-      '@web-update-notification/core': link:../../packages/core
-      typescript: 4.7.4
-
-  example/svelte:
+  example/svelte-vite:
     specifiers:
       '@sveltejs/vite-plugin-svelte': ^1.0.0-next.30
       '@tsconfig/svelte': ^2.0.1
@@ -94,7 +94,7 @@ importers:
       vite: 2.9.12
       vite-plugin-web-update-notification: link:../../packages/vite-plugin
 
-  example/vue:
+  example/vue-vite:
     specifiers:
       '@playwright/test': ^1.24.0-alpha-1655882451000
       '@rushstack/eslint-patch': ^1.1.0
