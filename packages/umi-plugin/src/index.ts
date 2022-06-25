@@ -89,9 +89,6 @@ export default (api: IApi) => {
   })
 
   api.modifyHTML(($) => {
-    if (!hiddenDefaultNotification || !customNotificationHTML)
-      $('head').append(`<link rel="stylesheet" href="${INJECT_STYLE_FILE_NAME}.css" />`)
-
     if (!hiddenDefaultNotification)
       $('body').append(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
 
