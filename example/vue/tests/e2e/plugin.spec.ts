@@ -4,7 +4,7 @@ import {
   INJECT_STYLE_FILE_NAME,
   INJECT_SCRIPT_FILE_NAME,
   JSON_FILE_NAME,
-} from "vite-plugin-web-update-notification";
+} from "@web-update-notification/core";
 
 test.describe("test vite-plugin-web-update-notification", () => {
   test.beforeEach(async ({ page }) => {

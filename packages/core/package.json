@@ -1,0 +1,40 @@
+{
+  "name": "@web-update-notification/core",
+  "type": "module",
+  "version": "0.1.1",
+  "description": "Detect web page updates and notify",
+  "author": "Utopia",
+  "license": "MIT",
+  "homepage": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/GreatAuk/vite-plugin-web-update-notification/issues"
+  },
+  "keywords": [
+    "web-update-notification"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "esno src/index.ts",
+    "build": "tsup"
+  },
+  "devDependencies": {
+  }
+}

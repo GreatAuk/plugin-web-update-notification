@@ -21,12 +21,12 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
     }
   },
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
@@ -40,22 +40,18 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch --ignore-watch example",
-    "example:vue": "pnpm --filter vue-example preview",
-    "example:react": "pnpm --filter react-example preview",
+    "build": "pnpm -r --filter=./packages/** build",
+    "dev:vite": "pnpm --filter=vite-plugin-web-update-notification dev",
+    "dev:umi": "pnpm --filter=umi-plugin-web-update-notification dev",
+    "example:vue": "pnpm --filter=vue-example preview",
+    "example:react": "pnpm --filter=react-example preview",
     "example:svelte": "pnpm --filter svelte-example preview",
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp && npm publish --registry=https://registry.npmjs.org/",
-    "start": "esno src/index.ts",
-    "test": "pnpm --filter vue-example test:e2e",
     "test:e2e": "pnpm --filter vue-example test:e2e",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit"
-  },
-  "peerDependencies": {
-    "vite": "*"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",

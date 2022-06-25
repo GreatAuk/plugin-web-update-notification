@@ -6,6 +6,7 @@ export default defineConfig((options) => { // The options here is derived from C
     entry: {
       index: 'src/index.ts',
       [INJECT_SCRIPT_FILE_NAME]: 'src/script.ts',
+      pluginBuildScript: 'src/pluginBuildScript.ts',
     },
     splitting: false,
     sourcemap: true,
