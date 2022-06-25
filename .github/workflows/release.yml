@@ -9,21 +9,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  # release:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16.x
-  #         registry-url: 'https://registry.npmjs.org'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: 'https://registry.npmjs.org'
 
-  #     - run: npx changelogithub
-  #       env:
-  #         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   publish-npm:
     runs-on: ubuntu-latest
@@ -58,12 +58,12 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --filter=!./example/**
+        run: pnpm --filter=!./example/** install
 
       - name: PNPM build
         run: pnpm build
 
       - name: Publish to NPM
-        run: pnpm -r --filter=./packages/** publish --access public --no-git-checks
+        run: pnpm --filter=./packages/** publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
