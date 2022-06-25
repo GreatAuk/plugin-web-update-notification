@@ -2,7 +2,7 @@
   "name": "vite-plugin-web-update-notification",
   "type": "module",
   "version": "0.1.1",
-  "description": "Vite plugin for detect  web page updates and notify.",
+  "description": "Vite plugin for detect web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
   "homepage": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
