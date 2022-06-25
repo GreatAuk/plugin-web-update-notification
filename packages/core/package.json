@@ -1,5 +1,5 @@
 {
-  "name": "@web-update-notification/core",
+  "name": "web-update-notification-core",
   "type": "module",
   "version": "0.1.1",
   "description": "Detect web page updates and notify",

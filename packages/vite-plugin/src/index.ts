@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import type { Plugin } from 'vite'
-import type { Options } from '@web-update-notification/core'
+import type { Options } from 'web-update-notification-core'
 import {
   INJECT_SCRIPT_FILE_NAME,
   INJECT_STYLE_FILE_NAME,
@@ -10,7 +10,7 @@ import {
   generateJSONFileContent,
   getGitCommitHash,
   get__Dirname,
-} from '@web-update-notification/core'
+} from 'web-update-notification-core'
 
 /**
  * It injects the hash into the HTML, and injects the notification anchor and the stylesheet and the
