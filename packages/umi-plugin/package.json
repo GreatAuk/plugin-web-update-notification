@@ -1,6 +1,6 @@
 {
   "name": "@umijs/plugin-web-update-notification",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Umi plugin for detect web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
