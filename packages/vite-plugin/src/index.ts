@@ -1,43 +1,16 @@
 import { readFileSync } from 'fs'
-import { dirname, resolve } from 'path'
-import { fileURLToPath } from 'url'
-import { execSync } from 'child_process'
+import { resolve } from 'path'
 import type { Plugin } from 'vite'
-
-import type { Options } from './type'
-
+import type { Options } from '@web-update-notification/core'
 import {
   INJECT_SCRIPT_FILE_NAME,
   INJECT_STYLE_FILE_NAME,
   JSON_FILE_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
-} from './constant'
-export * from './constant'
-
-/**
- * It returns the directory name of the current file.
- * @returns __dirname
- */
-function get__Dirname() {
-  if (import.meta?.url)
-    return dirname(fileURLToPath(import.meta.url))
-  return __dirname
-}
-
-/** A function that returns the hash of the current commit. */
-function getGitCommitHash() {
-  try {
-    return execSync('git rev-parse --short HEAD').toString().replace('\n', '')
-  }
-  catch (err) {
-    console.warn(`
-======================================================
-[vite-plugin-web-update-notice] Not a git repository !
-======================================================
-    `)
-    return ''
-  }
-}
+  generateJSONFile,
+  getGitCommitHash,
+  get__Dirname,
+} from '@web-update-notification/core'
 
 /**
  * It injects the hash into the HTML, and injects the notification anchor and the stylesheet and the
@@ -73,18 +46,6 @@ function injectPluginHtml(html: string, hash: string, options: Options) {
   return res
 }
 
-/**
- * generate json file for git commit hash
- * @param {string} hash - git commit hash
- * @returns A string
- */
-function generateJSONFile(hash: string) {
-  return `
-{
-  "hash": "${hash}"
-}`.replace('\n', '')
-}
-
 export function webUpdateNotice(options: Options = {}): Plugin {
   // let viteConfig: ResolvedConfig;
   return {
@@ -95,7 +56,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     //   // 存储最终解析的配置
     //   viteConfig = resolvedConfig;
     // },
-    generateBundle(_: any, bundle: any = {}) {
+    generateBundle(_, bundle = {}) {
       const commitHash = getGitCommitHash()
       if (commitHash) {
         // inject commit hash json file
