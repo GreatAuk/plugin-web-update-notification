@@ -1,7 +1,7 @@
 import type { Options } from './type'
-import { CUSTOM_UPDATE_EVENT_NAME, NOTIFICATION_ANCHOR_CLASS_NAME } from './constant'
+import { CUSTOM_UPDATE_EVENT_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME } from './constant'
 
-// bind notification click event
+// bind notification click event, click to refresh page
 const anchor = document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)
 anchor?.addEventListener('click', () => {
   window.location.reload()
@@ -14,20 +14,20 @@ anchor?.addEventListener('click', () => {
 function webUpdateCheck_checkAndNotice(options: Options) {
   const checkSystemUpdate = () => {
     window
-      .fetch(`./git-commit-hash.json?t=${Date.now()}`)
+      .fetch(`./${JSON_FILE_NAME}.json?t=${Date.now()}`)
       .then((response) => {
         if (!response.ok)
-          throw new Error('Failed to fetch git commit hash')
+          throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
 
         return response.json()
       })
       .then((res) => {
-        if (window.GIT_COMMIT_HASH !== res.hash) {
+        if (window.web_version_by_plugin !== res.version) {
           document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
             detail: options,
             bubbles: true,
           }))
-          if (!window.hasShowSystemUpdateNotice_vitePlugin && !options.hiddenDefaultNotification) {
+          if (!window.hasShowSystemUpdateNotice_plugin && !options.hiddenDefaultNotification) {
             webUpdateCheck_showNotification(options)
             // eslint-disable-next-line no-console
             console.log('system has update！！！')
@@ -56,7 +56,7 @@ window.webUpdateCheck_checkAndNotice = webUpdateCheck_checkAndNotice
  * show update notification
  */
 function webUpdateCheck_showNotification(options: Options) {
-  window.hasShowSystemUpdateNotice_vitePlugin = true
+  window.hasShowSystemUpdateNotice_plugin = true
 
   const { notificationProps, customNotificationHTML } = options
 
@@ -87,7 +87,7 @@ function webUpdateCheck_showNotification(options: Options) {
 
   notification.innerHTML = notificationInnerHTML
   document
-    .querySelector('.plugin-web-update-notice-anchor')!
+    .querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!
     .appendChild(notification)
 }
 

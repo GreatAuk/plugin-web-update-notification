@@ -28,13 +28,16 @@ test.describe("test vite-plugin-web-update-notification", () => {
     expect(await anchor.count()).toEqual(1);
   });
 
-  test("should has a git-commit-hash.json file", async ({ page, request }) => {
+  test(`should has a ${JSON_FILE_NAME}.json file`, async ({
+    page,
+    request,
+  }) => {
     const jsonFileRes = await request.get(`${JSON_FILE_NAME}.json`);
     expect(jsonFileRes.ok()).toBeTruthy();
 
     const res = await jsonFileRes.json();
-    expect(res).toHaveProperty("hash");
-    expect(res?.hash).toHaveLength(7);
+    expect(res).toHaveProperty("version");
+    expect(typeof res?.version).toBe("string");
   });
 
   test("don't show notification when hash is the same", async ({ page }) => {
@@ -51,7 +54,7 @@ test.describe("test vite-plugin-web-update-notification", () => {
       const response = await page.request.fetch(route.request());
       // Add a prefix to the title.
       const body = await response.json();
-      body.hash = "1234567";
+      body.version = "1234567";
       route.fulfill({
         response,
         body: JSON.stringify(body),

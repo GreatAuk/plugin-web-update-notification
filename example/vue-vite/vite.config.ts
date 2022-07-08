@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
-      logHash: true,
+      logVersion: true,
       checkInterval: 0.5 * 60 * 1000,
       notificationProps: {
         title: "system update",

@@ -48,7 +48,7 @@
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp package.json packages/**/package.json",
-    "test:e2e": "pnpm --filter vue-example test:e2e",
+    "test:e2e": "pnpm --filter vue-vite-example test:e2e",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit"
   },

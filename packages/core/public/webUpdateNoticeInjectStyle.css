@@ -5,6 +5,7 @@
   position: fixed;
   right: 24px;
   bottom: 24px;
+  user-select: none;
 }
 .vite-plugin-web-update-notice-content {
   background-color: #fff;

@@ -2,22 +2,22 @@ import { resolve } from 'path'
 import { copyFileSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
 import type { Options } from 'web-update-notification-core'
-import { INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getGitCommitHash } from 'web-update-notification-core'
+import { INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion } from 'web-update-notification-core'
 import { name as pkgName } from '../package.json'
 
 export type { Options } from 'web-update-notification-core'
 
-const logHashTpl = (commitHash: string) => {
+const logVersionTpl = (version: string) => {
   return `
 (function() {
-  console.log('git-commit-hash: %c${commitHash}', 'color: #1890ff');
+  console.log('version: %c${version}', 'color: #1890ff');
 })();`
 }
 
-export function generateScriptContent(options: Options, commitHash: string) {
+export function generateScriptContent(options: Options, version: string) {
   const filePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
   return `${readFileSync(filePath, 'utf8').toString()}
-  window.GIT_COMMIT_HASH = "${commitHash}";
+  window.web_version_by_plugin = "${version}";
   webUpdateCheck_checkAndNotice(${JSON.stringify(options)});`
 }
 
@@ -29,8 +29,8 @@ export default (api: IApi) => {
         return Joi.object({
           /** polling interval（ms）, default 10*60*1000 */
           checkInterval: Joi.number(),
-          /** whether to output commit-hash in console */
-          logHash: Joi.boolean(),
+          /** whether to output version in console */
+          logVersion: Joi.boolean(),
           customNotificationHTML: Joi.string(),
           notificationProps: {
             title: Joi.string(),
@@ -46,12 +46,12 @@ export default (api: IApi) => {
     },
   })
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
-  const { logHash, customNotificationHTML, hiddenDefaultNotification } = webUpdateNotificationOptions
+  const { logVersion, customNotificationHTML, hiddenDefaultNotification } = webUpdateNotificationOptions
 
-  const commitHash = getGitCommitHash()
+  const version = getVersion()
 
-  // 插件只在生产环境且仓库是 git 仓库时生效
-  if (!commitHash || api.env !== 'production')
+  // 插件只在生产环境时生效
+  if (!version || api.env !== 'production')
     return
 
   api.addHTMLLinks(() => {
@@ -68,9 +68,9 @@ export default (api: IApi) => {
 
   api.addHTMLScripts(() => {
     const scriptList = []
-    if (logHash) {
+    if (logVersion) {
       scriptList.push({
-        content: logHashTpl(commitHash),
+        content: logVersionTpl(version),
       })
     }
     return scriptList
@@ -78,14 +78,14 @@ export default (api: IApi) => {
 
   api.onBuildComplete(() => {
     // copy file from web-update-notification-core/dist/??.css */ to dist/
-    const scriptFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
-    copyFileSync(scriptFilePath, `dist/${INJECT_STYLE_FILE_NAME}.css`)
+    const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
+    copyFileSync(cssFilePath, `dist/${INJECT_STYLE_FILE_NAME}.css`)
 
     // write js file to dist/
-    writeFileSync(`dist/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions, commitHash))
+    writeFileSync(`dist/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions, version))
 
     // write version json file to dist/
-    writeFileSync(`dist/${JSON_FILE_NAME}.json`, generateJSONFileContent(commitHash))
+    writeFileSync(`dist/${JSON_FILE_NAME}.json`, generateJSONFileContent(version))
   })
 
   api.modifyHTML(($) => {

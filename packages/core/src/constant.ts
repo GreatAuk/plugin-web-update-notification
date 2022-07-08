@@ -1,4 +1,4 @@
-export const JSON_FILE_NAME = 'git-commit-hash'
+export const JSON_FILE_NAME = 'web_version_by_plugin'
 
 export const INJECT_STYLE_FILE_NAME = 'webUpdateNoticeInjectStyle'
 

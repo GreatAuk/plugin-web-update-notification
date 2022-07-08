@@ -17,30 +17,33 @@ export function get__Dirname() {
   return __dirname
 }
 
-/** A function that returns the hash of the current commit. */
-export function getGitCommitHash() {
+/**
+ * If the current directory is a git repository, return the current commit hash, otherwise return the
+ * current time
+ * @returns The git commit hash or the current time.
+ */
+export function getVersion() {
   try {
     return execSync('git rev-parse --short HEAD').toString().replace('\n', '')
   }
   catch (err) {
     console.warn(`
 ======================================================
-[vite-plugin-web-update-notice] Not a git repository !
-======================================================
-    `)
-    return ''
+[plugin-web-update-notice] Not a git repository!, we will use the packaging time instead.
+======================================================`)
+    return `${Date.now()}`
   }
 }
 
 /**
- * generate json file content for git commit hash
- * @param {string} hash - git commit hash
+ * generate json file content for version
+ * @param {string} version - git commit hash or packaging time
  * @returns A string
  */
-export function generateJSONFileContent(hash: string) {
+export function generateJSONFileContent(version: string) {
   return `
 {
-  "hash": "${hash}"
+  "version": "${version}"
 }`.replace('\n', '')
 }
 

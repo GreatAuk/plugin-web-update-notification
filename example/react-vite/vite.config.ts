@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     webUpdateNotice({
-      logHash: true,
+      logVersion: true,
       checkInterval: 0.5 * 60 * 1000,
     }),
   ],
