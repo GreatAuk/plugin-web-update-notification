@@ -19,13 +19,13 @@
 
 检测网页更新并通知用户刷新，支持 vite 和 umijs。
 
-> 以 git commit hash 为版本号，打包时将 hash 写入 json 文件。客户端轮询服务器的 git commit hash （窗口的 visibilitychange 事件做辅助）, 和本地作比较，如果不相同则通知用户刷新页面。
+> 以 git commit hash ( 如果不是一个 git 仓库，使用打包时的时间戳) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（窗口的 visibilitychange 事件做辅助）, 和本地作比较，如果不相同则通知用户刷新页面。
 
 <p align="center">
-  <img width="180" src="./images/vue_example.webp">
-  <img width="180" src="./images/react_example.webp">
-  <img width="180" src="./images/svelte_example.webp">
-  <img width="180" src="./images/react_umi_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
 
 ## Why
@@ -34,9 +34,11 @@
 ## 安装
 
 ```bash
-npm add vite-plugin-web-update-notification -D
-# yarn add vite-plugin-web-update-notification -D
-# pnpm add vite-plugin-web-update-notification -D
+# vite
+pnpm add vite-plugin-web-update-notification -D
+
+# umijs
+pnpm add umijs-plugin-web-update-notification -D
 ```
 
 ## 快速上手
@@ -54,7 +56,7 @@ export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
-      logHash: true,
+      logVersion: true,
     }),
   ]
 })
@@ -123,7 +125,7 @@ import type { Options as WebUpdateNotificationOptions } from 'umijs-plugin-web-u
 export default {
   plugins: ['umijs-plugin-web-update-notification'],
   webUpdateNotification: {
-    logHash: true,
+    logVersion: true,
     checkInterval: 0.5 * 60 * 1000,
     notificationProps: {
       title: 'system update',
@@ -143,7 +145,7 @@ interface Options {
   /** 轮询间隔（ms）, 默认 10*60*1000 */
   checkInterval?: number
   /** 是否在浏览器控制台输出 commit-hash */
-  logHash?: boolean
+  logVersion?: boolean
   customNotificationHTML?: string
   notificationProps?: NotificationProps
 }

@@ -6,10 +6,13 @@ import { fileURLToPath } from 'url'
 const destinations = [
   ['../LICENSE', '../packages/core/LICENSE'],
   ['../README.md', '../packages/core/README.md'],
+  ['../README.md', '../packages/core/README.zh-CN.md'],
   ['../LICENSE', '../packages/vite-plugin/LICENSE'],
   ['../README.md', '../packages/vite-plugin/README.md'],
+  ['../README.md', '../packages/vite-plugin/README.zh-CN.md'],
   ['../LICENSE', '../packages/umi-plugin/LICENSE'],
   ['../README.md', '../packages/umi-plugin/README.md'],
+  ['../README.md', '../packages/umi-plugin/README.zh-CN.md'],
 ]
 
 const _filename = import.meta.url ? fileURLToPath(import.meta.url) : __filename
