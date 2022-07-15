@@ -3,16 +3,16 @@ English | [简体中文](./README.zh-CN.md)
 # plugin-web-update-notification
 
 <p align="center">
-    <a href="https://unpkg.com/browse/vite-plugin-web-update-notification/dist/webUpdateNoticeInjectScript.js">
-      <img src="https://img.badgesize.io/https://unpkg.com/vite-plugin-web-update-notification/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
+    <a href="https://unpkg.com/@plugin-web-update-notification/core@0.3.0/dist/webUpdateNoticeInjectScript.js">
+      <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core@0.3.0/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
     </a>
-    <a href="https://www.npmjs.com/package/vite-plugin-web-update-notification">
-      <img src="https://img.shields.io/npm/v/vite-plugin-web-update-notification.svg?style=flat-square&colorB=51C838" alt="NPM Version" />
+    <a href="https://www.npmjs.com/package/@plugin-web-update-notification/core">
+      <img src="https://img.shields.io/npm/v/@plugin-web-update-notification/core.svg?style=flat-square&colorB=51C838" alt="NPM Version" />
     </a>
-    <a href="https://github.com/GreatAuk/vite-plugin-web-update-notification/blob/master/LICENSE">
+    <a href="https://github.com/GreatAuk/plugin-web-update-notification/blob/master/LICENSE">
       <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="License" />
     </a>
-    <a href="https://github.com/GreatAuk/vite-plugin-web-update-notification/discussions">
+    <a href="https://github.com/GreatAuk/plugin-web-update-notification/discussions">
       <img src="https://img.shields.io/badge/discussions-on%20github-blue?style=flat-square&colorB=51C838" alt="discussions-image" />
     </a>
     <br>
@@ -38,10 +38,10 @@ Some users do not have the habit of closing web pages. If the front-end page is 
 
 ```bash
 # vite
-pnpm add vite-plugin-web-update-notification -D
+pnpm add @plugin-web-update-notification/vite -D
 
 # umijs
-pnpm add umijs-plugin-web-update-notification -D
+pnpm add @plugin-web-update-notification/umijs -D
 ```
 
 ## Usage
@@ -52,7 +52,7 @@ pnpm add umijs-plugin-web-update-notification -D
 // vite.config.ts
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { webUpdateNotice } from 'vite-plugin-web-update-notification'
+import { webUpdateNotice } from '@plugin-web-update-notification/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -123,10 +123,10 @@ document.body.addEventListener('system_update_plugin_web_update_notification', (
 ```ts
 // .umirc.ts
 import { defineConfig } from 'umi'
-import type { Options as WebUpdateNotificationOptions } from 'umijs-plugin-web-update-notification'
+import type { Options as WebUpdateNotificationOptions } from '@plugin-web-update-notification/umijs'
 
 export default {
-  plugins: ['umijs-plugin-web-update-notification'],
+  plugins: ['@plugin-web-update-notification/umijs'],
   webUpdateNotification: {
     logVersion: true,
     checkInterval: 0.5 * 60 * 1000,
