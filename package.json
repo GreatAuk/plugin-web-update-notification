@@ -6,12 +6,12 @@
   "description": "Detect web page updates and notify",
   "author": "Utopia",
   "license": "MIT",
-  "homepage": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
+  "homepage": "https://github.com/GreatAuk/plugin-web-update-notification",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GreatAuk/vite-plugin-web-update-notification"
+    "url": "git+https://github.com/GreatAuk/plugin-web-update-notification"
   },
-  "bugs": "https://github.com/GreatAuk/vite-plugin-web-update-notification/issues",
+  "bugs": "https://github.com/GreatAuk/plugin-web-update-notification/issues",
   "keywords": [
     "plugin-web-update-notification"
   ],
@@ -39,8 +39,8 @@
   ],
   "scripts": {
     "build": "pnpm --filter=./packages/** build",
-    "dev:vite": "pnpm --filter=vite-plugin-web-update-notification dev",
-    "dev:umi": "pnpm --filter=umijs-plugin-web-update-notification dev",
+    "dev:vite": "pnpm --filter=@plugin-web-update-notification/vite dev",
+    "dev:umi": "pnpm --filter=@plugin-web-update-notification/core dev",
     "example:vue-vite": "pnpm --filter=vue-vite-example preview",
     "example:react-vite": "pnpm --filter=react-vite-example preview",
     "example:svelte-vite": "pnpm --filter svelte-vite-example preview",
@@ -49,6 +49,7 @@
     "synchronous-doc": "esno scripts/copyFile.ts",
     "prepublishOnly": "nr build",
     "release": "bumpp package.json packages/**/package.json",
+    "publish": "pnpm --filter=./packages/** publish --access public --no-git-checks --registry=https://registry.npmjs.org/",
     "test:e2e": "pnpm --filter vue-vite-example test:e2e",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit"

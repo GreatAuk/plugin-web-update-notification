@@ -1,23 +1,23 @@
 {
-  "name": "vite-plugin-web-update-notification",
+  "name": "@plugin-web-update-notification/vite",
   "type": "module",
   "version": "0.3.0",
   "description": "Vite plugin for detect web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
-  "homepage": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
+  "homepage": "https://github.com/GreatAuk/plugin-web-update-notification",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GreatAuk/vite-plugin-web-update-notification",
+    "url": "https://github.com/GreatAuk/plugin-web-update-notification",
     "directory": "packages/vite-plugin"
   },
   "bugs": {
-    "url": "https://github.com/GreatAuk/vite-plugin-web-update-notification/issues"
+    "url": "https://github.com/GreatAuk/plugin-web-update-notification/issues"
   },
   "keywords": [
     "vite",
     "vite-plugin",
-    "vite-plugin-web-update-notification",
+    "@plugin-web-update-notification/vite",
     "web-update-notification"
   ],
   "sideEffects": false,
@@ -43,7 +43,7 @@
     "vite": ">2.0.0-0"
   },
   "dependencies": {
-    "web-update-notification-core": "workspace:*"
+    "@plugin-web-update-notification/core": "workspace:*"
   },
   "devDependencies": {}
 }

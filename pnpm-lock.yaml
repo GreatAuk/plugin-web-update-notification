@@ -35,24 +35,25 @@ importers:
   example/react-umi:
     specifiers:
       '@playwright/test': ^1.24.0-alpha-1655882451000
+      '@plugin-web-update-notification/core': workspace:*
+      '@plugin-web-update-notification/umijs': workspace:*
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
       typescript: ^4.1.2
       umi: ^4.0.2
-      umijs-plugin-web-update-notification: workspace:*
-      web-update-notification-core: workspace:*
     dependencies:
       umi: 4.0.2_typescript@4.7.4
     devDependencies:
       '@playwright/test': 1.24.0-alpha-1655882451000
+      '@plugin-web-update-notification/core': link:../../packages/core
+      '@plugin-web-update-notification/umijs': link:../../packages/umi-plugin
       '@types/react': 18.0.14
       '@types/react-dom': 18.0.5
       typescript: 4.7.4
-      umijs-plugin-web-update-notification: link:../../packages/umi-plugin
-      web-update-notification-core: link:../../packages/core
 
   example/react-vite:
     specifiers:
+      '@plugin-web-update-notification/vite': workspace:*
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
       '@vitejs/plugin-react': ^1.3.0
@@ -60,20 +61,20 @@ importers:
       react-dom: ^18.0.0
       typescript: ^4.6.3
       vite: ^2.9.9
-      vite-plugin-web-update-notification: workspace:*
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
+      '@plugin-web-update-notification/vite': link:../../packages/vite-plugin
       '@types/react': 18.0.14
       '@types/react-dom': 18.0.5
       '@vitejs/plugin-react': 1.3.2
       typescript: 4.7.4
       vite: 2.9.12
-      vite-plugin-web-update-notification: link:../../packages/vite-plugin
 
   example/svelte-vite:
     specifiers:
+      '@plugin-web-update-notification/vite': workspace:*
       '@sveltejs/vite-plugin-svelte': ^1.0.0-next.30
       '@tsconfig/svelte': ^2.0.1
       svelte: ^3.44.0
@@ -82,8 +83,8 @@ importers:
       tslib: ^2.3.1
       typescript: ^4.5.4
       vite: ^2.9.9
-      vite-plugin-web-update-notification: workspace:*
     devDependencies:
+      '@plugin-web-update-notification/vite': link:../../packages/vite-plugin
       '@sveltejs/vite-plugin-svelte': 1.0.0-next.49_svelte@3.48.0+vite@2.9.12
       '@tsconfig/svelte': 2.0.1
       svelte: 3.48.0
@@ -92,11 +93,12 @@ importers:
       tslib: 2.4.0
       typescript: 4.7.4
       vite: 2.9.12
-      vite-plugin-web-update-notification: link:../../packages/vite-plugin
 
   example/vue-vite:
     specifiers:
       '@playwright/test': ^1.24.0-alpha-1655882451000
+      '@plugin-web-update-notification/core': workspace:*
+      '@plugin-web-update-notification/vite': workspace:*
       '@rushstack/eslint-patch': ^1.1.0
       '@types/jsdom': ^16.2.14
       '@types/node': ^16.11.36
@@ -113,17 +115,17 @@ importers:
       start-server-and-test: ^1.14.0
       typescript: ~4.7.2
       vite: ^2.9.9
-      vite-plugin-web-update-notification: workspace:*
       vitest: ^0.13.0
       vue: ^3.2.36
       vue-router: ^4.0.15
       vue-tsc: ^0.35.2
-      web-update-notification-core: workspace:*
     dependencies:
       vue: 3.2.37
       vue-router: 4.0.16_vue@3.2.37
     devDependencies:
       '@playwright/test': 1.24.0-alpha-1655882451000
+      '@plugin-web-update-notification/core': link:../../packages/core
+      '@plugin-web-update-notification/vite': link:../../packages/vite-plugin
       '@rushstack/eslint-patch': 1.1.3
       '@types/jsdom': 16.2.14
       '@types/node': 16.11.41
@@ -140,28 +142,26 @@ importers:
       start-server-and-test: 1.14.0
       typescript: 4.7.4
       vite: 2.9.12
-      vite-plugin-web-update-notification: link:../../packages/vite-plugin
       vitest: 0.13.1_jsdom@19.0.0
       vue-tsc: 0.35.2_typescript@4.7.4
-      web-update-notification-core: link:../../packages/core
 
   packages/core:
     specifiers: {}
 
   packages/umi-plugin:
     specifiers:
+      '@plugin-web-update-notification/core': workspace:*
       umi: ^4.0.2
-      web-update-notification-core: workspace:*
     dependencies:
-      web-update-notification-core: link:../core
+      '@plugin-web-update-notification/core': link:../core
     devDependencies:
       umi: 4.0.2
 
   packages/vite-plugin:
     specifiers:
-      web-update-notification-core: workspace:*
+      '@plugin-web-update-notification/core': workspace:*
     dependencies:
-      web-update-notification-core: link:../core
+      '@plugin-web-update-notification/core': link:../core
 
 packages:
 
