@@ -27,8 +27,15 @@
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
+**什么时候会检测更新 (fetch version.json)?**
+
+1. 首次加载页面。
+2. 轮询 （default: 10 * 60 * 1000 ms）。
+3. script 脚本资源加载失败 (404 ?)。
+4. visibilitychange event get visible。
 
 ## Why
+
 部分用户（老板）没有关闭网页的习惯，如果前端页面有更新的话，用户页面可能会出现报错（文件404）或白屏的情况。
 
 ## 安装
