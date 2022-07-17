@@ -13,6 +13,9 @@ const destinations = [
   ['../LICENSE', '../packages/umi-plugin/LICENSE'],
   ['../README.md', '../packages/umi-plugin/README.md'],
   ['../README.md', '../packages/umi-plugin/README.zh-CN.md'],
+  ['../LICENSE', '../packages/webpack-plugin/LICENSE'],
+  ['../README.md', '../packages/webpack-plugin/README.md'],
+  ['../README.md', '../packages/webpack-plugin/README.zh-CN.md'],
 ]
 
 const _filename = import.meta.url ? fileURLToPath(import.meta.url) : __filename
