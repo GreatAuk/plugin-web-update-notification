@@ -187,8 +187,11 @@ importers:
   packages/webpack-plugin:
     specifiers:
       '@plugin-web-update-notification/core': workspace:*
+      webpack: ^5.0.0
     dependencies:
       '@plugin-web-update-notification/core': link:../core
+    devDependencies:
+      webpack: 5.73.0
 
 packages:
 
@@ -2127,7 +2130,7 @@ packages:
   /@jridgewell/source-map/0.3.2:
     resolution: {integrity: sha512-m7O9o2uR8k2ObDysZYzdfhb08VuEml5oWGiosa1VdaPZ/A6QyPkAJuwN0Q1lhULOf6B7MtQmHENS743hWtCrgw==}
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.1
+      '@jridgewell/gen-mapping': 0.3.2
       '@jridgewell/trace-mapping': 0.3.13
     dev: true
 
@@ -13227,7 +13230,7 @@ packages:
       '@webassemblyjs/wasm-parser': 1.11.1
       acorn: 8.7.1
       acorn-import-assertions: 1.8.0_acorn@8.7.1
-      browserslist: 4.20.4
+      browserslist: 4.21.2
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.9.3
       es-module-lexer: 0.9.3

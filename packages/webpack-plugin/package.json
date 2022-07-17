@@ -40,10 +40,12 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "vite": ">2.0.0-0"
+    "webpack": "^5.0.0"
   },
   "dependencies": {
     "@plugin-web-update-notification/core": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "webpack": "^5.0.0"
+  }
 }
