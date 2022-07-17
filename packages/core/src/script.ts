@@ -49,6 +49,17 @@ function webUpdateCheck_checkAndNotice(options: Options) {
     if (document.visibilityState === 'visible')
       checkSystemUpdate()
   })
+
+  // listener script resource loading error
+  window.addEventListener(
+    'error',
+    (err) => {
+      const errTagName = (err?.target as any)?.tagName
+      if (errTagName === 'SCRIPT')
+        checkSystemUpdate()
+    },
+    true,
+  )
 }
 window.webUpdateCheck_checkAndNotice = webUpdateCheck_checkAndNotice
 

@@ -15,8 +15,8 @@
     "url": "https://github.com/GreatAuk/plugin-web-update-notification/issues"
   },
   "keywords": [
-    "vite",
-    "vite-plugin",
+    "webpack",
+    "webpack-plugin",
     "@plugin-web-update-notification/webpack",
     "web-update-notification"
   ],
