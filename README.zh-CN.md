@@ -17,7 +17,7 @@
     <br>
 </p>
 
-检测网页更新并通知用户刷新，支持 vite 和 umijs。
+检测网页更新并通知用户刷新，支持 vite、umijs 和 webpack 插件。
 
 > 以 git commit hash ( 如果不是一个 git 仓库，使用打包时的时间戳) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（窗口的 visibilitychange 事件做辅助）, 和本地作比较，如果不相同则通知用户刷新页面。
 
@@ -39,9 +39,14 @@ pnpm add @plugin-web-update-notification/vite -D
 
 # umijs
 pnpm add @plugin-web-update-notification/umijs -D
+
+# webpack plugin
+pnpm add @plugin-web-update-notification/webpack -D
 ```
 
 ## 快速上手
+
+[vite](#vite) | [umi](#umijs) | [webpack](#webpack)
 
 ### Vite
 
@@ -136,6 +141,25 @@ export default {
 }
 ```
 
+### webpack
+
+```js
+// vue.config.js(vue-cli project)
+const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/webpack')
+const { defineConfig } = require('@vue/cli-service')
+
+module.exports = defineConfig({
+  // ...other config
+  configureWebpack: {
+    plugins: [
+      new WebUpdateNotificationPlugin({
+        logVersion: true,
+      }),
+    ],
+  },
+})
+```
+
 ## Options
 
 ```ts
@@ -148,6 +172,8 @@ interface Options {
   logVersion?: boolean
   customNotificationHTML?: string
   notificationProps?: NotificationProps
+    /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
+  indexHtmlFilePath?: string // only webpack plugin support
 }
 
 interface NotificationProps {

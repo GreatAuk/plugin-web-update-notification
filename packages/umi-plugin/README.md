@@ -19,7 +19,7 @@ English | [简体中文](./README.zh-CN.md)
 </p>
 
 
-Detect webpage updates and notify user to reload. support vite and umijs.
+Detect webpage updates and notify user to reload. support vite, umijs and webpack.
 
 > Take the git commit hash( if not a git repository, use packaging time) as the version number, and write version into json file. The client polls the version of the server (visibilitychange event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page.
 
@@ -42,9 +42,14 @@ pnpm add @plugin-web-update-notification/vite -D
 
 # umijs
 pnpm add @plugin-web-update-notification/umijs -D
+
+# webpack plugin
+pnpm add @plugin-web-update-notification/webpack -D
 ```
 
 ## Usage
+
+[vite](#vite) | [umi](#umijs) | [webpack](#webpack)
 
 ### Vite
 
@@ -139,6 +144,27 @@ export default {
 }
 ```
 
+### webpack
+
+```js
+// vue.config.js(vue-cli project)
+const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/webpack')
+const { defineConfig } = require('@vue/cli-service')
+
+module.exports = defineConfig({
+  // ...other config
+  configureWebpack: {
+    plugins: [
+      new WebUpdateNotificationPlugin({
+        logVersion: true,
+      }),
+    ],
+  },
+})
+```
+
+
+
 ## Options
 
 ```ts
@@ -152,6 +178,8 @@ interface Options {
   customNotificationHTML?: string
   notificationProps?: NotificationProps
   hiddenDefaultNotification?: boolean
+  /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
+  indexHtmlFilePath?: string // only webpack plugin support
 }
 
 interface NotificationProps {
