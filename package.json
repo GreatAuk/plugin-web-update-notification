@@ -41,6 +41,7 @@
     "build": "pnpm --filter=./packages/** build",
     "dev:vite": "pnpm --filter=@plugin-web-update-notification/vite dev",
     "dev:umi": "pnpm --filter=@plugin-web-update-notification/core dev",
+    "dev:webpack": "pnpm --filter=@plugin-web-update-notification/webpack dev",
     "example:vue-vite": "pnpm --filter=vue-vite-example preview",
     "example:react-vite": "pnpm --filter=react-vite-example preview",
     "example:svelte-vite": "pnpm --filter svelte-vite-example preview",

@@ -3,6 +3,7 @@ import { copyFileSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
 import type { Options } from '@plugin-web-update-notification/core'
 import { INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion } from '@plugin-web-update-notification/core'
+// import html from 'html-webpack'
 import { name as pkgName } from '../package.json'
 
 export type { Options } from '@plugin-web-update-notification/core'
