@@ -49,7 +49,6 @@ function webUpdateCheck_checkAndNotice(options: Options) {
     if (document.visibilityState === 'visible')
       checkSystemUpdate()
   })
-
   // listener script resource loading error
   window.addEventListener(
     'error',
@@ -81,16 +80,16 @@ function webUpdateCheck_showNotification(options: Options) {
     const title = notificationProps?.title || '📢 &nbsp;系统升级通知'
     const description = notificationProps?.description || '检测到当前系统版本已更新，请刷新页面后使用。'
     const buttonText = notificationProps?.buttonText || '刷新'
-    notification.classList.add('vite-plugin-web-update-notice')
+    notification.classList.add('plugin-web-update-notice')
     notificationInnerHTML = `
-    <div class="vite-plugin-web-update-notice-content" data-cy="notification-content">
-      <div class="vite-plugin-web-update-notice-content-title">
+    <div class="plugin-web-update-notice-content" data-cy="notification-content">
+      <div class="plugin-web-update-notice-content-title">
         ${title}
       </div>
-      <div class="vite-plugin-web-update-notice-content-desc">
+      <div class="plugin-web-update-notice-content-desc">
         ${description}
       </div>
-      <a class="vite-plugin-web-update-notice-refresh-btn">
+      <a class="plugin-web-update-notice-refresh-btn">
         ${buttonText}
       </a>
     </div>`

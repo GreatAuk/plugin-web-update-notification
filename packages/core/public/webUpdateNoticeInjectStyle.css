@@ -1,13 +1,13 @@
 .plugin-web-update-notice-anchor {
   cursor: pointer;
 }
-.vite-plugin-web-update-notice {
+.plugin-web-update-notice {
   position: fixed;
   right: 24px;
   bottom: 24px;
   user-select: none;
 }
-.vite-plugin-web-update-notice-content {
+.plugin-web-update-notice-content {
   background-color: #fff;
   border-radius: 4px;
   color: #000000d9;
@@ -16,17 +16,17 @@
   line-height: 1.5715;
   width: 280px;
 }
-.vite-plugin-web-update-notice-content-title {
+.plugin-web-update-notice-content-title {
   font-weight: 500;
   margin-bottom: 8px;
   font-size: 15px;
   line-height: 24px;
 }
-.vite-plugin-web-update-notice-content-desc {
+.plugin-web-update-notice-content-desc {
   font-size: 13px;
   line-height: 24px;
 }
-.vite-plugin-web-update-notice-refresh-btn {
+.plugin-web-update-notice-refresh-btn {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -37,6 +37,6 @@
   color: #1890ff;
 }
 
-.vite-plugin-web-update-notice-refresh-btn:hover {
+.plugin-web-update-notice-refresh-btn:hover {
   background-color: rgba(64,87,109,.1);
 }
