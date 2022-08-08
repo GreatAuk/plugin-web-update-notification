@@ -27,7 +27,7 @@
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
-**什么时候会检测更新 (fetch version.json)?**
+**什么时候会检测更新 (fetch version.json)? **
 
 1. 首次加载页面。
 2. 轮询 （default: 10 * 60 * 1000 ms）。
@@ -179,7 +179,7 @@ interface Options {
   logVersion?: boolean
   customNotificationHTML?: string
   notificationProps?: NotificationProps
-    /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
+  /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
   indexHtmlFilePath?: string // only webpack plugin support
 }
 

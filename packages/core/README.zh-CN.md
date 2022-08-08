@@ -29,7 +29,8 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
-**When to check for updates (fetch version.json)?**
+
+**When to check for updates (fetch version.json)? **
 
 1. first load page.
 2. poll （default: 10 * 60 * 1000 ms）.
@@ -111,7 +112,7 @@ export default defineConfig({
 ```
 
 ```ts
-// hidden default notification, listener to update event custom behavir.
+// hidden default notification, listener to update event custom behavior.
 // vite.config.ts
 export default defineConfig({
   plugins: [
