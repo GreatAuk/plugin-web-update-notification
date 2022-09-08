@@ -29,8 +29,7 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
-
-**When to check for updates (fetch version.json)? **
+**When to check for updates (fetch version.json)** ?
 
 1. first load page.
 2. poll （default: 10 * 60 * 1000 ms）.
@@ -187,6 +186,14 @@ interface Options {
   hiddenDefaultNotification?: boolean
   /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
   indexHtmlFilePath?: string // only webpack plugin support
+
+  /**
+   * Base public path for inject file, Valid values include:
+   * * Absolute URL pathname, e.g. /foo/
+   * * Full URL, e.g. https://foo.com/
+   * * Empty string(default) or ./
+   */
+  injectFileBase?: string
 }
 
 interface NotificationProps {
