@@ -30,7 +30,7 @@ function injectPluginHtml(html: string, version: string, options: Options) {
   res = res.replace(
     '</head>',
     `${cssLinkHtml}
-    <script type="module" crossorigin src="${INJECT_SCRIPT_FILE_NAME}.js"></script>
+    <script defer src="${INJECT_SCRIPT_FILE_NAME}.js"></script>
     ${logHtml}
   </head>
     `,

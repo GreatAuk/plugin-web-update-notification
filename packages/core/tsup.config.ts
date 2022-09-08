@@ -5,14 +5,14 @@ export default defineConfig((options) => { // The options here is derived from C
   return {
     entry: {
       index: 'src/index.ts',
-      [INJECT_SCRIPT_FILE_NAME]: 'src/script.ts',
+      [INJECT_SCRIPT_FILE_NAME.replace('.global', '')]: 'src/script.ts',
       pluginBuildScript: 'src/pluginBuildScript.ts',
     },
     splitting: false,
     sourcemap: true,
     clean: true,
     dts: true,
-    format: ['cjs', 'esm'],
+    format: ['esm', 'cjs', 'iife'],
     minify: !options.watch,
     onSuccess: 'cp -a public/. dist',
   }

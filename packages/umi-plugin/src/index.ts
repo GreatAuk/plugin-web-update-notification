@@ -93,7 +93,7 @@ export default (api: IApi) => {
     if (!hiddenDefaultNotification)
       $('body').append(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
 
-    $('body').append(`<script type="module" crossorigin src="${INJECT_SCRIPT_FILE_NAME}.js"></script>`)
+    $('body').append(`<script defer src="${INJECT_SCRIPT_FILE_NAME}.js"></script>`)
     return $
   })
 }
