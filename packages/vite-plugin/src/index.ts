@@ -21,16 +21,16 @@ import {
  * @returns The html of the page with the injected script and css.
  */
 function injectPluginHtml(html: string, version: string, options: Options) {
-  const { logVersion, customNotificationHTML, hiddenDefaultNotification } = options
+  const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
 
   const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${INJECT_STYLE_FILE_NAME}.css">`
+  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${INJECT_STYLE_FILE_NAME}.css">`
   let res = html
 
   res = res.replace(
     '</head>',
     `${cssLinkHtml}
-    <script defer src="${INJECT_SCRIPT_FILE_NAME}.js"></script>
+    <script defer src="${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js"></script>
     ${logHtml}
   </head>
     `,

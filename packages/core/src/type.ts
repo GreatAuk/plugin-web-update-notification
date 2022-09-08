@@ -6,6 +6,13 @@ export interface Options {
   customNotificationHTML?: string
   notificationProps?: NotificationProps
   hiddenDefaultNotification?: boolean
+  /**
+   * Base public path for inject file, Valid values include:
+   * * Absolute URL pathname, e.g. /foo/
+   * * Full URL, e.g. https://foo.com/
+   * * Empty string(default) or ./
+   */
+  injectFileBase?: string
 }
 
 interface NotificationProps {

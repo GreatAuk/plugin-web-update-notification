@@ -12,9 +12,10 @@ anchor?.addEventListener('click', () => {
  * @param {Options} options - Options
  */
 function webUpdateCheck_checkAndNotice(options: Options) {
+  const { injectFileBase = '', checkInterval, hiddenDefaultNotification } = options
   const checkSystemUpdate = () => {
     window
-      .fetch(`./${JSON_FILE_NAME}.json?t=${Date.now()}`)
+      .fetch(`${injectFileBase}${JSON_FILE_NAME}.json?t=${Date.now()}`)
       .then((response) => {
         if (!response.ok)
           throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
@@ -27,7 +28,7 @@ function webUpdateCheck_checkAndNotice(options: Options) {
             detail: options,
             bubbles: true,
           }))
-          if (!window.hasShowSystemUpdateNotice_plugin && !options.hiddenDefaultNotification) {
+          if (!window.hasShowSystemUpdateNotice_plugin && !hiddenDefaultNotification) {
             webUpdateCheck_showNotification(options)
             // eslint-disable-next-line no-console
             console.log('system has update！！！')
@@ -43,7 +44,7 @@ function webUpdateCheck_checkAndNotice(options: Options) {
   // check system update after page loaded
   checkSystemUpdate()
   // polling check system update
-  setInterval(checkSystemUpdate, options.checkInterval || 10 * 60 * 1000)
+  setInterval(checkSystemUpdate, checkInterval || 10 * 60 * 1000)
   // when page visibility change, check system update
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible')

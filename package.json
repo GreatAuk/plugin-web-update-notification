@@ -46,6 +46,7 @@
     "example:react-vite": "pnpm --filter=react-vite-example preview",
     "example:svelte-vite": "pnpm --filter svelte-vite-example preview",
     "example:react-umi": "pnpm --filter react-umi-example preview",
+    "example:vue-webpack": "pnpm --filter vue-cli preview",
     "lint": "eslint .",
     "synchronous-doc": "esno scripts/copyFile.ts",
     "prepublishOnly": "nr build",

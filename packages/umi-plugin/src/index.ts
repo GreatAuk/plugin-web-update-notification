@@ -32,6 +32,7 @@ export default (api: IApi) => {
           checkInterval: Joi.number(),
           /** whether to output version in console */
           logVersion: Joi.boolean(),
+          injectFileBase: Joi.string(),
           customNotificationHTML: Joi.string(),
           notificationProps: {
             title: Joi.string(),
@@ -47,7 +48,7 @@ export default (api: IApi) => {
     },
   })
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
-  const { logVersion, customNotificationHTML, hiddenDefaultNotification } = webUpdateNotificationOptions
+  const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = webUpdateNotificationOptions
 
   const version = getVersion()
 
@@ -62,7 +63,7 @@ export default (api: IApi) => {
     return [
       {
         rel: 'stylesheet',
-        href: `${INJECT_STYLE_FILE_NAME}.css`,
+        href: `${injectFileBase}${INJECT_STYLE_FILE_NAME}.css`,
       },
     ]
   })
@@ -93,7 +94,7 @@ export default (api: IApi) => {
     if (!hiddenDefaultNotification)
       $('body').append(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
 
-    $('body').append(`<script defer src="${INJECT_SCRIPT_FILE_NAME}.js"></script>`)
+    $('body').append(`<script defer src="${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js"></script>`)
     return $
   })
 }
