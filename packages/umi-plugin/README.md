@@ -29,12 +29,13 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
+
 **When to check for updates (fetch version.json)** ?
 
 1. first load page.
-2. poll （default: 10 * 60 * 1000 ms）.
+2. poll (default: 10 * 60 * 1000 ms).
 3. script resource loading failure detected (404 ?).
-4. visibilitychange event get visible.
+4. when the browser is refocus or revisible.
 
 ## Why
 
