@@ -28,10 +28,7 @@ test.describe("test @plugin-web-update-notification/vite", () => {
     expect(await anchor.count()).toEqual(1);
   });
 
-  test(`should has a ${JSON_FILE_NAME}.json file`, async ({
-    page,
-    request,
-  }) => {
+  test(`should has a ${JSON_FILE_NAME}.json file`, async ({ request }) => {
     const jsonFileRes = await request.get(`${JSON_FILE_NAME}.json`);
     expect(jsonFileRes.ok()).toBeTruthy();
 

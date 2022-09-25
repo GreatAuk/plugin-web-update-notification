@@ -24,6 +24,7 @@ function injectPluginHtml(html: string, version: string, options: Options) {
   const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
 
   const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
+  const versionScript = `<script>window.web_version_by_plugin = '${version}';</script>`
   const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${INJECT_STYLE_FILE_NAME}.css">`
   let res = html
 
@@ -32,6 +33,7 @@ function injectPluginHtml(html: string, version: string, options: Options) {
     `${cssLinkHtml}
     <script defer src="${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js"></script>
     ${logHtml}
+    ${versionScript}
   </head>
     `,
   )
@@ -84,7 +86,6 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         name: undefined,
         source:
         `${readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
-        window.web_version_by_plugin = "${version}";
         webUpdateCheck_checkAndNotice(${JSON.stringify(options)});`,
         fileName: `${INJECT_SCRIPT_FILE_NAME}.js`,
       }

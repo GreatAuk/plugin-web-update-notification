@@ -9,10 +9,11 @@ import { name as pkgName } from '../package.json'
 export type { Options } from '@plugin-web-update-notification/core'
 
 const logVersionTpl = (version: string) => {
-  return `
-(function() {
-  console.log('version: %c${version}', 'color: #1890ff');
-})();`
+  return `console.log('version: %c${version}', 'color: #1890ff');`
+}
+
+const injectVersionTpl = (version: string) => {
+  return `window.web_version_by_plugin = '${version}';`
 }
 
 export function generateScriptContent(options: Options, version: string) {
@@ -75,6 +76,9 @@ export default (api: IApi) => {
         content: logVersionTpl(version),
       })
     }
+    scriptList.push({
+      content: injectVersionTpl(version),
+    })
     return scriptList
   })
 
