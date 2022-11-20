@@ -1,11 +1,8 @@
 import type { Options } from './type'
-import { CUSTOM_UPDATE_EVENT_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME } from './constant'
+import { CUSTOM_UPDATE_EVENT_NAME, JSON_FILE_NAME, LOCAL_STORAGE_PREFIX, NOTIFICATION_ANCHOR_CLASS_NAME, NOTIFICATION_DISMISS_BTN_CLASS_NAME, NOTIFICATION_REFRESH_BTN_CLASS_NAME } from './constant'
 
-// bind notification click event, click to refresh page
-const anchor = document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)
-anchor?.addEventListener('click', () => {
-  window.location.reload()
-})
+let hasShowSystemUpdateNotice = false
+let latestVersion = ''
 
 /**
  * limit function
@@ -34,24 +31,25 @@ function webUpdateCheck_checkAndNotice(options: Options) {
   const { injectFileBase = '', checkInterval, hiddenDefaultNotification } = options
   const checkSystemUpdate = () => {
     window
-      .fetch(`${injectFileBase}${JSON_FILE_NAME}.json?t=${Date.now()}`)
+      .fetch(`${injectFileBase}${JSON_FILE_NAME}.json?t=${performance.now()}`)
       .then((response) => {
         if (!response.ok)
           throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
 
         return response.json()
       })
-      .then((res) => {
-        if (window.web_version_by_plugin !== res.version) {
+      .then(({ version: versionFromServer }: { version: string }) => {
+        latestVersion = versionFromServer
+        if (window.web_version_by_plugin !== versionFromServer) {
+          // dispatch custom event
           document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
             detail: options,
             bubbles: true,
           }))
-          if (!window.hasShowSystemUpdateNotice_plugin && !hiddenDefaultNotification) {
-            webUpdateCheck_showNotification(options)
-            // eslint-disable-next-line no-console
-            console.log('system has update！！！')
-          }
+
+          const dismiss = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
+          if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
+            handleShowNotification(options)
         }
       })
       .catch((err) => {
@@ -94,12 +92,37 @@ function webUpdateCheck_checkAndNotice(options: Options) {
 window.webUpdateCheck_checkAndNotice = webUpdateCheck_checkAndNotice
 
 /**
+ * Bind the refresh button click event to refresh the page, and bind the dismiss button click event to
+ * hide the notification and dismiss the system update.
+ */
+function bindBtnEvent() {
+  // bind refresh button click event, click to refresh page
+  const refreshBtn = document.querySelector(`.${NOTIFICATION_REFRESH_BTN_CLASS_NAME}`)
+  refreshBtn?.addEventListener('click', () => {
+    window.location.reload()
+  })
+
+  // bind dismiss button click event, click to hide notification
+  const dismissBtn = document.querySelector(`.${NOTIFICATION_DISMISS_BTN_CLASS_NAME}`)
+  dismissBtn?.addEventListener('click', () => {
+    try {
+      hasShowSystemUpdateNotice = false
+      document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)?.remove()
+      localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${latestVersion}`, 'true')
+    }
+    catch (err) {
+      console.error(err)
+    }
+  })
+}
+
+/**
  * show update notification
  */
-function webUpdateCheck_showNotification(options: Options) {
-  window.hasShowSystemUpdateNotice_plugin = true
+function handleShowNotification(options: Options) {
+  hasShowSystemUpdateNotice = true
 
-  const { notificationProps, customNotificationHTML } = options
+  const { notificationProps, customNotificationHTML, hiddenDismissButton } = options
 
   const notification = document.createElement('div')
   let notificationInnerHTML = ''
@@ -108,9 +131,11 @@ function webUpdateCheck_showNotification(options: Options) {
     notificationInnerHTML = customNotificationHTML
   }
   else {
-    const title = notificationProps?.title || '📢 &nbsp;系统升级通知'
-    const description = notificationProps?.description || '检测到当前系统版本已更新，请刷新页面后使用。'
-    const buttonText = notificationProps?.buttonText || '刷新'
+    const title = notificationProps?.title ?? '📢 &nbsp;系统升级通知'
+    const description = notificationProps?.description ?? '检测到当前系统版本已更新，请刷新页面后使用。'
+    const buttonText = notificationProps?.buttonText ?? '刷新'
+    const dismissButtonText = notificationProps?.dismissButtonText ?? '忽略'
+    const dismissButtonHtml = hiddenDismissButton ? '' : `<a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">${dismissButtonText}</a>`
     notification.classList.add('plugin-web-update-notice')
     notificationInnerHTML = `
     <div class="plugin-web-update-notice-content" data-cy="notification-content">
@@ -120,9 +145,12 @@ function webUpdateCheck_showNotification(options: Options) {
       <div class="plugin-web-update-notice-content-desc">
         ${description}
       </div>
-      <a class="plugin-web-update-notice-refresh-btn">
-        ${buttonText}
-      </a>
+      <div class="plugin-web-update-notice-tools">
+        ${dismissButtonHtml}
+        <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+          ${buttonText}
+        </a>
+      </div>
     </div>`
   }
 
@@ -130,10 +158,12 @@ function webUpdateCheck_showNotification(options: Options) {
   document
     .querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!
     .appendChild(notification)
+
+  bindBtnEvent()
 }
 
 // meaningless export, in order to let tsup bundle these functions
 export {
   webUpdateCheck_checkAndNotice,
-  webUpdateCheck_showNotification,
+  handleShowNotification as webUpdateCheck_showNotification,
 }

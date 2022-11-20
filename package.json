@@ -38,7 +38,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm --filter=./packages/** build",
+    "build:core": "pnpm --filter=@plugin-web-update-notification/core build",
+    "build": "pnpm build:core && pnpm --filter=./packages/** --filter=!./packages/core build",
     "dev:vite": "pnpm --filter=@plugin-web-update-notification/vite dev",
     "dev:umi": "pnpm --filter=@plugin-web-update-notification/core dev",
     "dev:webpack": "pnpm --filter=@plugin-web-update-notification/webpack dev",

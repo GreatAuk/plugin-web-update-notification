@@ -12,9 +12,10 @@ export default defineConfig({
       logVersion: true,
       checkInterval: 0.5 * 60 * 1000,
       notificationProps: {
-        title: "system update",
+        title: "📢  system update",
         description: "System update, please refresh the page",
         buttonText: "refresh",
+        dismissButtonText: "dismiss",
       },
     }),
   ],

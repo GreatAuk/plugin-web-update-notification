@@ -5,7 +5,7 @@ export default defineConfig((options) => { // The options here is derived from C
   return {
     entry: {
       index: 'src/index.ts',
-      [INJECT_SCRIPT_FILE_NAME.replace('.global', '')]: 'src/script.ts',
+      [INJECT_SCRIPT_FILE_NAME.replace('.global', '')]: 'src/injectScript.ts',
       pluginBuildScript: 'src/pluginBuildScript.ts',
     },
     splitting: false,
