@@ -39,8 +39,10 @@ export default (api: IApi) => {
             title: Joi.string(),
             description: Joi.string(),
             buttonText: Joi.string(),
+            dismissButtonText: Joi.string()
           },
           hiddenDefaultNotification: Joi.boolean(),
+          hiddenDismissButton: Joi.boolean()
         })
       },
     },
