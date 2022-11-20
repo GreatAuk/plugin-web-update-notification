@@ -185,8 +185,9 @@ interface Options {
   customNotificationHTML?: string
   notificationProps?: NotificationProps
   hiddenDefaultNotification?: boolean
+  hiddenDismissButton?: boolean
   /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
-  indexHtmlFilePath?: string // only webpack plugin support
+  indexHtmlFilePath?: string // !!! only webpack plugin support
 
   /**
    * Base public path for inject file, Valid values include:
@@ -201,6 +202,8 @@ interface NotificationProps {
   title?: string
   description?: string
   buttonText?: string
+  /** dismiss button text */
+  dismissButtonText?: string
 }
 ```
 
