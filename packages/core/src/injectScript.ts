@@ -107,7 +107,7 @@ function bindBtnEvent() {
   dismissBtn?.addEventListener('click', () => {
     try {
       hasShowSystemUpdateNotice = false
-      document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)?.remove()
+      document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME} .plugin-web-update-notice`)?.remove()
       localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${latestVersion}`, 'true')
     }
     catch (err) {
