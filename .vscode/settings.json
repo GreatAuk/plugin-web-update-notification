@@ -1,3 +1,9 @@
 {
-  "vitest.exclude": ["**/node_modules/**", "**/dist/**", "**/.{idea,git,cache,output,temp}/**", "**/example/**"]
+  "vitest.exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.{idea,git,cache,output,temp}/**",
+    "**/example/**"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
