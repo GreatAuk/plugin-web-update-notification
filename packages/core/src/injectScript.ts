@@ -165,5 +165,4 @@ function handleShowNotification(options: Options) {
 // meaningless export, in order to let tsup bundle these functions
 export {
   webUpdateCheck_checkAndNotice,
-  handleShowNotification as webUpdateCheck_showNotification,
 }

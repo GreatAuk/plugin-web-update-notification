@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
+      versionType: "pkg_version",
       logVersion: true,
       checkInterval: 0.5 * 60 * 1000,
       notificationProps: {

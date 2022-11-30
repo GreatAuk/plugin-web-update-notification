@@ -59,7 +59,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     //   viteConfig = resolvedConfig;
     // },
     generateBundle(_, bundle = {}) {
-      const version = getVersion()
+      const version = getVersion(options.versionType)
       if (!version)
         return
 
@@ -93,7 +93,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     transformIndexHtml: {
       enforce: 'post',
       transform(html: string) {
-        const version = getVersion()
+        const version = getVersion(options.versionType)
         if (version)
           return injectPluginHtml(html, version, options)
         return html

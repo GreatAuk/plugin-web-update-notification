@@ -29,6 +29,7 @@ export default (api: IApi) => {
     config: {
       schema(Joi) {
         return Joi.object({
+          versionType: Joi.string(),
           /** polling interval（ms）, default 10*60*1000 */
           checkInterval: Joi.number(),
           /** whether to output version in console */
@@ -39,10 +40,10 @@ export default (api: IApi) => {
             title: Joi.string(),
             description: Joi.string(),
             buttonText: Joi.string(),
-            dismissButtonText: Joi.string()
+            dismissButtonText: Joi.string(),
           },
           hiddenDefaultNotification: Joi.boolean(),
-          hiddenDismissButton: Joi.boolean()
+          hiddenDismissButton: Joi.boolean(),
         })
       },
     },
@@ -51,9 +52,9 @@ export default (api: IApi) => {
     },
   })
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
-  const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = webUpdateNotificationOptions
+  const { versionType, logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = webUpdateNotificationOptions
 
-  const version = getVersion()
+  const version = getVersion(versionType)
 
   // 插件只在生产环境时生效
   if (!version || api.env !== 'production')

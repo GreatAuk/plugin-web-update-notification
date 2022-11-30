@@ -64,9 +64,9 @@ class WebUpdateNotificationPlugin {
   apply(compiler: Compiler) {
     compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
       // const outputPath = compiler.outputPath
-      const { hiddenDefaultNotification } = this.options
+      const { hiddenDefaultNotification, versionType } = this.options
 
-      const version = getVersion()
+      const version = getVersion(versionType)
 
       const jsonFileContent = generateJSONFileContent(version)
       // @ts-expect-error
@@ -97,7 +97,7 @@ class WebUpdateNotificationPlugin {
       try {
         accessSync(htmlFilePath, constants.F_OK)
 
-        const version = getVersion()
+        const version = getVersion(this.options.versionType)
         let html = readFileSync(htmlFilePath, 'utf8')
         html = injectPluginHtml(html, version, this.options)
         writeFileSync(htmlFilePath, html)
