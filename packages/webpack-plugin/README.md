@@ -3,8 +3,8 @@ English | [简体中文](./README.zh-CN.md)
 # plugin-web-update-notification
 
 <p align="center">
-    <a href="https://unpkg.com/@plugin-web-update-notification/core@0.3.0/dist/webUpdateNoticeInjectScript.js">
-      <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core@0.3.0/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
+    <a href="https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js">
+      <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
     </a>
     <a href="https://www.npmjs.com/package/@plugin-web-update-notification/core">
       <img src="https://img.shields.io/npm/v/@plugin-web-update-notification/core.svg?style=flat-square&colorB=51C838" alt="NPM Version" />
@@ -21,7 +21,7 @@ English | [简体中文](./README.zh-CN.md)
 
 Detect webpage updates and notify user to reload. support vite, umijs and webpack.
 
-> Take the git commit hash( if not a git repository, use packaging time) as the version number, and write version into json file. The client polls the version of the server (visibilitychange event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page.
+> Take the git commit hash (also support package.json version、build timestamp) as the version number, and write version into json file. The client polls the version of the server (visibilitychange or focus event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page (you can custom behavior).
 
 <p align="center">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
@@ -35,7 +35,7 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
 1. first load page.
 2. poll (default: 10 * 60 * 1000 ms).
 3. script resource loading failure detected (404 ?).
-4. when the browser is refocus or revisible.
+4. when the browser window is refocus or revisible.
 
 ## Why
 
@@ -112,7 +112,7 @@ export default defineConfig({
 ```
 
 ```ts
-// hidden default notification, listener to update event custom behavior.
+// hidden default notification, listener to update event and custom behavior.
 // vite.config.ts
 export default defineConfig({
   plugins: [
@@ -178,6 +178,8 @@ module.exports = defineConfig({
 function webUpdateNotice(options?: Options): Plugin
 
 interface Options {
+  /** default is 'git_commit_hash' */
+  versionType?: 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
   /** polling interval（ms）, default 10*60*1000 */
   checkInterval?: number
   /** whether to output commit-hash in console */

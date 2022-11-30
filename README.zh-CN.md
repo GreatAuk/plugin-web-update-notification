@@ -2,8 +2,8 @@
 
 # plugin-web-update-notification
 <p align="center">
-    <a href="https://unpkg.com/@plugin-web-update-notification/core@0.3.0/dist/webUpdateNoticeInjectScript.js">
-      <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core@0.3.0/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
+    <a href="https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js">
+      <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
     </a>
     <a href="https://www.npmjs.com/package/@plugin-web-update-notification/core">
       <img src="https://img.shields.io/npm/v/@plugin-web-update-notification/core.svg?style=flat-square&colorB=51C838" alt="NPM Version" />
@@ -19,7 +19,7 @@
 
 检测网页更新并通知用户刷新，支持 vite、umijs 和 webpack 插件。
 
-> 以 git commit hash ( 如果不是一个 git 仓库，使用打包时的时间戳) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（窗口的 visibilitychange 事件做辅助）, 和本地作比较，如果不相同则通知用户刷新页面。
+> 以 git commit hash (也支持 package.json version、build timestamp) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（浏览器窗口的 visibilitychange、focus 事件辅助），和本地作比较，如果不相同则通知用户刷新页面。
 
 <p align="center">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
@@ -33,7 +33,7 @@
 1. 首次加载页面。
 2. 轮询 （default: 10 * 60 * 1000 ms）。
 3. script 脚本资源加载失败 (404 ?)。
-4. when the browser is refocus or revisible。
+4. when the browser window is refocus or revisible。
 
 ## Why
 
@@ -174,6 +174,8 @@ module.exports = defineConfig({
 function webUpdateNotice(options?: Options): Plugin
 
 interface Options {
+  /** default is 'git_commit_hash' */
+  versionType?: 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
   /** polling interval（ms）, default 10*60*1000 */
   checkInterval?: number
   /** whether to output commit-hash in console */
