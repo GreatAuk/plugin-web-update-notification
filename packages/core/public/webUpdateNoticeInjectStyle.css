@@ -3,6 +3,7 @@
   right: 24px;
   bottom: 24px;
   user-select: none;
+  z-index: 99999;
 }
 
 .plugin-web-update-notice-content {
