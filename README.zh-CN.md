@@ -124,7 +124,7 @@ export default defineConfig({
   ],
 });
 
-    
+
 // other file to set locale
 window.pluginWebUpdateNotice_.setLocale('zh_CN')
 ```
@@ -164,7 +164,7 @@ export default {
       title: 'system update',
       description: 'System update, please refresh the page',
       buttonText: 'refresh',
-      dismissButtonText: "dismiss",
+      dismissButtonText: 'dismiss',
     },
   } as WebUpdateNotificationOptions
 }
@@ -242,7 +242,7 @@ export type LocaleData = Record<string, NotificationProps>
 
 ## 变动了哪些内容
 
-![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content)
+![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content.webp)
 
 ## License
 

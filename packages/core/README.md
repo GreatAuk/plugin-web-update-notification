@@ -123,7 +123,7 @@ export default defineConfig({
   ],
 });
 
-    
+
 // other file to set locale
 window.pluginWebUpdateNotice_.setLocale('zh_CN')
 ```
@@ -242,7 +242,7 @@ export type LocaleData = Record<string, NotificationProps>
 
 ## What was changed
 
-![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content)
+![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content.webp)
 
 ## License
 
