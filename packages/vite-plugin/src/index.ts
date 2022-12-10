@@ -3,6 +3,7 @@ import { resolve } from 'path'
 import type { Plugin } from 'vite'
 import type { Options } from '@plugin-web-update-notification/core'
 import {
+  DIRECTORY_NAME,
   INJECT_SCRIPT_FILE_NAME,
   INJECT_STYLE_FILE_NAME,
   JSON_FILE_NAME,
@@ -24,14 +25,14 @@ function injectPluginHtml(html: string, version: string, options: Options) {
   const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
 
   const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
-  const versionScript = `<script>window.web_version_by_plugin = '${version}';</script>`
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${INJECT_STYLE_FILE_NAME}.css">`
+  const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
+  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css">`
   let res = html
 
   res = res.replace(
     '</head>',
     `${cssLinkHtml}
-    <script defer src="${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js"></script>
+    <script defer src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"></script>
     ${logHtml}
     ${versionScript}
   </head>
@@ -69,7 +70,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         type: 'asset',
         name: undefined,
         source: generateJSONFileContent(version),
-        fileName: `${JSON_FILE_NAME}.json`,
+        fileName: `${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`,
       }
       // inject css file
       bundle[INJECT_STYLE_FILE_NAME] = {
@@ -77,7 +78,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         type: 'asset',
         name: undefined,
         source: readFileSync(`${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString(),
-        fileName: `${INJECT_STYLE_FILE_NAME}.css`,
+        fileName: `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`,
       }
       // inject js file
       bundle[INJECT_SCRIPT_FILE_NAME] = {
@@ -86,8 +87,8 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         name: undefined,
         source:
         `${readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
-        webUpdateCheck_checkAndNotice(${JSON.stringify(options)});`,
-        fileName: `${INJECT_SCRIPT_FILE_NAME}.js`,
+        window.pluginWebUpdateNotice_.checkUpdate(${JSON.stringify(options)});`,
+        fileName: `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`,
       }
     },
     transformIndexHtml: {

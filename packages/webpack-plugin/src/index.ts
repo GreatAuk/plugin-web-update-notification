@@ -2,7 +2,7 @@
 import { accessSync, constants, readFileSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 import type { Options } from '@plugin-web-update-notification/core'
-import { INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion, get__Dirname } from '@plugin-web-update-notification/core'
+import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion, get__Dirname } from '@plugin-web-update-notification/core'
 import type { Compilation, Compiler } from 'webpack'
 
 const pluginName = 'WebUpdateNotificationPlugin'
@@ -24,14 +24,14 @@ function injectPluginHtml(html: string, version: string, options: Options) {
   const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
 
   const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
-  const versionScript = `<script>window.web_version_by_plugin = '${version}';</script>`
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${INJECT_STYLE_FILE_NAME}.css">`
+  const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
+  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css">`
   let res = html
 
   res = res.replace(
     '</head>',
     `${cssLinkHtml}
-    <script defer src="${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js"></script>
+    <script defer src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"></script>
     ${logHtml}
     ${versionScript}
   </head>
@@ -48,11 +48,10 @@ function injectPluginHtml(html: string, version: string, options: Options) {
   return res
 }
 
-export function generateScriptContent(options: Options, version: string) {
+export function generateScriptContent(options: Options) {
   const filePath = resolve(`${get__Dirname()}/${INJECT_SCRIPT_FILE_NAME}.js`)
   return `${readFileSync(filePath, 'utf8').toString()}
-  window.web_version_by_plugin = "${version}";
-  webUpdateCheck_checkAndNotice(${JSON.stringify(options)});`
+  window.pluginWebUpdateNotice_.checkUpdate(${JSON.stringify(options)});`
 }
 
 class WebUpdateNotificationPlugin {
@@ -70,22 +69,22 @@ class WebUpdateNotificationPlugin {
 
       const jsonFileContent = generateJSONFileContent(version)
       // @ts-expect-error
-      compilation.assets[`${JSON_FILE_NAME}.json`] = {
+      compilation.assets[`${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`] = {
         source: () => jsonFileContent,
         size: () => jsonFileContent.length,
       }
       if (!hiddenDefaultNotification) {
         const injectStyleContent = readFileSync(`${get__Dirname()}/${INJECT_STYLE_FILE_NAME}.css`, 'utf8')
         // @ts-expect-error
-        compilation.assets[`${INJECT_STYLE_FILE_NAME}.css`] = {
+        compilation.assets[`${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`] = {
           source: () => injectStyleContent,
           size: () => injectStyleContent.length,
         }
       }
 
-      const injectScriptContent = generateScriptContent(this.options, version)
+      const injectScriptContent = generateScriptContent(this.options)
       // @ts-expect-error
-      compilation.assets[`${INJECT_SCRIPT_FILE_NAME}.js`] = {
+      compilation.assets[`${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`] = {
         source: () => injectScriptContent,
         size: () => injectScriptContent.length,
       }

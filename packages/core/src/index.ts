@@ -80,7 +80,7 @@ export function getVersion(versionType: VersionType = 'git_commit_hash') {
 [plugin-web-update-notice] get version throw a error, we will use the packaging timestamp instead.
 ======================================================`)
     console.error(err)
-    return `${Date.now()}`
+    return getTimestamp()
   }
 }
 

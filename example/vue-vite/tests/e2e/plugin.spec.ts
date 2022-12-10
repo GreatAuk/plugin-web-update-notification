@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import {
+  DIRECTORY_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
   INJECT_STYLE_FILE_NAME,
   INJECT_SCRIPT_FILE_NAME,
@@ -16,11 +17,13 @@ test.describe("test @plugin-web-update-notification/vite", () => {
   });
   test("script and css file inject success", async ({ page }) => {
     const scriptTag = page.locator(
-      `script[src="${INJECT_SCRIPT_FILE_NAME}.js"]`
+      `script[src="${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"]`
     );
     expect(await scriptTag.count()).toEqual(1);
 
-    const cssTag = page.locator(`link[href="${INJECT_STYLE_FILE_NAME}.css"]`);
+    const cssTag = page.locator(
+      `link[href="${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css"]`
+    );
     expect(await cssTag.count()).toEqual(1);
   });
 
@@ -30,7 +33,9 @@ test.describe("test @plugin-web-update-notification/vite", () => {
   });
 
   test(`should has a ${JSON_FILE_NAME}.json file`, async ({ request }) => {
-    const jsonFileRes = await request.get(`${JSON_FILE_NAME}.json`);
+    const jsonFileRes = await request.get(
+      `${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`
+    );
     expect(jsonFileRes.ok()).toBeTruthy();
 
     const res = await jsonFileRes.json();
@@ -63,6 +68,7 @@ test.describe("test @plugin-web-update-notification/vite", () => {
     const notificationContent = page.locator(
       `[data-cy="notification-content"]`
     );
+    expect(await notificationContent.count()).toEqual(1);
     expect(await notificationContent.innerHTML()).toContain("system update");
     expect(await notificationContent.innerHTML()).toContain("refresh");
   });

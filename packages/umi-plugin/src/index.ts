@@ -2,8 +2,7 @@ import { resolve } from 'path'
 import { copyFileSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
 import type { Options } from '@plugin-web-update-notification/core'
-import { INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion } from '@plugin-web-update-notification/core'
-// import html from 'html-webpack'
+import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion } from '@plugin-web-update-notification/core'
 import { name as pkgName } from '../package.json'
 
 export type { Options } from '@plugin-web-update-notification/core'
@@ -13,14 +12,13 @@ const logVersionTpl = (version: string) => {
 }
 
 const injectVersionTpl = (version: string) => {
-  return `window.web_version_by_plugin = '${version}';`
+  return `window.pluginWebUpdateNotice_version = '${version}';`
 }
 
-export function generateScriptContent(options: Options, version: string) {
+export function generateScriptContent(options: Options) {
   const filePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
   return `${readFileSync(filePath, 'utf8').toString()}
-  window.web_version_by_plugin = "${version}";
-  webUpdateCheck_checkAndNotice(${JSON.stringify(options)});`
+  window.pluginWebUpdateNotice_.checkUpdate(${JSON.stringify(options)});`
 }
 
 export default (api: IApi) => {
@@ -42,6 +40,8 @@ export default (api: IApi) => {
             buttonText: Joi.string(),
             dismissButtonText: Joi.string(),
           },
+          locale: Joi.string(),
+          localeData: Joi.object(),
           hiddenDefaultNotification: Joi.boolean(),
           hiddenDismissButton: Joi.boolean(),
         })
@@ -67,7 +67,7 @@ export default (api: IApi) => {
     return [
       {
         rel: 'stylesheet',
-        href: `${injectFileBase}${INJECT_STYLE_FILE_NAME}.css`,
+        href: `${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`,
       },
     ]
   })
@@ -88,13 +88,13 @@ export default (api: IApi) => {
   api.onBuildComplete(() => {
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
     const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
-    copyFileSync(cssFilePath, `dist/${INJECT_STYLE_FILE_NAME}.css`)
+    copyFileSync(cssFilePath, `dist/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`)
 
     // write js file to dist/
-    writeFileSync(`dist/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions, version))
+    writeFileSync(`dist/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions))
 
     // write version json file to dist/
-    writeFileSync(`dist/${JSON_FILE_NAME}.json`, generateJSONFileContent(version))
+    writeFileSync(`dist/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version))
   })
 
   api.modifyHTML(($) => {

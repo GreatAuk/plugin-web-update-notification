@@ -124,7 +124,7 @@ export default defineConfig({
 })
 
 // other file to listener custom update event
-document.body.addEventListener('system_update_plugin_web_update_notification', (options) => {
+document.body.addEventListener('plugin_web_update_notice', (options) => {
   console.log(options)
   alert('System update!')
 })

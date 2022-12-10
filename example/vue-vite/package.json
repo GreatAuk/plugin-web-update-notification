@@ -16,7 +16,9 @@
     "vue-router": "^4.0.15"
   },
   "devDependencies": {
-    "@playwright/test": "^1.24.0-alpha-1655882451000",
+    "@playwright/test": "^1.28.1",
+    "@plugin-web-update-notification/core": "workspace:*",
+    "@plugin-web-update-notification/vite": "workspace:*",
     "@rushstack/eslint-patch": "^1.1.0",
     "@types/jsdom": "^16.2.14",
     "@types/node": "^16.11.36",
@@ -32,8 +34,6 @@
     "prettier": "^2.5.1",
     "start-server-and-test": "^1.14.0",
     "typescript": "~4.7.2",
-    "@plugin-web-update-notification/vite": "workspace:*",
-    "@plugin-web-update-notification/core": "workspace:*",
     "vitest": "^0.13.0",
     "vue-tsc": "^0.35.2"
   }

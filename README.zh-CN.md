@@ -122,7 +122,7 @@ export default defineConfig({
 })
 
 // 在其他文件中监听自定义更新事件
-document.body.addEventListener('system_update_plugin_web_update_notification', (options) => {
+document.body.addEventListener('plugin_web_update_notice', (options) => {
   console.log(options)
   alert('System update!')
 })

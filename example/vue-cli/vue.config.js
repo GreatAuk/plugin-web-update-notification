@@ -8,6 +8,7 @@ module.exports = defineConfig({
       new WebUpdateNotificationPlugin({
         logVersion: true,
         injectFileBase: './',
+        locale: 'en_US',
       }),
     ],
   },
