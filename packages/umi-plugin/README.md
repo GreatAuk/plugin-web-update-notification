@@ -60,6 +60,8 @@ pnpm add @plugin-web-update-notification/webpack -D
 
 ### Vite
 
+**basic usage**
+
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
@@ -77,13 +79,14 @@ export default defineConfig({
 })
 ```
 
+**custom notification text**
+
 ```ts
 // vite.config.ts
 export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
-      // custom notification text
       notificationProps: {
         title: 'system update',
         description: 'System update, please refresh the page',
@@ -94,25 +97,40 @@ export default defineConfig({
 })
 ```
 
+**internationalization**
+
 ```ts
 // vite.config.ts
 export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
-      // custom notification UI
-      customNotificationHTML: `
-        <div style="background-color: #fff;padding: 24px;border-radius: 4px;position: fixed;top: 24px;right: 24px;border: 1px solid;">
-          System update, please refresh the page
-        </div>
-      `,
+      // plugin preset: zh_CN | zh_TW | en_US
+      locale: "en_US",
+      localeData: {
+        en_US: {
+          title: "📢 system update",
+          description: "System update, please refresh the page",
+          buttonText: "refresh",
+          dismissButtonText: "dismiss",
+        },
+        zh_CN: {
+          ...
+        },
+        ...
+      },
     }),
-  ]
-})
+  ],
+});
+
+    
+// other file to set locale
+window.pluginWebUpdateNotice_.setLocale('zh_CN')
 ```
 
+**hidden default notification, listener to update event and custom behavior.**
+
 ```ts
-// hidden default notification, listener to update event and custom behavior.
 // vite.config.ts
 export default defineConfig({
   plugins: [
@@ -146,6 +164,7 @@ export default {
       title: 'system update',
       description: 'System update, please refresh the page',
       buttonText: 'refresh',
+      dismissButtonText: "dismiss",
     },
   } as WebUpdateNotificationOptions
 }
@@ -170,44 +189,60 @@ module.exports = defineConfig({
 })
 ```
 
-
-
 ## Options
 
 ```ts
 function webUpdateNotice(options?: Options): Plugin
 
-interface Options {
-  /** default is 'git_commit_hash' */
-  versionType?: 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
-  /** polling interval（ms）, default 10*60*1000 */
+export interface Options {
+  /**
+   * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
+   *
+   * default is 'git_commit_hash'
+   * */
+  versionType?: VersionType
+  /** polling interval（ms）, default 10 * 60 * 1000 */
   checkInterval?: number
-  /** whether to output commit-hash in console */
+  /** whether to output version in console */
   logVersion?: boolean
   customNotificationHTML?: string
+  /** notificationProps have higher priority than locale */
   notificationProps?: NotificationProps
+  /** locale default is zh_CN
+   *
+   * preset: zh_CN | zh_TW | en_US
+   * */
+  locale?: string
+  localeData?: LocaleData
   hiddenDefaultNotification?: boolean
   hiddenDismissButton?: boolean
-  /** index.html file path, by default, we will look up path.resolve(webpackOutputPath, './index.html') */
-  indexHtmlFilePath?: string // !!! only webpack plugin support
-
   /**
    * Base public path for inject file, Valid values include:
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
    * * Empty string(default) or ./
+   * !!! Don't forget last /
    */
   injectFileBase?: string
 }
 
-interface NotificationProps {
+export type VersionType = 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
+
+export interface NotificationProps {
   title?: string
   description?: string
+  /** refresh button text */
   buttonText?: string
   /** dismiss button text */
   dismissButtonText?: string
 }
+
+export type LocaleData = Record<string, NotificationProps>
 ```
+
+## What was changed
+
+![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content)
 
 ## License
 
