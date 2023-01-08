@@ -1,7 +1,8 @@
-English | [简体中文](./README.zh-CN.md)
+
+
+[English](./README.md) | 简体中文
 
 # plugin-web-update-notification
-
 <p align="center">
     <a href="https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js">
       <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
@@ -18,10 +19,9 @@ English | [简体中文](./README.zh-CN.md)
     <br>
 </p>
 
+检测网页更新并通知用户刷新，支持 vite、umijs 和 webpack 插件。
 
-Detect webpage updates and notify user to reload. support vite, umijs and webpack.
-
-> Take the git commit hash (also support package.json version、build timestamp) as the version number, and write version into json file. The client polls the version of the server (visibilitychange or focus event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page (you can custom behavior).
+> 以 git commit hash (也支持 package.json version、build timestamp) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（浏览器窗口的 visibilitychange、focus 事件辅助），和本地作比较，如果不相同则通知用户刷新页面。
 
 <p align="center">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
@@ -30,18 +30,18 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
 
-**When to check for updates (fetch version.json)** ?
+**什么时候会检测更新 (fetch version.json)** ?
 
-1. first load page.
-2. poll (default: 10 * 60 * 1000 ms).
-3. script resource loading failure detected (404 ?).
-4. when the browser window is refocus or revisible.
+1. 首次加载页面。
+2. 轮询 （default: 10 * 60 * 1000 ms）。
+3. script 脚本资源加载失败 (404 ?)。
+4. when the browser window is refocus or revisible。
 
 ## Why
 
-Some users do not have the habit of closing web pages. If the front-end page is updated, the user page may report an error (file 404) or a white screen.
+部分用户（老板）没有关闭网页的习惯，如果前端页面有更新的话，用户页面一直是历史版本，也有可能会出现报错（文件404）、白屏的情况。
 
-## Install
+## 安装
 
 ```bash
 # vite
@@ -54,13 +54,13 @@ pnpm add @plugin-web-update-notification/umijs -D
 pnpm add @plugin-web-update-notification/webpack -D
 ```
 
-## Usage
+## 快速上手
 
 [vite](#vite) | [umi](#umijs) | [webpack](#webpack)
 
 ### Vite
 
-**basic usage**
+**基础使用**
 
 ```ts
 // vite.config.ts
@@ -79,7 +79,7 @@ export default defineConfig({
 })
 ```
 
-**custom notification text**
+**自定义通知栏文本**
 
 ```ts
 // vite.config.ts
@@ -88,16 +88,17 @@ export default defineConfig({
     vue(),
     webUpdateNotice({
       notificationProps: {
-        title: 'system update',
+        title: '标题',
         description: 'System update, please refresh the page',
-        buttonText: 'refresh',
+        buttonText: '刷新',
+        dismissButtonText: '忽略'
       },
     }),
   ]
 })
 ```
 
-**internationalization**
+**国际化**
 
 ```ts
 // vite.config.ts
@@ -128,9 +129,8 @@ export default defineConfig({
 window.pluginWebUpdateNotice_.setLocale('zh_CN')
 ```
 
-**hidden default notification, listener to update event and custom behavior.**
-
 ```ts
+// 取消默认的通知栏，监听更新事件自定义行为
 // vite.config.ts
 export default defineConfig({
   plugins: [
@@ -141,7 +141,7 @@ export default defineConfig({
   ]
 })
 
-// other file to listener custom update event
+// 在其他文件中监听自定义更新事件
 document.body.addEventListener('plugin_web_update_notice', (options) => {
   console.log(options)
   alert('System update!')
@@ -164,7 +164,7 @@ export default {
       title: 'system update',
       description: 'System update, please refresh the page',
       buttonText: 'refresh',
-      dismissButtonText: "dismiss",
+      dismissButtonText: 'dismiss',
     },
   } as WebUpdateNotificationOptions
 }
@@ -240,7 +240,7 @@ export interface NotificationProps {
 export type LocaleData = Record<string, NotificationProps>
 ```
 
-## What was changed
+## 变动了哪些内容
 
 ![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content.webp)
 

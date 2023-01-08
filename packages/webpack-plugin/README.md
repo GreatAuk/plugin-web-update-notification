@@ -39,7 +39,7 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
 
 ## Why
 
-Some users do not have the habit of closing web pages. If the front-end page is updated, the user page may report an error (file 404) or a white screen.
+Some users do not have the habit of closing web pages. If the front-end page is updated, the user page has always been a historical version, any there may be report an error (file 404) or a white screen.
 
 ## Install
 
@@ -164,7 +164,7 @@ export default {
       title: 'system update',
       description: 'System update, please refresh the page',
       buttonText: 'refresh',
-      dismissButtonText: "dismiss",
+      dismissButtonText: 'dismiss',
     },
   } as WebUpdateNotificationOptions
 }

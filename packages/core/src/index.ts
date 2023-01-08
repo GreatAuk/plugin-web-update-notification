@@ -29,7 +29,7 @@ export function getHostProjectPkgVersion() {
   catch (err) {
     console.warn(`
 ======================================================
-[plugin-web-update-notice] Not a git repository!
+[plugin-web-update-notice] cannot get the version of the host project's package.json file!
 ======================================================`)
     throw err
   }
@@ -61,9 +61,9 @@ export function getTimestamp() {
 }
 
 /**
- * If the current directory is a git repository, return the current commit hash, otherwise return the
- * current time
- * @returns The git commit hash or the current time.
+ * It returns the version of the current project.
+ * @param {VersionType} [versionType=git_commit_hash] - The version type
+ * @returns The version of the plugin.
  */
 export function getVersion(versionType: VersionType = 'git_commit_hash') {
   try {
