@@ -3,16 +3,17 @@ English | [简体中文](./README.zh-CN.md)
 # plugin-web-update-notification
 
 <p align="center">
-    <a href="https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js">
+    <a href="https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js" target="__blank">
       <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
     </a>
-    <a href="https://www.npmjs.com/package/@plugin-web-update-notification/core">
+    <a href="https://www.npmjs.com/package/@plugin-web-update-notification/core" target="__blank">
       <img src="https://img.shields.io/npm/v/@plugin-web-update-notification/core.svg?style=flat-square&colorB=51C838" alt="NPM Version" />
     </a>
+    <a href="https://www.npmjs.com/package/@plugin-web-update-notification/core" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@plugin-web-update-notification/core?color=50a36f&label="></a>
     <a href="https://github.com/GreatAuk/plugin-web-update-notification/blob/master/LICENSE">
       <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="License" />
     </a>
-    <a href="https://github.com/GreatAuk/plugin-web-update-notification/discussions">
+    <a href="https://github.com/GreatAuk/plugin-web-update-notification/discussions" target="__blank">
       <img src="https://img.shields.io/badge/discussions-on%20github-blue?style=flat-square&colorB=51C838" alt="discussions-image" />
     </a>
     <br>
