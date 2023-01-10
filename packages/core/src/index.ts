@@ -66,13 +66,22 @@ export function getTimestamp() {
  * @returns The version of the plugin.
  */
 export function getVersion(versionType: VersionType = 'git_commit_hash') {
+  const getVersionStrategies: Record<VersionType, () => string> = {
+    pkg_version: getHostProjectPkgVersion,
+    git_commit_hash: getGitCommitHash,
+    build_timestamp: getTimestamp,
+  }
   try {
-    if (versionType === 'git_commit_hash')
-      return getGitCommitHash()
-    if (versionType === 'pkg_version')
-      return getHostProjectPkgVersion()
+    const strategy = getVersionStrategies[versionType]
+    if (!strategy) {
+      console.warn(`
+      ======================================================
+      [plugin-web-update-notice] The version type '${versionType}' is not supported!, we will use the packaging timestamp instead.
+      ======================================================`)
+      return getTimestamp()
+    }
 
-    return getTimestamp()
+    return strategy()
   }
   catch (err) {
     console.warn(`

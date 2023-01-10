@@ -51,6 +51,8 @@ function injectPluginHtml(html: string, version: string, options: Options) {
 
 export function webUpdateNotice(options: Options = {}): Plugin {
   // let viteConfig: ResolvedConfig;
+
+  const version = getVersion(options.versionType)
   return {
     name: 'vue-vite-web-update-notice',
     apply: 'build',
@@ -60,7 +62,6 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     //   viteConfig = resolvedConfig;
     // },
     generateBundle(_, bundle = {}) {
-      const version = getVersion(options.versionType)
       if (!version)
         return
 
@@ -94,7 +95,6 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     transformIndexHtml: {
       enforce: 'post',
       transform(html: string) {
-        const version = getVersion(options.versionType)
         if (version)
           return injectPluginHtml(html, version, options)
         return html
