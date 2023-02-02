@@ -36,11 +36,11 @@
 1. 首次加载页面。
 2. 轮询 （default: 10 * 60 * 1000 ms）。
 3. script 脚本资源加载失败 (404 ?)。
-4. when the browser window is refocus or revisible。
+4. when the tab page is refocus or revisible。
 
 ## Why
 
-部分用户（老板）没有关闭网页的习惯，如果前端页面有更新的话，用户页面一直是历史版本，也有可能会出现报错（文件404）、白屏的情况。
+部分用户（老板）没有关闭网页的习惯，在网页有新版本更新或问题修复时，用户继续使用旧的版本，影响用户体验和后端数据准确性。也有可能会出现报错（文件404）、白屏的情况。
 
 ## 安装
 
@@ -143,8 +143,9 @@ export default defineConfig({
 })
 
 // 在其他文件中监听自定义更新事件
-document.body.addEventListener('plugin_web_update_notice', (options) => {
+document.body.addEventListener('plugin_web_update_notice', ({ options, version }) => {
   console.log(options)
+  // write some code, show your custom notification and etc.
   alert('System update!')
 })
 ```
@@ -244,6 +245,97 @@ export type LocaleData = Record<string, NotificationProps>
 ## 变动了哪些内容
 
 ![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content.webp)
+
+## Q&A
+
+1. `TypeScript` 的智能提示, 如果你想使用 `window.pluginWebUpdateNotice_.`。
+
+   ```ts
+   // src/shim.d.ts
+   
+   /// <reference types="@plugin-web-update-notification/core" />
+   ```
+
+2. 请求 `version.json` 文件提示 `404 error`。
+
+   上传打包内容到 cnd 服务器：
+
+   ```ts
+   // vite.config.ts
+   
+   const prod = process.env.NODE_ENV === 'production'
+   
+   const cdnServerUrl = 'https://foo.com/'
+   
+   export default defineConfig({
+     base: prod ? cdnServerUrl : '/',
+     plugins: [
+       vue(),
+       webUpdateNotice({
+         injectFileBase: cdnServerUrl
+       })
+     ]
+   })
+   ```
+
+   在非根目录下部署的项目：
+
+   ```ts
+   // vite.config.ts
+   
+   const prod = process.env.NODE_ENV === 'production'
+   
+   const base = '/folder/' // https://example.com/folder/
+   
+   export default defineConfig({
+     base: base,
+     plugins: [
+       vue(),
+       webUpdateNotice({
+         injectFileBase: base
+       })
+     ]
+   })
+   ```
+
+3. 自定义 `notification` 的刷新和忽略按钮事件。
+
+   ```ts
+   // refresh button click event, if you set it, it will cover the default event (location.reload())
+   window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
+   
+   // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
+   window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
+   ```
+
+4. 自定义 notification 样式。
+
+   你可以通过更高的权重覆盖默认样式。([default css file](https://github.com/GreatAuk/plugin-web-update-notification/blob/master/packages/core/public/webUpdateNoticeInjectStyle.css))
+
+   ```html
+   <!-- notification html content -->
+   
+   <div class="plugin-web-update-notice-anchor">
+     <div class="plugin-web-update-notice">
+       <div class="plugin-web-update-notice-content" data-cy="notification-content">
+         <div class="plugin-web-update-notice-content-title">
+           📢  system update
+         </div>
+         <div class="plugin-web-update-notice-content-desc">
+           System update, please refresh the page
+         </div>
+         <div class="plugin-web-update-notice-tools">
+           <a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</a>
+           <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+             refresh
+           </a>
+         </div>
+       </div>
+     </div>
+   </div>
+   ```
+
+
 
 ## License
 

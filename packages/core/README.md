@@ -36,7 +36,7 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
 1. first load page.
 2. poll (default: 10 * 60 * 1000 ms).
 3. script resource loading failure detected (404 ?).
-4. when the browser window is refocus or revisible.
+4. when the tab page is refocus or revisible.
 
 ## Why
 
@@ -142,9 +142,10 @@ export default defineConfig({
   ]
 })
 
-// other file to listener custom update event
-document.body.addEventListener('plugin_web_update_notice', (options) => {
+// other file to listener update event and custom behavior
+document.body.addEventListener('plugin_web_update_notice', ({ options, version }) => {
   console.log(options)
+  // write some code, show your custom notification and etc.
   alert('System update!')
 })
 ```
@@ -241,9 +242,110 @@ export interface NotificationProps {
 export type LocaleData = Record<string, NotificationProps>
 ```
 
+## Function
+| name                                            | params                              | describe                                                     |
+| ----------------------------------------------- | ----------------------------------- | ------------------------------------------------------------ |
+| window.pluginWebUpdateNotice_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                   |
+| window.pluginWebUpdateNotice_.closeNotification |                                     | close notification                                           |
+| window.pluginWebUpdateNotice_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
+
+
+
+
 ## What was changed
 
 ![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content.webp)
+
+## Q&A
+
+1. `TypeScript` 的智能提示, 如果你想使用 `window.pluginWebUpdateNotice_.`。
+
+   ```ts
+   // src/shim.d.ts
+   
+   /// <reference types="@plugin-web-update-notification/core" />
+   ```
+
+2. request `version.json` file get `404 error`.
+
+   If you upload the production files bundled to cdn server:
+
+   ```ts
+   // vite.config.ts
+   
+   const prod = process.env.NODE_ENV === 'production'
+   
+   const cdnServerUrl = 'https://foo.com/'
+   
+   export default defineConfig({
+     base: prod ? cdnServerUrl : '/',
+     plugins: [
+       vue(),
+       webUpdateNotice({
+         injectFileBase: cdnServerUrl
+       })
+     ]
+   })
+   ```
+
+   Deploy the project in a non-root directory:
+
+   ```ts
+   // vite.config.ts
+   
+   const prod = process.env.NODE_ENV === 'production'
+   
+   const base = '/folder/' // https://example.com/folder/
+   
+   export default defineConfig({
+     base: base,
+     plugins: [
+       vue(),
+       webUpdateNotice({
+         injectFileBase: base
+       })
+     ]
+   })
+   ```
+
+3. Custom notification button event.
+
+   ```ts
+   // refresh button click event, if you set it, it will cover the default event (location.reload())
+   window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
+   
+   // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
+   window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
+   ```
+
+4. Custom notification style.
+
+   you can cover css styles with higher weights. ([default css file](https://github.com/GreatAuk/plugin-web-update-notification/blob/master/packages/core/public/webUpdateNoticeInjectStyle.css))
+
+   ```html
+   <!-- notification html content -->
+   
+   <div class="plugin-web-update-notice-anchor">
+     <div class="plugin-web-update-notice">
+       <div class="plugin-web-update-notice-content" data-cy="notification-content">
+         <div class="plugin-web-update-notice-content-title">
+           📢  system update
+         </div>
+         <div class="plugin-web-update-notice-content-desc">
+           System update, please refresh the page
+         </div>
+         <div class="plugin-web-update-notice-tools">
+           <a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</a>
+           <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+             refresh
+           </a>
+         </div>
+       </div>
+     </div>
+   </div>
+   ```
+
+
 
 ## License
 
