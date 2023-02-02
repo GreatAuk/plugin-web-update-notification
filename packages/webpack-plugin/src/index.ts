@@ -29,13 +29,12 @@ function injectPluginHtml(html: string, version: string, options: Options) {
   let res = html
 
   res = res.replace(
-    '</head>',
-    `${cssLinkHtml}
+    '<head>',
+    `<head>
+    ${cssLinkHtml}
     <script defer src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"></script>
     ${logHtml}
-    ${versionScript}
-  </head>
-    `,
+    ${versionScript}`,
   )
 
   if (!hiddenDefaultNotification) {

@@ -35,7 +35,6 @@ importers:
   example/react-umi:
     specifiers:
       '@playwright/test': ^1.24.0-alpha-1655882451000
-      '@plugin-web-update-notification/core': workspace:*
       '@plugin-web-update-notification/umijs': workspace:*
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
@@ -45,7 +44,6 @@ importers:
       umi: 4.0.2_typescript@4.9.3
     devDependencies:
       '@playwright/test': 1.24.0-alpha-1655882451000
-      '@plugin-web-update-notification/core': link:../../packages/core
       '@plugin-web-update-notification/umijs': link:../../packages/umi-plugin
       '@types/react': 18.0.14
       '@types/react-dom': 18.0.5
@@ -4774,7 +4772,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.1_debug@4.3.2
+      follow-redirects: 1.15.1_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: true
@@ -8239,18 +8237,6 @@ packages:
 
   /flatted/3.2.5:
     resolution: {integrity: sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==}
-    dev: true
-
-  /follow-redirects/1.15.1_debug@4.3.2:
-    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.2
     dev: true
 
   /follow-redirects/1.15.1_debug@4.3.4:

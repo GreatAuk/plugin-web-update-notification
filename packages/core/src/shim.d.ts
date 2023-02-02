@@ -8,8 +8,19 @@ declare global {
       locale?: string;
       /** set language */
       setLocale: (locale: string) => void
-      /** check update */
       checkUpdate: (options: Options) => void
+      /** dismiss current update and close notification, same behavior as dismiss the button */
+      dismissUpdate: () => void
+      /** close notification */
+      closeNotification: () => void
+      /**
+       * refresh button click event, if you set it, it will cover the default event (location.reload())
+       */
+      onClickRefresh?: (version: string) => void
+      /**
+       * dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
+       */
+      onClickDismiss?: (version: string) => void
     }
   }
 }

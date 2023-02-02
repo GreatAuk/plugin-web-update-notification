@@ -1,6 +1,7 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
+import './shim.d.ts'
 
 import { name as pkgName_ } from '../package.json'
 import type { VersionType } from './type'

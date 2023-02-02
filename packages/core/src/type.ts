@@ -9,6 +9,9 @@ export interface Options {
   checkInterval?: number
   /** whether to output version in console */
   logVersion?: boolean
+  /**
+   * @deprecated
+   */
   customNotificationHTML?: string
   /** notificationProps have higher priority than locale */
   notificationProps?: NotificationProps
@@ -18,6 +21,11 @@ export interface Options {
    * */
   locale?: string
   localeData?: LocaleData
+  /**
+   * Whether to hide the default notification, default is false
+   *
+   * If you set it to true, you need to custom behavior by yourself
+   */
   hiddenDefaultNotification?: boolean
   hiddenDismissButton?: boolean
   /**
@@ -25,7 +33,7 @@ export interface Options {
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
    * * Empty string(default) or ./
-   * !!! Don't forget last /
+   * !!! Don't forget / at the end of the path
    */
   injectFileBase?: string
 }

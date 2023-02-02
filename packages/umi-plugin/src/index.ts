@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { copyFileSync, readFileSync, writeFileSync } from 'fs'
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
 import type { Options } from '@plugin-web-update-notification/core'
 import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion } from '@plugin-web-update-notification/core'
@@ -72,7 +72,7 @@ export default (api: IApi) => {
     ]
   })
 
-  api.addHTMLScripts(() => {
+  api.addHTMLHeadScripts(() => {
     const scriptList = []
     if (logVersion) {
       scriptList.push({
@@ -82,10 +82,15 @@ export default (api: IApi) => {
     scriptList.push({
       content: injectVersionTpl(version),
     })
+    scriptList.push({
+      src: `${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js`,
+    })
     return scriptList
   })
 
   api.onBuildComplete(() => {
+    mkdirSync(`dist/${DIRECTORY_NAME}`)
+
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
     const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
     copyFileSync(cssFilePath, `dist/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`)
@@ -99,9 +104,7 @@ export default (api: IApi) => {
 
   api.modifyHTML(($) => {
     if (!hiddenDefaultNotification)
-      $('body').append(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
-
-    $('body').append(`<script defer src="${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js"></script>`)
+      $('body').append(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div>`)
     return $
   })
 }

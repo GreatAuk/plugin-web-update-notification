@@ -3,6 +3,7 @@ import { CUSTOM_UPDATE_EVENT_NAME, DIRECTORY_NAME, JSON_FILE_NAME, LOCAL_STORAGE
 import presetLocaleData from './locale'
 
 let hasShowSystemUpdateNotice = false
+/** latest version from server */
 let latestVersion = ''
 let currentLocale = ''
 
@@ -45,13 +46,16 @@ function checkUpdate(options: Options) {
         if (window.pluginWebUpdateNotice_version !== versionFromServer) {
           // dispatch custom event
           document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
-            detail: options,
+            detail: {
+              options,
+              version: versionFromServer,
+            },
             bubbles: true,
           }))
 
           const dismiss = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
           if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
-            handleShowNotification(options)
+            showNotification(options)
         }
       })
       .catch((err) => {
@@ -60,7 +64,7 @@ function checkUpdate(options: Options) {
   }
 
   // check system update after page loaded
-  checkSystemUpdate()
+  setTimeout(checkSystemUpdate)
 
   // polling check system update
   setInterval(checkSystemUpdate, checkInterval || 10 * 60 * 1000)
@@ -89,12 +93,36 @@ function checkUpdate(options: Options) {
     true,
   )
 }
+
 window.pluginWebUpdateNotice_ = {
   checkUpdate,
+  dismissUpdate,
+  closeNotification,
   setLocale: (locale: string) => {
     window.pluginWebUpdateNotice_.locale = locale
     currentLocale = locale
   },
+}
+
+/**
+ * close notification, remove the notification from the DOM
+ */
+function closeNotification() {
+  hasShowSystemUpdateNotice = false
+  document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME} .plugin-web-update-notice`)?.remove()
+}
+
+/**
+ * dismiss current update and hide notification
+ */
+function dismissUpdate() {
+  try {
+    closeNotification()
+    localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${latestVersion}`, 'true')
+  }
+  catch (err) {
+    console.error(err)
+  }
 }
 
 /**
@@ -105,20 +133,23 @@ function bindBtnEvent() {
   // bind refresh button click event, click to refresh page
   const refreshBtn = document.querySelector(`.${NOTIFICATION_REFRESH_BTN_CLASS_NAME}`)
   refreshBtn?.addEventListener('click', () => {
+    const { onClickRefresh } = window.pluginWebUpdateNotice_
+    if (onClickRefresh) {
+      onClickRefresh(latestVersion)
+      return
+    }
     window.location.reload()
   })
 
   // bind dismiss button click event, click to hide notification
   const dismissBtn = document.querySelector(`.${NOTIFICATION_DISMISS_BTN_CLASS_NAME}`)
   dismissBtn?.addEventListener('click', () => {
-    try {
-      hasShowSystemUpdateNotice = false
-      document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME} .plugin-web-update-notice`)?.remove()
-      localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${latestVersion}`, 'true')
+    const { onClickDismiss } = window.pluginWebUpdateNotice_
+    if (onClickDismiss) {
+      onClickDismiss(latestVersion)
+      return
     }
-    catch (err) {
-      console.error(err)
-    }
+    dismissUpdate()
   })
 }
 
@@ -137,7 +168,7 @@ function getLocaleText(locale: string, key: keyof LocaleData[string], localeData
 /**
  * show update notification
  */
-function handleShowNotification(options: Options) {
+function showNotification(options: Options) {
   try {
     hasShowSystemUpdateNotice = true
 
