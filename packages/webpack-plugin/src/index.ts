@@ -60,8 +60,12 @@ class WebUpdateNotificationPlugin {
   }
 
   apply(compiler: Compiler) {
-    const { hiddenDefaultNotification, versionType, indexHtmlFilePath } = this.options
-    const version = getVersion(versionType)
+    const { hiddenDefaultNotification, versionType, indexHtmlFilePath, customVersion } = this.options
+    let version = ''
+    if (versionType === 'custom')
+      version = getVersion(versionType, customVersion!)
+    else
+      version = getVersion(versionType!)
 
     compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
       // const outputPath = compiler.outputPath

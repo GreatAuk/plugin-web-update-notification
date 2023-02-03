@@ -51,7 +51,13 @@ function injectPluginHtml(html: string, version: string, options: Options) {
 export function webUpdateNotice(options: Options = {}): Plugin {
   // let viteConfig: ResolvedConfig;
 
-  const version = getVersion(options.versionType)
+  const { versionType, customVersion } = options
+  let version = ''
+  if (versionType === 'custom')
+    version = getVersion(versionType, customVersion!)
+  else
+    version = getVersion(versionType!)
+
   return {
     name: 'vue-vite-web-update-notice',
     apply: 'build',

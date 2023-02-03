@@ -5,6 +5,10 @@ export interface Options {
    * default is 'git_commit_hash'
    * */
   versionType?: VersionType
+  /**
+   * custom version, if versionType is 'custom', this option is required
+   */
+  customVersion?: string
   /** polling interval（ms）, default 10 * 60 * 1000 */
   checkInterval?: number
   /** whether to output version in console */
@@ -22,9 +26,14 @@ export interface Options {
   locale?: string
   localeData?: LocaleData
   /**
-   * Whether to hide the default notification, default is false
-   *
-   * If you set it to true, you need to custom behavior by yourself
+   * Whether to hide the default notification, if you set it to true, you need to custom behavior by yourself
+   * ```ts
+    document.body.addEventListener('plugin_web_update_notice', ({ options, version }) => {
+      // write some code, show your custom notification and etc.
+      alert('System update!')
+    })
+   * ```
+   * @default false
    */
   hiddenDefaultNotification?: boolean
   hiddenDismissButton?: boolean
@@ -38,7 +47,7 @@ export interface Options {
   injectFileBase?: string
 }
 
-export type VersionType = 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
+export type VersionType = 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
 
 export interface NotificationProps {
   title?: string

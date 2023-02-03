@@ -52,9 +52,13 @@ export default (api: IApi) => {
     },
   })
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
-  const { versionType, logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = webUpdateNotificationOptions
+  const { versionType, logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '', customVersion } = webUpdateNotificationOptions
 
-  const version = getVersion(versionType)
+  let version = ''
+  if (versionType === 'custom')
+    version = getVersion(versionType, customVersion!)
+  else
+    version = getVersion(versionType!)
 
   // 插件只在生产环境时生效
   if (!version || api.env !== 'production')

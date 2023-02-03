@@ -61,16 +61,32 @@ export function getTimestamp() {
   return `${Date.now()}`
 }
 
+export function getCustomVersion(version?: string) {
+  if (!version) {
+    console.warn(`
+======================================================
+[plugin-web-update-notice] The versionType is 'custom', but the customVersion is not specified!
+======================================================`)
+    throw new Error('The versionType is \'custom\', but the customVersion is not specified!')
+  }
+  return version
+}
+
 /**
  * It returns the version of the current project.
  * @param {VersionType} [versionType=git_commit_hash] - The version type
- * @returns The version of the plugin.
+ * @param {string} [customVersion] - The custom version
+ * @returns The version by the plugin.
  */
-export function getVersion(versionType: VersionType = 'git_commit_hash') {
+export function getVersion(): string
+export function getVersion(versionType: 'custom', customVersion: string): string
+export function getVersion(versionType: Exclude<VersionType, 'custom'>): string
+export function getVersion(versionType: VersionType = 'git_commit_hash', customVersion?: string) {
   const getVersionStrategies: Record<VersionType, () => string> = {
     pkg_version: getHostProjectPkgVersion,
     git_commit_hash: getGitCommitHash,
     build_timestamp: getTimestamp,
+    custom: () => getCustomVersion(customVersion),
   }
   try {
     const strategy = getVersionStrategies[versionType]
@@ -105,4 +121,3 @@ export function generateJSONFileContent(version: string) {
   "version": "${version}"
 }`.replace('\n', '')
 }
-
