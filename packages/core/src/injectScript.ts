@@ -1,5 +1,5 @@
 import type { LocaleData, Options } from './type'
-import { CUSTOM_UPDATE_EVENT_NAME, DIRECTORY_NAME, JSON_FILE_NAME, LOCAL_STORAGE_PREFIX, NOTIFICATION_ANCHOR_CLASS_NAME, NOTIFICATION_DISMISS_BTN_CLASS_NAME, NOTIFICATION_REFRESH_BTN_CLASS_NAME } from './constant'
+import { CUSTOM_UPDATE_EVENT_NAME, DIRECTORY_NAME, JSON_FILE_NAME, LOCAL_STORAGE_PREFIX, NOTIFICATION_ANCHOR_CLASS_NAME, NOTIFICATION_DISMISS_BTN_CLASS_NAME, NOTIFICATION_POSITION_MAP, NOTIFICATION_REFRESH_BTN_CLASS_NAME } from './constant'
 import presetLocaleData from './locale'
 
 let hasShowSystemUpdateNotice = false
@@ -172,26 +172,29 @@ function showNotification(options: Options) {
   try {
     hasShowSystemUpdateNotice = true
 
-    const { notificationProps, customNotificationHTML, hiddenDismissButton, locale = 'zh_CN', localeData: localeData_ } = options
+    const { notificationProps, notificationConfig, customNotificationHTML, hiddenDismissButton, locale = 'zh_CN', localeData: localeData_ } = options
     const localeData = Object.assign({}, presetLocaleData, localeData_)
     if (!currentLocale) {
       currentLocale = locale
       window.pluginWebUpdateNotice_.locale = locale
     }
 
-    const notification = document.createElement('div')
+    const notificationWrap = document.createElement('div')
     let notificationInnerHTML = ''
 
     if (customNotificationHTML) {
       notificationInnerHTML = customNotificationHTML
     }
     else {
+      const { placement = 'bottomRight', primaryColor, secondaryColor } = notificationConfig || {}
       const title = notificationProps?.title ?? getLocaleText(currentLocale, 'title', localeData)
       const description = notificationProps?.description ?? getLocaleText(currentLocale, 'description', localeData)
       const buttonText = notificationProps?.buttonText ?? getLocaleText(currentLocale, 'buttonText', localeData)
       const dismissButtonText = notificationProps?.dismissButtonText ?? getLocaleText(currentLocale, 'dismissButtonText', localeData)
-      const dismissButtonHtml = hiddenDismissButton ? '' : `<a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">${dismissButtonText}</a>`
-      notification.classList.add('plugin-web-update-notice')
+      const dismissButtonHtml = hiddenDismissButton ? '' : `<a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn" style="color:${secondaryColor}">${dismissButtonText}</a>`
+
+      notificationWrap.classList.add('plugin-web-update-notice')
+      notificationWrap.style.cssText = `${NOTIFICATION_POSITION_MAP[placement]}`
       notificationInnerHTML = `
     <div class="plugin-web-update-notice-content" data-cy="notification-content">
       <div class="plugin-web-update-notice-content-title">
@@ -202,17 +205,17 @@ function showNotification(options: Options) {
       </div>
       <div class="plugin-web-update-notice-tools">
         ${dismissButtonHtml}
-        <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+        <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn" style="color:${primaryColor}">
           ${buttonText}
         </a>
       </div>
     </div>`
     }
 
-    notification.innerHTML = notificationInnerHTML
+    notificationWrap.innerHTML = notificationInnerHTML
     document
       .querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!
-      .appendChild(notification)
+      .appendChild(notificationWrap)
 
     bindBtnEvent()
   }

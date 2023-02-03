@@ -11,3 +11,10 @@ export const NOTIFICATION_REFRESH_BTN_CLASS_NAME = 'plugin-web-update-notice-ref
 /** dismiss button class name */
 export const NOTIFICATION_DISMISS_BTN_CLASS_NAME = 'plugin-web-update-notice-dismiss-btn'
 export const LOCAL_STORAGE_PREFIX = 'web_update_check_dismiss_version_'
+
+export const NOTIFICATION_POSITION_MAP = {
+  topLeft: 'top: 24px;left: 24px',
+  topRight: 'top: 24px;right: 24px',
+  bottomLeft: 'bottom: 24px;left: 24px',
+  bottomRight: 'bottom: 24px;right: 24px',
+}

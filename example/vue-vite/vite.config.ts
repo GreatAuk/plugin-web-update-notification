@@ -18,6 +18,11 @@ export default defineConfig({
         buttonText: "refresh",
         dismissButtonText: "dismiss",
       },
+      notificationConfig: {
+        primaryColor: "red",
+        secondaryColor: "blue",
+        placement: "topRight",
+      },
     }),
   ],
   resolve: {
