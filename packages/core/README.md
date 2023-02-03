@@ -219,6 +219,7 @@ export interface Options {
   customNotificationHTML?: string
   /** notificationProps have higher priority than locale */
   notificationProps?: NotificationProps
+  notificationConfig?: NotificationConfig
   /**
    * preset: zh_CN | zh_TW | en_US
    * @default 'zh_CN'
@@ -255,7 +256,22 @@ export interface Options {
   injectFileBase?: string
 }
 
-export type VersionType = 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
+export type VersionType = 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
+
+export interface NotificationConfig {
+  /**
+   * refresh button color
+   * @default '#1677ff'
+  */
+  primaryColor?: string
+  /**
+   * dismiss button color
+   * @default 'rgba(0,0,0,.25)'
+  */
+  secondaryColor?: string
+  /** @default 'bottomRight' */
+  placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+}
 
 export interface NotificationProps {
   title?: string
