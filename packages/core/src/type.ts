@@ -1,15 +1,17 @@
 export interface Options {
   /**
-   * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
+   * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
    *
-   * default is 'git_commit_hash'
+   * @default 'git_commit_hash'
    * */
   versionType?: VersionType
   /**
    * custom version, if versionType is 'custom', this option is required
    */
   customVersion?: string
-  /** polling interval（ms）, default 10 * 60 * 1000 */
+  /** polling interval（ms）
+   * @default 10 * 60 * 1000
+   */
   checkInterval?: number
   /** whether to output version in console */
   logVersion?: boolean
@@ -19,11 +21,15 @@ export interface Options {
   customNotificationHTML?: string
   /** notificationProps have higher priority than locale */
   notificationProps?: NotificationProps
-  /** locale default is zh_CN
-   *
+  /**
    * preset: zh_CN | zh_TW | en_US
+   * @default 'zh_CN'
    * */
   locale?: string
+  /**
+   * custom locale data
+   * @link default data: https://github.com/GreatAuk/plugin-web-update-notification/blob/master/packages/core/src/locale.ts
+   */
   localeData?: LocaleData
   /**
    * Whether to hide the default notification, if you set it to true, you need to custom behavior by yourself
@@ -36,6 +42,10 @@ export interface Options {
    * @default false
    */
   hiddenDefaultNotification?: boolean
+  /**
+   * Whether to hide the dismiss button
+   * @default false
+   */
   hiddenDismissButton?: boolean
   /**
    * Base public path for inject file, Valid values include:

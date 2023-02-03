@@ -22,7 +22,7 @@
 
 检测网页更新并通知用户刷新，支持 vite、umijs 和 webpack 插件。
 
-> 以 git commit hash (也支持 package.json version、build timestamp) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（浏览器窗口的 visibilitychange、focus 事件辅助），和本地作比较，如果不相同则通知用户刷新页面。
+> 以 git commit hash (也支持 package.json version、build timestamp、custom) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（浏览器窗口的 visibilitychange、focus 事件辅助），和本地作比较，如果不相同则通知用户刷新页面。
 
 <p align="center">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
@@ -198,32 +198,59 @@ function webUpdateNotice(options?: Options): Plugin
 
 export interface Options {
   /**
-   * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp'
+   * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
    *
-   * default is 'git_commit_hash'
+   * @default 'git_commit_hash'
    * */
   versionType?: VersionType
-  /** polling interval（ms）, default 10 * 60 * 1000 */
+  /**
+   * custom version, if versionType is 'custom', this option is required
+   */
+  customVersion?: string
+  /** polling interval（ms）
+   * @default 10 * 60 * 1000
+   */
   checkInterval?: number
   /** whether to output version in console */
   logVersion?: boolean
+  /**
+   * @deprecated
+   */
   customNotificationHTML?: string
   /** notificationProps have higher priority than locale */
   notificationProps?: NotificationProps
-  /** locale default is zh_CN
-   *
+  /**
    * preset: zh_CN | zh_TW | en_US
+   * @default 'zh_CN'
    * */
   locale?: string
+  /**
+   * custom locale data
+   * @link default data: https://github.com/GreatAuk/plugin-web-update-notification/blob/master/packages/core/src/locale.ts
+   */
   localeData?: LocaleData
+  /**
+   * Whether to hide the default notification, if you set it to true, you need to custom behavior by yourself
+   * ```ts
+    document.body.addEventListener('plugin_web_update_notice', ({ options, version }) => {
+      // write some code, show your custom notification and etc.
+      alert('System update!')
+    })
+   * ```
+   * @default false
+   */
   hiddenDefaultNotification?: boolean
+  /**
+   * Whether to hide the dismiss button
+   * @default false
+   */
   hiddenDismissButton?: boolean
   /**
    * Base public path for inject file, Valid values include:
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
    * * Empty string(default) or ./
-   * !!! Don't forget last /
+   * !!! Don't forget / at the end of the path
    */
   injectFileBase?: string
 }
@@ -252,7 +279,7 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // src/shim.d.ts
-   
+
    /// <reference types="@plugin-web-update-notification/core" />
    ```
 
@@ -262,11 +289,11 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const cdnServerUrl = 'https://foo.com/'
-   
+
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -282,13 +309,13 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const base = '/folder/' // https://example.com/folder/
-   
+
    export default defineConfig({
-     base: base,
+     base,
      plugins: [
        vue(),
        webUpdateNotice({
@@ -303,7 +330,7 @@ export type LocaleData = Record<string, NotificationProps>
    ```ts
    // refresh button click event, if you set it, it will cover the default event (location.reload())
    window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
-   
+
    // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
    window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
    ```
@@ -314,7 +341,7 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```html
    <!-- notification html content -->
-   
+
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
