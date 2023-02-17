@@ -52,6 +52,9 @@ export default (api: IApi) => {
     },
   })
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
+  if (webUpdateNotificationOptions.injectFileBase === undefined)
+    webUpdateNotificationOptions.injectFileBase = api.userConfig.publicPath || '/'
+
   const { versionType, logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '', customVersion } = webUpdateNotificationOptions
 
   let version = ''

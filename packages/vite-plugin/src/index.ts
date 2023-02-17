@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
-import type { Plugin } from 'vite'
+import type { Plugin, ResolvedConfig } from 'vite'
 import type { Options } from '@plugin-web-update-notification/core'
 import {
   DIRECTORY_NAME,
@@ -49,7 +49,7 @@ function injectPluginHtml(html: string, version: string, options: Options) {
 }
 
 export function webUpdateNotice(options: Options = {}): Plugin {
-  // let viteConfig: ResolvedConfig;
+  let viteConfig: ResolvedConfig
 
   const { versionType, customVersion } = options
   let version = ''
@@ -62,10 +62,12 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     name: 'vue-vite-web-update-notice',
     apply: 'build',
     enforce: 'post',
-    // configResolved(resolvedConfig: ResolvedConfig) {
-    //   // 存储最终解析的配置
-    //   viteConfig = resolvedConfig;
-    // },
+    configResolved(resolvedConfig: ResolvedConfig) {
+      // 存储最终解析的配置
+      viteConfig = resolvedConfig
+      if (options.injectFileBase === undefined)
+        options.injectFileBase = viteConfig.base
+    },
     generateBundle(_, bundle = {}) {
       if (!version)
         return

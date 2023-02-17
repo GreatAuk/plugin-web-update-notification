@@ -245,12 +245,15 @@ export interface Options {
    */
   hiddenDismissButton?: boolean
   /**
+   * After version 1.2.0, you not need to set this option, it will be automatically detected from the base of vite config、publicPath of webpack config or publicPath of umi config
+   *
    * Base public path for inject file, Valid values include:
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
    * * Empty string(default) or ./
+   *
    * !!! Don't forget / at the end of the path
-   */
+  */
   injectFileBase?: string
 }
 
@@ -303,11 +306,11 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const cdnServerUrl = 'https://foo.com/'
-
+   
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -323,11 +326,11 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const base = '/folder/' // https://example.com/folder/
-
+   
    export default defineConfig({
      base,
      plugins: [
@@ -338,6 +341,8 @@ export type LocaleData = Record<string, NotificationProps>
      ]
    })
    ```
+
+   > After version 1.2.0, you not need to set this option, it will be automatically detected from the base of vite config、publicPath of webpack config or publicPath of umi config
 
 3. 自定义 `notification` 的刷新和忽略按钮事件。
 
@@ -355,7 +360,7 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```html
    <!-- notification html content -->
-
+   
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">

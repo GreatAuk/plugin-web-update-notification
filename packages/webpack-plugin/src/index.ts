@@ -21,7 +21,7 @@ type PluginOptions = Options & {
  * @returns The html of the page with the injected script and css.
  */
 function injectPluginHtml(html: string, version: string, options: Options) {
-  const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
+  const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
 
   const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
   const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
@@ -60,6 +60,10 @@ class WebUpdateNotificationPlugin {
   }
 
   apply(compiler: Compiler) {
+    const { publicPath } = compiler.options.output
+    if (this.options.injectFileBase === undefined)
+      this.options.injectFileBase = typeof publicPath === 'string' ? publicPath : '/'
+
     const { hiddenDefaultNotification, versionType, indexHtmlFilePath, customVersion } = this.options
     let version = ''
     if (versionType === 'custom')
@@ -69,7 +73,6 @@ class WebUpdateNotificationPlugin {
 
     compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
       // const outputPath = compiler.outputPath
-
       const jsonFileContent = generateJSONFileContent(version)
       // @ts-expect-error
       compilation.assets[`${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`] = {
