@@ -30,13 +30,12 @@
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
-
 **什么时候会检测更新 (fetch version.json)** ?
 
 1. 首次加载页面。
 2. 轮询 （default: 10 * 60 * 1000 ms）。
 3. script 脚本资源加载失败 (404 ?)。
-4. when the tab page is refocus or revisible。
+4. 标签页 refocus or revisible。
 
 ## Why
 
@@ -194,6 +193,8 @@ module.exports = defineConfig({
 ## Options
 
 ```ts
+function webUpdateNotice(options?: Options): Plugin
+
 export interface Options {
   /**
    * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
@@ -302,15 +303,15 @@ export type LocaleData = Record<string, NotificationProps>
 
 2. 请求 `version.json` 文件提示 `404 error`。
 
-   上传打包内容到 cnd 服务器：
+   上传打包内容到 cdn 服务器：
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const cdnServerUrl = 'https://foo.com/'
-   
+
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -326,11 +327,11 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const base = '/folder/' // https://example.com/folder/
-   
+
    export default defineConfig({
      base,
      plugins: [

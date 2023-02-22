@@ -30,13 +30,12 @@
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
-
 **什么时候会检测更新 (fetch version.json)** ?
 
 1. 首次加载页面。
 2. 轮询 （default: 10 * 60 * 1000 ms）。
 3. script 脚本资源加载失败 (404 ?)。
-4. when the tab page is refocus or revisible。
+4. 标签页 refocus or revisible。
 
 ## Why
 
@@ -194,6 +193,8 @@ module.exports = defineConfig({
 ## Options
 
 ```ts
+function webUpdateNotice(options?: Options): Plugin
+
 export interface Options {
   /**
    * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
@@ -245,12 +246,15 @@ export interface Options {
    */
   hiddenDismissButton?: boolean
   /**
+   * After version 1.2.0, you not need to set this option, it will be automatically detected from the base of vite config、publicPath of webpack config or publicPath of umi config
+   *
    * Base public path for inject file, Valid values include:
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
    * * Empty string(default) or ./
+   *
    * !!! Don't forget / at the end of the path
-   */
+  */
   injectFileBase?: string
 }
 
@@ -299,7 +303,7 @@ export type LocaleData = Record<string, NotificationProps>
 
 2. 请求 `version.json` 文件提示 `404 error`。
 
-   上传打包内容到 cnd 服务器：
+   上传打包内容到 cdn 服务器：
 
    ```ts
    // vite.config.ts
@@ -339,6 +343,8 @@ export type LocaleData = Record<string, NotificationProps>
    })
    ```
 
+   > After version 1.2.0, you not need to set this option, it will be automatically detected from the base of vite config、publicPath of webpack config or publicPath of umi config
+
 3. 自定义 `notification` 的刷新和忽略按钮事件。
 
    ```ts
@@ -355,7 +361,7 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```html
    <!-- notification html content -->
-
+   
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
