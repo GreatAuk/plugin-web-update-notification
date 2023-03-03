@@ -90,7 +90,7 @@ export default (api: IApi) => {
       content: injectVersionTpl(version),
     })
     scriptList.push({
-      src: `${injectFileBase}${INJECT_SCRIPT_FILE_NAME}.js`,
+      src: `${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`,
     })
     return scriptList
   })
