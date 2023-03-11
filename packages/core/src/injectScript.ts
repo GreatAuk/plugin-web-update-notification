@@ -6,6 +6,7 @@ let hasShowSystemUpdateNotice = false
 /** latest version from server */
 let latestVersion = ''
 let currentLocale = ''
+let intervalTimer: NodeJS.Timer | undefined
 
 /**
  * limit function
@@ -66,16 +67,25 @@ function checkUpdate(options: Options) {
   // check system update after page loaded
   setTimeout(checkSystemUpdate)
 
-  // polling check system update
-  if (checkInterval > 0)
-    setInterval(checkSystemUpdate, checkInterval)
+  /**
+   * polling check system update
+   */
+  const pollingCheck = () => {
+    if (checkInterval > 0)
+      intervalTimer = setInterval(checkSystemUpdate, checkInterval)
+  }
+  pollingCheck()
 
   const limitCheckSystemUpdate = limit(checkSystemUpdate, 5000)
 
   // when page visibility change, check system update
   window.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible')
+    if (document.visibilityState === 'visible') {
+      pollingCheck()
       limitCheckSystemUpdate()
+    }
+    if (document.visibilityState === 'hidden')
+      intervalTimer && clearInterval(intervalTimer)
   })
 
   // when page focus, check system update
