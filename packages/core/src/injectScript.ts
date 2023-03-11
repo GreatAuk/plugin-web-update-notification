@@ -31,7 +31,7 @@ function limit(fn: Function, delay: number) {
  * @param {Options} options - Options
  */
 function checkUpdate(options: Options) {
-  const { injectFileBase = '', checkInterval, hiddenDefaultNotification } = options
+  const { injectFileBase = '', checkInterval = 10 * 60 * 1000, hiddenDefaultNotification } = options
   const checkSystemUpdate = () => {
     window
       .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${performance.now()}`)
@@ -67,7 +67,8 @@ function checkUpdate(options: Options) {
   setTimeout(checkSystemUpdate)
 
   // polling check system update
-  setInterval(checkSystemUpdate, checkInterval || 10 * 60 * 1000)
+  if (checkInterval > 0)
+    setInterval(checkSystemUpdate, checkInterval)
 
   const limitCheckSystemUpdate = limit(checkSystemUpdate, 5000)
 

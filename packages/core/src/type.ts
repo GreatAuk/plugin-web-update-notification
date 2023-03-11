@@ -9,7 +9,8 @@ export interface Options {
    * custom version, if versionType is 'custom', this option is required
    */
   customVersion?: string
-  /** polling interval（ms）
+  /** polling interval(ms).
+   * if set to 0, it will not polling
    * @default 10 * 60 * 1000
    */
   checkInterval?: number
