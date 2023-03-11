@@ -208,6 +208,7 @@ export interface Options {
    */
   customVersion?: string
   /** polling interval（ms）
+   * if set to 0, it will not polling
    * @default 10 * 60 * 1000
    */
   checkInterval?: number

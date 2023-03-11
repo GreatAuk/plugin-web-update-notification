@@ -30,7 +30,7 @@
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
 </p>
-**什么时候会检测更新 (fetch version.json)** ?
+**什么时候会检测更新(fetch version.json)**  ?
 
 1. 首次加载页面。
 2. 轮询 （default: 10 * 60 * 1000 ms）。
@@ -207,6 +207,7 @@ export interface Options {
    */
   customVersion?: string
   /** polling interval（ms）
+   * if set to 0, it will not polling
    * @default 10 * 60 * 1000
    */
   checkInterval?: number
@@ -361,7 +362,7 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```html
    <!-- notification html content -->
-   
+
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
@@ -382,6 +383,8 @@ export type LocaleData = Record<string, NotificationProps>
    </div>
    ```
 
+## 文章
+* https://juejin.cn/post/7209234917288886331
 
 
 ## License
