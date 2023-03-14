@@ -17,12 +17,12 @@ test.describe("test @plugin-web-update-notification/vite", () => {
   });
   test("script and css file inject success", async ({ page }) => {
     const scriptTag = page.locator(
-      `script[src="${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"]`
+      `script[src="/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"]`
     );
     expect(await scriptTag.count()).toEqual(1);
 
     const cssTag = page.locator(
-      `link[href="${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css"]`
+      `link[href="/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css"]`
     );
     expect(await cssTag.count()).toEqual(1);
   });

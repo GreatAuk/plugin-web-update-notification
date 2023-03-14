@@ -1,6 +1,8 @@
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { execSync } from 'child_process'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { execSync } from 'node:child_process'
+import { findUpSync } from 'find-up'
+
 import './shim.d.ts'
 
 import { name as pkgName_ } from '../package.json'
@@ -17,6 +19,22 @@ export function get__Dirname() {
   if (import.meta?.url)
     return dirname(fileURLToPath(import.meta.url))
   return __dirname
+}
+
+/**
+ * It checks if a path is a Git or SVN repository
+ * @param {string} path - The path to the repository.
+ * @returns A string that is either 'Git', 'SVN', or undefined.
+ */
+function checkRepoType() {
+  const gitRepo = findUpSync('.git', { type: 'directory' })
+  if (gitRepo)
+    return 'Git'
+  const svnRepo = findUpSync('.svn', { type: 'directory' })
+  if (svnRepo)
+    return 'SVN'
+
+  return 'unknown'
 }
 
 /**
@@ -54,6 +72,23 @@ export function getGitCommitHash() {
 }
 
 /**
+ * get SVN revision number
+ * @returns The SVN revision number.
+ */
+export function getSVNRevisionNumber() {
+  try {
+    return execSync('svnversion').toString().replace('\n', '').trim()
+  }
+  catch (err) {
+    console.warn(`
+======================================================
+[plugin-web-update-notice] Not a SVN repository!
+======================================================`)
+    throw err
+  }
+}
+
+/**
  * It returns the current timestamp
  * @returns The current time in milliseconds.
  */
@@ -81,15 +116,25 @@ export function getCustomVersion(version?: string) {
 export function getVersion(): string
 export function getVersion(versionType: 'custom', customVersion: string): string
 export function getVersion(versionType: Exclude<VersionType, 'custom'>): string
-export function getVersion(versionType: VersionType = 'git_commit_hash', customVersion?: string) {
+export function getVersion(versionType?: VersionType, customVersion?: string) {
   const getVersionStrategies: Record<VersionType, () => string> = {
     pkg_version: getHostProjectPkgVersion,
     git_commit_hash: getGitCommitHash,
     build_timestamp: getTimestamp,
     custom: () => getCustomVersion(customVersion),
+    svn_revision_number: getSVNRevisionNumber,
   }
+
+  const defaultStrategyMap = {
+    Git: 'git_commit_hash',
+    SVN: 'svn_revision_number',
+    unknown: '',
+  }
+
+  const versionType_ = (versionType || defaultStrategyMap[checkRepoType()]) as VersionType
+
   try {
-    const strategy = getVersionStrategies[versionType]
+    const strategy = getVersionStrategies[versionType_]
     if (!strategy) {
       console.warn(`
       ======================================================

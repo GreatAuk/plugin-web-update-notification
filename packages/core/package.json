@@ -36,5 +36,7 @@
     "build": "tsup",
     "dev": "tsup --watch"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "find-up": "^6.3.0"
+  }
 }
