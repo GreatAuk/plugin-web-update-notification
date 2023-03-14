@@ -8,6 +8,7 @@ export default defineConfig((options) => { // The options here is derived from C
       [INJECT_SCRIPT_FILE_NAME.replace('.global', '')]: 'src/injectScript.ts',
       pluginBuildScript: 'src/pluginBuildScript.ts',
     },
+    target: 'es6',
     splitting: false,
     sourcemap: true,
     clean: true,
