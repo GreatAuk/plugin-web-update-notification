@@ -335,7 +335,7 @@ interface Window {
 
    ```ts
    // src/shim.d.ts
-
+   
    /// <reference types="@plugin-web-update-notification/core" />
    ```
 
@@ -382,12 +382,13 @@ interface Window {
    ```
 
    > After version 1.2.0, in most case, you not need to set injectFileBase, it will be automatically detected from the base of vite config、publicPath of webpack config or publicPath of umi config
+
 3. Custom notification button event.
 
    ```ts
    // refresh button click event, if you set it, it will cover the default event (location.reload())
    window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
-
+   
    // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
    window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
    ```
@@ -419,8 +420,17 @@ interface Window {
    </div>
    ```
 
+5. manual check update.
 
+   ```ts
+   // vue-router check update before each route change
+   router.beforeEach((to, from, next) => {
+     window.pluginWebUpdateNotice_.checkUpdate()
+     next()
+   })
+   ```
 
+   
 ## License
 
 [MIT](./LICENSE)

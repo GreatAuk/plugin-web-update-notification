@@ -335,7 +335,7 @@ interface Window {
 
    ```ts
    // src/shim.d.ts
-
+   
    /// <reference types="@plugin-web-update-notification/core" />
    ```
 
@@ -345,11 +345,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const cdnServerUrl = 'https://foo.com/'
-
+   
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -365,11 +365,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const base = '/folder/' // https://example.com/folder/
-
+   
    export default defineConfig({
      base,
      plugins: [
@@ -388,7 +388,7 @@ interface Window {
    ```ts
    // refresh button click event, if you set it, it will cover the default event (location.reload())
    window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
-
+   
    // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
    window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
    ```
@@ -419,6 +419,18 @@ interface Window {
      </div>
    </div>
    ```
+
+5. 手动检测更新
+
+   ```ts
+   // vue-router check update before each route change
+   router.beforeEach((to, from, next) => {
+     window.pluginWebUpdateNotice_.checkUpdate()
+     next()
+   })
+   ```
+
+   
 
 ## 文章
 * https://juejin.cn/post/7209234917288886331
