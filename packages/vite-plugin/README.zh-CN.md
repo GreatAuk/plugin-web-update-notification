@@ -22,7 +22,7 @@
 
 检测网页更新并通知用户刷新，支持 vite、umijs 和 webpack 插件。
 
-> 以 git commit hash (也支持 package.json version、build timestamp、custom) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（浏览器窗口的 visibilitychange、focus 事件辅助），和本地作比较，如果不相同则通知用户刷新页面。
+> 以 git commit hash (也支持 svn revision number、package.json version、build timestamp、custom) 为版本号，打包时将版本号写入 json 文件。客户端轮询服务器上的版本号（浏览器窗口的 visibilitychange、focus 事件辅助），和本地作比较，如果不相同则通知用户刷新页面。
 
 <p align="center">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
@@ -190,16 +190,17 @@ module.exports = defineConfig({
 })
 ```
 
-## Options
+## webUpdateNotice Options
 
 ```ts
 function webUpdateNotice(options?: Options): Plugin
 
 export interface Options {
   /**
-   * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
-   *
-   * @default 'git_commit_hash'
+   * support 'git_commit_hash' | 'svn_revision_number' | 'pkg_version' | 'build_timestamp' | 'custom'
+   * * if repository type is 'Git', default is 'git_commit_hash'
+   * * if repository type is 'SVN', default is 'svn_revision_number'
+   * * if repository type is 'unknown', default is 'build_timestamp'
    * */
   versionType?: VersionType
   /**
@@ -288,6 +289,42 @@ export interface NotificationProps {
 export type LocaleData = Record<string, NotificationProps>
 ```
 
+## 曝露的方法
+
+| name                                            | params                              | describe                                                     |
+| ----------------------------------------------- | ----------------------------------- | ------------------------------------------------------------ |
+| window.pluginWebUpdateNotice_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                   |
+| window.pluginWebUpdateNotice_.closeNotification |                                     | close notification                                           |
+| window.pluginWebUpdateNotice_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
+| window.pluginWebUpdateNotice_.checkUpdate       |                                     | manual check update, a function wrap by debounce(5000ms)     |
+```ts
+interface Window {
+  pluginWebUpdateNotice_: {
+    /**
+     * set language.
+     * preset: zh_CN、zh_TW、en_US
+    */
+    setLocale: (locale: string) => void
+    /**
+     * manual check update, a function wrap by debounce(5000ms)
+     */
+    checkUpdate: () => void
+    /** dismiss current update and close notification, same behavior as dismiss the button */
+    dismissUpdate: () => void
+    /** close notification */
+    closeNotification: () => void
+    /**
+     * refresh button click event, if you set it, it will cover the default event (location.reload())
+     */
+    onClickRefresh?: (version: string) => void
+    /**
+     * dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
+     */
+    onClickDismiss?: (version: string) => void
+  }
+}
+```
+
 ## 变动了哪些内容
 
 ![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content.webp)
@@ -362,7 +399,7 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```html
    <!-- notification html content -->
-
+   
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">

@@ -2,7 +2,6 @@ const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification
 const { defineConfig } = require('@vue/cli-service')
 
 module.exports = defineConfig({
-  publicPath: '/test/',
   transpileDependencies: true,
   configureWebpack: {
     plugins: [

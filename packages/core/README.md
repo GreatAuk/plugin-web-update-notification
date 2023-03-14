@@ -22,7 +22,7 @@ English | [简体中文](./README.zh-CN.md)
 
 Detect webpage updates and notify user to reload. support vite, umijs and webpack.
 
-> Take the git commit hash (also support package.json version、build timestamp、custom) as the version number, and write version into json file. The client polls the version of the server (visibilitychange or focus event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page (you can custom behavior).
+> Take the git commit hash (also support svn revision number、package.json version、build timestamp、custom) as the version number, and write version into json file. The client polls the version of the server (visibilitychange or focus event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page (you can custom behavior).
 
 <p align="center">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
@@ -191,16 +191,17 @@ module.exports = defineConfig({
 })
 ```
 
-## Options
+## webUpdateNotice Options
 
 ```ts
 function webUpdateNotice(options?: Options): Plugin
 
 export interface Options {
   /**
-   * support 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
-   *
-   * @default 'git_commit_hash'
+   * support 'git_commit_hash' | 'svn_revision_number' | 'pkg_version' | 'build_timestamp' | 'custom'
+   * * if repository type is 'Git', default is 'git_commit_hash'
+   * * if repository type is 'SVN', default is 'svn_revision_number'
+   * * if repository type is 'unknown', default is 'build_timestamp'
    * */
   versionType?: VersionType
   /**
@@ -289,15 +290,40 @@ export interface NotificationProps {
 export type LocaleData = Record<string, NotificationProps>
 ```
 
-## Function
+## export Functions
 | name                                            | params                              | describe                                                     |
 | ----------------------------------------------- | ----------------------------------- | ------------------------------------------------------------ |
 | window.pluginWebUpdateNotice_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                   |
 | window.pluginWebUpdateNotice_.closeNotification |                                     | close notification                                           |
 | window.pluginWebUpdateNotice_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
-
-
-
+| window.pluginWebUpdateNotice_.checkUpdate       |                                     | manual check update, a function wrap by debounce(5000ms)     |
+```ts
+interface Window {
+  pluginWebUpdateNotice_: {
+    /**
+       * set language.
+       * preset: zh_CN、zh_TW、en_US
+      */
+    setLocale: (locale: string) => void
+    /**
+     * manual check update, a function wrap by debounce(5000ms)
+     */
+    checkUpdate: () => void
+    /** dismiss current update and close notification, same behavior as dismiss the button */
+    dismissUpdate: () => void
+    /** close notification */
+    closeNotification: () => void
+    /**
+     * refresh button click event, if you set it, it will cover the default event (location.reload())
+     */
+    onClickRefresh?: (version: string) => void
+    /**
+     * dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
+     */
+    onClickDismiss?: (version: string) => void
+  }
+}
+```
 
 ## What was changed
 
@@ -319,11 +345,11 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const cdnServerUrl = 'https://foo.com/'
-
+   
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -339,11 +365,11 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const base = '/folder/' // https://example.com/folder/
-
+   
    export default defineConfig({
      base,
      plugins: [
@@ -372,7 +398,7 @@ export type LocaleData = Record<string, NotificationProps>
 
    ```html
    <!-- notification html content -->
-
+   
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
