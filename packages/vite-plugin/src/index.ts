@@ -95,7 +95,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         name: undefined,
         source:
         `${readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
-        window.pluginWebUpdateNotice_.checkUpdate(${JSON.stringify(options)});`,
+        window.__checkUpdateSetup__(${JSON.stringify(options)});`,
         fileName: `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`,
       }
     },

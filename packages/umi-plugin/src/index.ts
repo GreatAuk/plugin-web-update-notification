@@ -18,7 +18,7 @@ const injectVersionTpl = (version: string) => {
 export function generateScriptContent(options: Options) {
   const filePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
   return `${readFileSync(filePath, 'utf8').toString()}
-  window.pluginWebUpdateNotice_.checkUpdate(${JSON.stringify(options)});`
+  window.__checkUpdateSetup__(${JSON.stringify(options)});`
 }
 
 export default (api: IApi) => {

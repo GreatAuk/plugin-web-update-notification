@@ -28,10 +28,29 @@ function limit(fn: Function, delay: number) {
 }
 
 /**
+ * querySelector takes a string and returns an element.
+ * @param {string} selector - string
+ * @returns The first element that matches the selector.
+ */
+function querySelector(selector: string) {
+  return document.querySelector(selector)
+}
+
+window.pluginWebUpdateNotice_ = {
+  checkUpdate: () => {},
+  dismissUpdate,
+  closeNotification,
+  setLocale: (locale: string) => {
+    window.pluginWebUpdateNotice_.locale = locale
+    currentLocale = locale
+  },
+}
+
+/**
  * It checks whether the system has been updated and if so, it shows a notification.
  * @param {Options} options - Options
  */
-function checkUpdate(options: Options) {
+function __checkUpdateSetup__(options: Options) {
   const { injectFileBase = '', checkInterval = 10 * 60 * 1000, hiddenDefaultNotification } = options
   const checkSystemUpdate = () => {
     window
@@ -78,6 +97,8 @@ function checkUpdate(options: Options) {
 
   const limitCheckSystemUpdate = limit(checkSystemUpdate, 5000)
 
+  window.pluginWebUpdateNotice_.checkUpdate = limitCheckSystemUpdate
+
   // when page visibility change, check system update
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
@@ -105,22 +126,14 @@ function checkUpdate(options: Options) {
   )
 }
 
-window.pluginWebUpdateNotice_ = {
-  checkUpdate,
-  dismissUpdate,
-  closeNotification,
-  setLocale: (locale: string) => {
-    window.pluginWebUpdateNotice_.locale = locale
-    currentLocale = locale
-  },
-}
+window.__checkUpdateSetup__ = __checkUpdateSetup__
 
 /**
  * close notification, remove the notification from the DOM
  */
 function closeNotification() {
   hasShowSystemUpdateNotice = false
-  document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME} .plugin-web-update-notice`)?.remove()
+  querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME} .plugin-web-update-notice`)?.remove()
 }
 
 /**
@@ -142,7 +155,7 @@ function dismissUpdate() {
  */
 function bindBtnEvent() {
   // bind refresh button click event, click to refresh page
-  const refreshBtn = document.querySelector(`.${NOTIFICATION_REFRESH_BTN_CLASS_NAME}`)
+  const refreshBtn = querySelector(`.${NOTIFICATION_REFRESH_BTN_CLASS_NAME}`)
   refreshBtn?.addEventListener('click', () => {
     const { onClickRefresh } = window.pluginWebUpdateNotice_
     if (onClickRefresh) {
@@ -153,7 +166,7 @@ function bindBtnEvent() {
   })
 
   // bind dismiss button click event, click to hide notification
-  const dismissBtn = document.querySelector(`.${NOTIFICATION_DISMISS_BTN_CLASS_NAME}`)
+  const dismissBtn = querySelector(`.${NOTIFICATION_DISMISS_BTN_CLASS_NAME}`)
   dismissBtn?.addEventListener('click', () => {
     const { onClickDismiss } = window.pluginWebUpdateNotice_
     if (onClickDismiss) {
@@ -237,5 +250,5 @@ function showNotification(options: Options) {
 
 // meaningless export, in order to let tsup bundle these functions
 export {
-  checkUpdate,
+  __checkUpdateSetup__,
 }

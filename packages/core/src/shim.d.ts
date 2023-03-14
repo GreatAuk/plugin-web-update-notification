@@ -4,11 +4,21 @@ declare global {
   interface Window {
     /** version number */
     pluginWebUpdateNotice_version: string
+    /**
+     * don't call this function in manual。
+     */
+    __checkUpdateSetup__: (options: Options) => void
     pluginWebUpdateNotice_: {
       locale?: string;
-      /** set language */
+      /**
+       * set language.
+       * preset: zh_CN、zh_TW、en_US
+      */
       setLocale: (locale: string) => void
-      checkUpdate: (options: Options) => void
+      /**
+       * manual check update, a function wrap by debounce(5000ms)
+       */
+      checkUpdate: () => void
       /** dismiss current update and close notification, same behavior as dismiss the button */
       dismissUpdate: () => void
       /** close notification */

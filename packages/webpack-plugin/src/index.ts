@@ -50,7 +50,7 @@ function injectPluginHtml(html: string, version: string, options: Options) {
 export function generateScriptContent(options: Options) {
   const filePath = resolve(`${get__Dirname()}/${INJECT_SCRIPT_FILE_NAME}.js`)
   return `${readFileSync(filePath, 'utf8').toString()}
-  window.pluginWebUpdateNotice_.checkUpdate(${JSON.stringify(options)});`
+  window.__checkUpdateSetup__(${JSON.stringify(options)});`
 }
 
 class WebUpdateNotificationPlugin {
