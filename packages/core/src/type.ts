@@ -37,7 +37,8 @@ export interface Options {
   /**
    * Whether to hide the default notification, if you set it to true, you need to custom behavior by yourself
    * ```ts
-    document.body.addEventListener('plugin_web_update_notice', ({ options, version }) => {
+    document.body.addEventListener('plugin_web_update_notice', (e) => {
+      const { version, options } = e.detail
       // write some code, show your custom notification and etc.
       alert('System update!')
     })

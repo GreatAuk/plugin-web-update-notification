@@ -151,6 +151,8 @@ document.body.addEventListener('plugin_web_update_notice', ({ options, version }
 
 ### Umijs
 
+不支持 `umi2`, `umi2` 可以尝试下通过 `chainWebpack` 配置 `webpack` 插件。
+
 ```ts
 // .umirc.ts
 import { defineConfig } from 'umi'
@@ -234,7 +236,8 @@ export interface Options {
   /**
    * Whether to hide the default notification, if you set it to true, you need to custom behavior by yourself
    * ```ts
-    document.body.addEventListener('plugin_web_update_notice', ({ options, version }) => {
+    document.body.addEventListener('plugin_web_update_notice', (e) => {
+      const { version, options } = e.detail
       // write some code, show your custom notification and etc.
       alert('System update!')
     })
@@ -331,12 +334,19 @@ interface Window {
 
 ## Q&A
 
-1. `TypeScript` 的智能提示, 如果你想使用 `window.pluginWebUpdateNotice_.`。
+1. `TypeScript` 的智能提示, 如果你想使用 `window.pluginWebUpdateNotice_.` 或监听自定义更新事件。
 
    ```ts
    // src/shim.d.ts
    
-   /// <reference types="@plugin-web-update-notification/core" />
+   // if you use vite plugin
+   /// <reference types="@plugin-web-update-notification/vite" />
+   
+   // if you use umi plugin
+   /// <reference types="@plugin-web-update-notification/umijs" />
+   
+   // if you use webpack plugin
+   /// <reference types="@plugin-web-update-notification/webpack" />
    ```
 
 2. 请求 `version.json` 文件提示 `404 error`。
@@ -345,11 +355,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const cdnServerUrl = 'https://foo.com/'
-   
+
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -365,11 +375,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const base = '/folder/' // https://example.com/folder/
-   
+
    export default defineConfig({
      base,
      plugins: [
@@ -388,7 +398,7 @@ interface Window {
    ```ts
    // refresh button click event, if you set it, it will cover the default event (location.reload())
    window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
-   
+
    // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
    window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
    ```
@@ -399,7 +409,7 @@ interface Window {
 
    ```html
    <!-- notification html content -->
-   
+
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
@@ -430,7 +440,7 @@ interface Window {
    })
    ```
 
-   
+
 
 ## 文章
 * https://juejin.cn/post/7209234917288886331
