@@ -96,17 +96,18 @@ export default (api: IApi) => {
   })
 
   api.onBuildComplete(() => {
-    mkdirSync(`dist/${DIRECTORY_NAME}`)
+    const outputPath = resolve(api.userConfig.outputPath || 'dist')
+    mkdirSync(`${outputPath}/${DIRECTORY_NAME}`)
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
     const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
-    copyFileSync(cssFilePath, `dist/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`)
+    copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`)
 
     // write js file to dist/
-    writeFileSync(`dist/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions))
+    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions))
 
     // write version json file to dist/
-    writeFileSync(`dist/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version))
+    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version))
   })
 
   api.modifyHTML(($) => {

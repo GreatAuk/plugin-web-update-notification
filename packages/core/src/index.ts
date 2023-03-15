@@ -22,9 +22,8 @@ export function get__Dirname() {
 }
 
 /**
- * It checks if a path is a Git or SVN repository
- * @param {string} path - The path to the repository.
- * @returns A string that is either 'Git', 'SVN', or undefined.
+ * It checks if the current directory is a Git or SVN repository, and returns the type of repository
+ * @returns 'Git' | 'SVN' | 'unknown'
  */
 function checkRepoType() {
   const gitRepo = findUpSync('.git', { type: 'directory' })
