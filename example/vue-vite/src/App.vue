@@ -5,6 +5,10 @@ import HelloWorld from "@/components/HelloWorld.vue";
 const handleCheck = () => {
   window.pluginWebUpdateNotice_.checkUpdate();
 };
+// type a = GlobalEventHandlersEventMap
+window.addEventListener("plugin_web_update_notice", (e) => {
+  console.log("[12]-main.ts", e.detail);
+});
 </script>
 
 <template>

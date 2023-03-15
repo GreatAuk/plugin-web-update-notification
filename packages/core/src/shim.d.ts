@@ -33,4 +33,7 @@ declare global {
       onClickDismiss?: (version: string) => void
     }
   }
+  interface GlobalEventHandlersEventMap {
+    plugin_web_update_notice: CustomEvent<{ version: string; options: Options }>;
+  }
 }

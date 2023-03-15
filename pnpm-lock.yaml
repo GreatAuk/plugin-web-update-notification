@@ -116,7 +116,6 @@ importers:
   example/vue-vite:
     specifiers:
       '@playwright/test': ^1.28.1
-      '@plugin-web-update-notification/core': workspace:*
       '@plugin-web-update-notification/vite': workspace:*
       '@rushstack/eslint-patch': ^1.1.0
       '@types/jsdom': ^16.2.14
@@ -142,7 +141,6 @@ importers:
       vue-router: 4.0.16_vue@3.2.37
     devDependencies:
       '@playwright/test': 1.28.1
-      '@plugin-web-update-notification/core': link:../../packages/core
       '@plugin-web-update-notification/vite': link:../../packages/vite-plugin
       '@rushstack/eslint-patch': 1.1.3
       '@types/jsdom': 16.2.14

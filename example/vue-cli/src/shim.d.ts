@@ -1,0 +1,1 @@
+/// <reference types="@plugin-web-update-notification/webpack" />
