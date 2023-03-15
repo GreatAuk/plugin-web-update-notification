@@ -74,6 +74,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
 
       // inject version json file
       bundle[JSON_FILE_NAME] = {
+        // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
         isAsset: true,
         type: 'asset',
         name: undefined,
@@ -82,6 +83,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       }
       // inject css file
       bundle[INJECT_STYLE_FILE_NAME] = {
+        // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
         isAsset: true,
         type: 'asset',
         name: undefined,
@@ -90,6 +92,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       }
       // inject js file
       bundle[INJECT_SCRIPT_FILE_NAME] = {
+        // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
         isAsset: true,
         type: 'asset',
         name: undefined,
