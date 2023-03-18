@@ -35,7 +35,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "esno src/index.ts",
+    "start": "tsx src/index.ts",
     "dev": "tsup --watch",
     "build": "tsup"
   },
