@@ -28,6 +28,15 @@ function limit(fn: Function, delay: number) {
 }
 
 /**
+ * It reloads the current page without using the browser cache
+ */
+function reloadPageWithoutCache() {
+  const url = new URL(window.location.href)
+  url.searchParams.set('__time__', Date.now().toString())
+  window.location.href = url.href
+}
+
+/**
  * querySelector takes a string and returns an element.
  * @param {string} selector - string
  * @returns The first element that matches the selector.
@@ -177,7 +186,7 @@ function bindBtnEvent() {
       onClickRefresh(latestVersion)
       return
     }
-    window.location.reload()
+    reloadPageWithoutCache()
   })
 
   // bind dismiss button click event, click to hide notification
