@@ -15,6 +15,6 @@ export default defineConfig((options) => { // The options here is derived from C
     dts: true,
     format: ['esm', 'cjs', 'iife'],
     minify: !options.watch,
-    onSuccess: 'cp -a public/. dist',
+    onSuccess: 'cp -a public/. dist & tsx ./src/buildScript.ts',
   }
 })

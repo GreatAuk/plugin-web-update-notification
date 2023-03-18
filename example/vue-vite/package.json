@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
+    "@plugin-web-update-notification/core": "workspace:*",
     "@plugin-web-update-notification/vite": "workspace:*",
     "@rushstack/eslint-patch": "^1.1.0",
     "@types/jsdom": "^16.2.14",
