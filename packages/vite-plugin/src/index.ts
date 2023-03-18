@@ -51,7 +51,7 @@ function injectPluginHtml(html: string, version: string, options: Options) {
 export function webUpdateNotice(options: Options = {}): Plugin {
   let viteConfig: ResolvedConfig
 
-  const { versionType, customVersion } = options
+  const { versionType, customVersion, silence } = options
   let version = ''
   if (versionType === 'custom')
     version = getVersion(versionType, customVersion!)
@@ -78,7 +78,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         isAsset: true,
         type: 'asset',
         name: undefined,
-        source: generateJSONFileContent(version),
+        source: generateJSONFileContent(version, silence),
         fileName: `${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`,
       }
       // inject css file

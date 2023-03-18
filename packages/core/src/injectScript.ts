@@ -1,4 +1,4 @@
-import type { LocaleData, Options } from './type'
+import type { LocaleData, Options, VersionJSON } from './type'
 import { CUSTOM_UPDATE_EVENT_NAME, DIRECTORY_NAME, JSON_FILE_NAME, LOCAL_STORAGE_PREFIX, NOTIFICATION_ANCHOR_CLASS_NAME, NOTIFICATION_DISMISS_BTN_CLASS_NAME, NOTIFICATION_POSITION_MAP, NOTIFICATION_REFRESH_BTN_CLASS_NAME } from './constant'
 import presetLocaleData from './locale'
 
@@ -68,7 +68,9 @@ function __checkUpdateSetup__(options: Options) {
 
         return response.json()
       })
-      .then(({ version: versionFromServer }: { version: string }) => {
+      .then(({ version: versionFromServer, silence }: VersionJSON) => {
+        if (silence)
+          return
         latestVersion = versionFromServer
         if (window.pluginWebUpdateNotice_version !== versionFromServer) {
           // dispatch custom event

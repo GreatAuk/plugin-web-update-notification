@@ -55,7 +55,7 @@ export default (api: IApi) => {
   if (webUpdateNotificationOptions.injectFileBase === undefined)
     webUpdateNotificationOptions.injectFileBase = api.userConfig.publicPath || '/'
 
-  const { versionType, logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '', customVersion } = webUpdateNotificationOptions
+  const { versionType, logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '', customVersion, silence } = webUpdateNotificationOptions
 
   let version = ''
   if (versionType === 'custom')
@@ -107,7 +107,7 @@ export default (api: IApi) => {
     writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions))
 
     // write version json file to dist/
-    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version))
+    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version, silence))
   })
 
   api.modifyHTML(($) => {

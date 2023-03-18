@@ -6,7 +6,7 @@ import { findUpSync } from 'find-up'
 import './shim.d.ts'
 
 import { name as pkgName_ } from '../package.json'
-import type { VersionType } from './type'
+import type { VersionJSON, VersionType } from './type'
 export * from './constant'
 export type { Options } from './type'
 export const pkgName = pkgName_
@@ -159,9 +159,12 @@ export function getVersion(versionType?: VersionType, customVersion?: string) {
  * @param {string} version - git commit hash or packaging time
  * @returns A string
  */
-export function generateJSONFileContent(version: string) {
-  return `
-{
-  "version": "${version}"
-}`.replace('\n', '')
+export function generateJSONFileContent(version: string, silence = false) {
+  const content: VersionJSON = {
+    version,
+  }
+  if (silence)
+    content.silence = true
+
+  return JSON.stringify(content, null, 2)
 }
