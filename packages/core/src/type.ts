@@ -25,6 +25,11 @@ export interface Options {
    * @default true
    */
   checkImmediately?: boolean
+  /**
+   * check update when load js file error
+   * @default true
+   */
+  checkOnLoadFileError?: boolean
   /** whether to output version in console */
   logVersion?: boolean
   /**

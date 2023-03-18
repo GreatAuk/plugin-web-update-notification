@@ -57,6 +57,7 @@ function __checkUpdateSetup__(options: Options) {
     hiddenDefaultNotification,
     checkOnWindowFocus = true,
     checkImmediately = true,
+    checkOnLoadFileError = true,
   } = options
   const checkSystemUpdate = () => {
     window
@@ -124,16 +125,18 @@ function __checkUpdateSetup__(options: Options) {
       limitCheckSystemUpdate()
   })
 
-  // listener script resource loading error
-  window.addEventListener(
-    'error',
-    (err) => {
-      const errTagName = (err?.target as any)?.tagName
-      if (errTagName === 'SCRIPT')
-        checkSystemUpdate()
-    },
-    true,
-  )
+  if (checkOnLoadFileError) {
+    // listener script resource loading error
+    window.addEventListener(
+      'error',
+      (err) => {
+        const errTagName = (err?.target as any)?.tagName
+        if (errTagName === 'SCRIPT')
+          checkSystemUpdate()
+      },
+      true,
+    )
+  }
 }
 
 window.__checkUpdateSetup__ = __checkUpdateSetup__
