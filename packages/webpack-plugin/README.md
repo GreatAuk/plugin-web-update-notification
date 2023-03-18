@@ -213,8 +213,28 @@ export interface Options {
    * @default 10 * 60 * 1000
    */
   checkInterval?: number
+  /**
+   * check update when window focus
+   * @default true
+   */
+  checkOnWindowFocus?: boolean
+  /**
+   * check update immediately after page loaded
+   * @default true
+   */
+  checkImmediately?: boolean
+  /**
+   * check update when load js file error
+   * @default true
+   */
+  checkOnLoadFileError?: boolean
   /** whether to output version in console */
   logVersion?: boolean
+  /**
+   * whether to silence the notification.
+   * such as when local version is v1.0, you can set this option to true and build a new version v1.0.1, then the notification will not show
+   */
+  silence?: boolean
   /**
    * @deprecated
    */
@@ -336,13 +356,13 @@ interface Window {
 
    ```ts
    // src/shim.d.ts
-
+   
    // if you use vite plugin
    /// <reference types="@plugin-web-update-notification/vite" />
-
+   
    // if you use umi plugin
    /// <reference types="@plugin-web-update-notification/umijs" />
-
+   
    // if you use webpack plugin
    /// <reference types="@plugin-web-update-notification/webpack" />
    ```
@@ -353,11 +373,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const cdnServerUrl = 'https://foo.com/'
-
+   
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -373,11 +393,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-
+   
    const prod = process.env.NODE_ENV === 'production'
-
+   
    const base = '/folder/' // https://example.com/folder/
-
+   
    export default defineConfig({
      base,
      plugins: [
@@ -396,7 +416,7 @@ interface Window {
    ```ts
    // refresh button click event, if you set it, it will cover the default event (location.reload())
    window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
-
+   
    // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
    window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
    ```
@@ -407,7 +427,7 @@ interface Window {
 
    ```html
    <!-- notification html content -->
-
+   
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
@@ -437,6 +457,17 @@ interface Window {
      next()
    })
    ```
+
+6. Some versions do not notify. For example, if the customer version is `v1.0`, you need to update to `v1.0.1`, but do not want to display the update prompt.
+
+   ```ts
+   webUpdateNotice({
+     ...
+     silence: true
+   })
+   ```
+   
+7. 
 
 
 ## License

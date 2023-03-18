@@ -214,8 +214,28 @@ export interface Options {
    * @default 10 * 60 * 1000
    */
   checkInterval?: number
+  /**
+   * check update when window focus
+   * @default true
+   */
+  checkOnWindowFocus?: boolean
+  /**
+   * check update immediately after page loaded
+   * @default true
+   */
+  checkImmediately?: boolean
+  /**
+   * check update when load js file error
+   * @default true
+   */
+  checkOnLoadFileError?: boolean
   /** whether to output version in console */
   logVersion?: boolean
+  /**
+   * whether to silence the notification.
+   * such as when local version is v1.0, you can set this option to true and build a new version v1.0.1, then the notification will not show
+   */
+  silence?: boolean
   /**
    * @deprecated
    */
@@ -338,13 +358,13 @@ interface Window {
 
    ```ts
    // src/shim.d.ts
-   
+
    // if you use vite plugin
    /// <reference types="@plugin-web-update-notification/vite" />
-   
+
    // if you use umi plugin
    /// <reference types="@plugin-web-update-notification/umijs" />
-   
+
    // if you use webpack plugin
    /// <reference types="@plugin-web-update-notification/webpack" />
    ```
@@ -440,7 +460,16 @@ interface Window {
    })
    ```
 
+6. 部分版本不通知。如客户版本是 `v1.0`, 你需要更新 `v1.0.1`, 但不想显示更新提示。
 
+   ```ts
+   webUpdateNotice({
+     ...
+     silence: true
+   })
+   ```
+   
+   
 
 ## 文章
 * https://juejin.cn/post/7209234917288886331
