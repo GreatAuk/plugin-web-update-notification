@@ -15,12 +15,17 @@ export interface Options {
    * @default 10 * 60 * 1000
    */
   checkInterval?: number
-  /** whether to output version in console */
   /**
    * check update when window focus
    * @default true
    */
   checkOnWindowFocus?: boolean
+  /**
+   * check update immediately after page loaded
+   * @default true
+   */
+  checkImmediately?: boolean
+  /** whether to output version in console */
   logVersion?: boolean
   /**
    * @deprecated

@@ -51,7 +51,13 @@ window.pluginWebUpdateNotice_ = {
  * @param {Options} options - Options
  */
 function __checkUpdateSetup__(options: Options) {
-  const { injectFileBase = '', checkInterval = 10 * 60 * 1000, hiddenDefaultNotification, checkOnWindowFocus = true } = options
+  const {
+    injectFileBase = '',
+    checkInterval = 10 * 60 * 1000,
+    hiddenDefaultNotification,
+    checkOnWindowFocus = true,
+    checkImmediately = true,
+  } = options
   const checkSystemUpdate = () => {
     window
       .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${performance.now()}`)
@@ -83,8 +89,10 @@ function __checkUpdateSetup__(options: Options) {
       })
   }
 
-  // check system update after page loaded
-  setTimeout(checkSystemUpdate)
+  if (checkImmediately) {
+    // check system update after page loaded
+    setTimeout(checkSystemUpdate)
+  }
 
   /**
    * polling check system update
