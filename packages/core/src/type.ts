@@ -16,6 +16,11 @@ export interface Options {
    */
   checkInterval?: number
   /** whether to output version in console */
+  /**
+   * check update when window focus
+   * @default true
+   */
+  checkOnWindowFocus?: boolean
   logVersion?: boolean
   /**
    * @deprecated

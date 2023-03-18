@@ -51,7 +51,7 @@ window.pluginWebUpdateNotice_ = {
  * @param {Options} options - Options
  */
 function __checkUpdateSetup__(options: Options) {
-  const { injectFileBase = '', checkInterval = 10 * 60 * 1000, hiddenDefaultNotification } = options
+  const { injectFileBase = '', checkInterval = 10 * 60 * 1000, hiddenDefaultNotification, checkOnWindowFocus = true } = options
   const checkSystemUpdate = () => {
     window
       .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${performance.now()}`)
@@ -103,7 +103,8 @@ function __checkUpdateSetup__(options: Options) {
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       pollingCheck()
-      limitCheckSystemUpdate()
+      if (checkOnWindowFocus)
+        limitCheckSystemUpdate()
     }
     if (document.visibilityState === 'hidden')
       intervalTimer && clearInterval(intervalTimer)
@@ -111,7 +112,8 @@ function __checkUpdateSetup__(options: Options) {
 
   // when page focus, check system update
   window.addEventListener('focus', () => {
-    limitCheckSystemUpdate()
+    if (checkOnWindowFocus)
+      limitCheckSystemUpdate()
   })
 
   // listener script resource loading error
