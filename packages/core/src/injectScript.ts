@@ -33,7 +33,7 @@ function limit(fn: Function, delay: number) {
 function reloadPageWithoutCache() {
   const url = new URL(window.location.href)
   url.searchParams.set('__time__', Date.now().toString())
-  window.location.href = url.href
+  window.location.replace(url.href)
 }
 
 /**
