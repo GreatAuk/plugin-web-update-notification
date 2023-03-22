@@ -129,8 +129,8 @@ export default defineConfig({
 window.pluginWebUpdateNotice_.setLocale('zh_CN')
 ```
 
+**取消默认的通知栏，监听更新事件自定义行为**
 ```ts
-// 取消默认的通知栏，监听更新事件自定义行为
 // vite.config.ts
 export default defineConfig({
   plugins: [
@@ -142,8 +142,8 @@ export default defineConfig({
 })
 
 // 在其他文件中监听自定义更新事件
-document.body.addEventListener('plugin_web_update_notice', ({ options, version }) => {
-  console.log(options)
+document.body.addEventListener('plugin_web_update_notice', (e) => {
+  const { version, options } = e.detail
   // write some code, show your custom notification and etc.
   alert('System update!')
 })
@@ -468,8 +468,8 @@ interface Window {
      silence: true
    })
    ```
-   
-   
+
+
 
 ## 文章
 * https://juejin.cn/post/7209234917288886331
