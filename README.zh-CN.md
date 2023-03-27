@@ -334,6 +334,10 @@ interface Window {
     checkUpdate: () => void
     /** dismiss current update and close notification, same behavior as dismiss the button */
     dismissUpdate: () => void
+    /**
+     * refresh current page, ignore the browser cache and cdn cache
+     */
+    refreshPage: () => void
     /** close notification */
     closeNotification: () => void
     /**

@@ -19,6 +19,10 @@ declare global {
        * manual check update, a function wrap by debounce(5000ms)
        */
       checkUpdate: () => void
+      /**
+       * refresh current page, ignore the browser cache and cdn cache
+       */
+      refreshPage: () => void
       /** dismiss current update and close notification, same behavior as dismiss the button */
       dismissUpdate: () => void
       /** close notification */

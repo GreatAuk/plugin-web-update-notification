@@ -48,6 +48,7 @@ function querySelector(selector: string) {
 window.pluginWebUpdateNotice_ = {
   checkUpdate: () => {},
   dismissUpdate,
+  refreshPage: reloadPageWithoutCache,
   closeNotification,
   setLocale: (locale: string) => {
     window.pluginWebUpdateNotice_.locale = locale
