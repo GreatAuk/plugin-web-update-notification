@@ -335,10 +335,6 @@ interface Window {
     /** close notification */
     closeNotification: () => void
     /**
-     * refresh current page, ignore the browser cache and cdn cache
-     */
-    refreshPage: () => void
-    /**
      * refresh button click event, if you set it, it will cover the default event (location.reload())
      */
     onClickRefresh?: (version: string) => void
@@ -470,9 +466,6 @@ interface Window {
      silence: true
    })
    ```
-
-7.
-
 
 ## License
 
