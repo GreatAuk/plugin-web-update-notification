@@ -30,11 +30,11 @@ function limit(fn: Function, delay: number) {
 /**
  * It reloads the current page without using the browser cache
  */
-function reloadPageWithoutCache() {
-  const url = new URL(window.location.href)
-  url.searchParams.set('__time__', Date.now().toString())
-  window.location.replace(url.href)
-}
+// function reloadPageWithoutCache() {
+//   const url = new URL(window.location.href)
+//   url.searchParams.set('__time__', Date.now().toString())
+//   window.location.replace(url.href)
+// }
 
 /**
  * querySelector takes a string and returns an element.
@@ -186,7 +186,7 @@ function bindBtnEvent() {
       onClickRefresh(latestVersion)
       return
     }
-    reloadPageWithoutCache()
+    window.location.reload()
   })
 
   // bind dismiss button click event, click to hide notification
