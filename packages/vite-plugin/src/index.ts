@@ -33,7 +33,7 @@ function injectPluginHtml(html: string, version: string, options: Options) {
     '<head>',
     `<head>
     ${cssLinkHtml}
-    <script defer src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"></script>
+    <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"></script>
     ${logHtml}
     ${versionScript}`,
   )
