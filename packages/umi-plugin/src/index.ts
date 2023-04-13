@@ -28,10 +28,14 @@ export default (api: IApi) => {
       schema(Joi) {
         return Joi.object({
           versionType: Joi.string(),
+          customVersion: Joi.string(),
           /** polling interval（ms）, default 10*60*1000 */
           checkInterval: Joi.number(),
           /** whether to output version in console */
           logVersion: Joi.boolean(),
+          checkOnWindowFocus: Joi.boolean(),
+          checkImmediately: Joi.boolean(),
+          checkOnLoadFileError: Joi.boolean(),
           injectFileBase: Joi.string(),
           customNotificationHTML: Joi.string(),
           notificationProps: {
@@ -40,6 +44,12 @@ export default (api: IApi) => {
             buttonText: Joi.string(),
             dismissButtonText: Joi.string(),
           },
+          notificationConfig: {
+            primaryColor: Joi.string(),
+            secondaryColor: Joi.string(),
+            placement: Joi.string(),
+          },
+          silence: Joi.boolean(),
           locale: Joi.string(),
           localeData: Joi.object(),
           hiddenDefaultNotification: Joi.boolean(),
