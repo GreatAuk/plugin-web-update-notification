@@ -33,7 +33,7 @@
   ],
   "scripts": {
     "start": "tsx src/index.ts",
-    "build": "tsup",
+    "build": "tsup && tsup --config tsup.config.injectFile.ts",
     "dev": "tsup --watch"
   },
   "devDependencies": {
