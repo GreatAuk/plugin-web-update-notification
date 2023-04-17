@@ -9,6 +9,7 @@ import {
   JSON_FILE_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
   generateJSONFileContent,
+  getFileHash,
   getVersion,
   get__Dirname,
 } from '@plugin-web-update-notification/core'
@@ -21,19 +22,24 @@ import {
  * @param {Options} options - Options
  * @returns The html of the page with the injected script and css.
  */
-function injectPluginHtml(html: string, version: string, options: Options) {
+function injectPluginHtml(
+  html: string,
+  version: string,
+  options: Options,
+  { cssFileHash, jsFileHash }: { jsFileHash: string; cssFileHash: string },
+) {
   const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
 
   const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
   const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css">`
+  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
 
   res = res.replace(
     '<head>',
     `<head>
     ${cssLinkHtml}
-    <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"></script>
+    <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>
     ${logHtml}
     ${versionScript}`,
   )
@@ -58,6 +64,18 @@ export function webUpdateNotice(options: Options = {}): Plugin {
   else
     version = getVersion(versionType!)
 
+  /** inject script file hash */
+  let jsFileHash = ''
+  /** inject css file hash */
+  let cssFileHash = ''
+
+  const cssFileSource = readFileSync(`${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString()
+  cssFileHash = getFileHash(cssFileSource)
+
+  const jsFileSource = `${readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
+  window.__checkUpdateSetup__(${JSON.stringify(options)});`
+  jsFileHash = getFileHash(jsFileSource)
+
   return {
     name: 'vue-vite-web-update-notice',
     apply: 'build',
@@ -81,32 +99,32 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         source: generateJSONFileContent(version, silence),
         fileName: `${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`,
       }
+
       // inject css file
       bundle[INJECT_STYLE_FILE_NAME] = {
         // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
         isAsset: true,
         type: 'asset',
         name: undefined,
-        source: readFileSync(`${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString(),
-        fileName: `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`,
+        source: cssFileSource,
+        fileName: `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
       }
+
       // inject js file
       bundle[INJECT_SCRIPT_FILE_NAME] = {
         // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
         isAsset: true,
         type: 'asset',
         name: undefined,
-        source:
-        `${readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
-        window.__checkUpdateSetup__(${JSON.stringify(options)});`,
-        fileName: `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`,
+        source: jsFileSource,
+        fileName: `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
       }
     },
     transformIndexHtml: {
-      enforce: 'post',
-      transform(html: string) {
-        if (version)
-          return injectPluginHtml(html, version, options)
+      order: 'post',
+      handler(html: string, { chunk }) {
+        if (version && chunk)
+          return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
         return html
       },
     },

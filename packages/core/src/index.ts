@@ -2,6 +2,7 @@ import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execSync } from 'node:child_process'
 import { findUpSync } from 'find-up'
+import md5 from 'md5'
 
 import './shim.d.ts'
 
@@ -19,6 +20,15 @@ export function get__Dirname() {
   if (import.meta?.url)
     return dirname(fileURLToPath(import.meta.url))
   return __dirname
+}
+
+/**
+ * The function returns the first 8 characters of the MD5 hash of a given string.
+ * @param {string} fileString - a string that represents the content of a file.
+ * @returns the first 8 characters of the MD5 hash of the file
+ */
+export function getFileHash(fileString: string) {
+  return md5(fileString).slice(0, 8)
 }
 
 /**

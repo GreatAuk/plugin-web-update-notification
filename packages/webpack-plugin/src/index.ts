@@ -2,7 +2,7 @@
 import { accessSync, constants, readFileSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 import type { Options } from '@plugin-web-update-notification/core'
-import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion, get__Dirname } from '@plugin-web-update-notification/core'
+import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getFileHash, getVersion, get__Dirname } from '@plugin-web-update-notification/core'
 import type { Compilation, Compiler } from 'webpack'
 
 const pluginName = 'WebUpdateNotificationPlugin'
@@ -20,19 +20,24 @@ type PluginOptions = Options & {
  * @param {Options} options - Options
  * @returns The html of the page with the injected script and css.
  */
-function injectPluginHtml(html: string, version: string, options: Options) {
+function injectPluginHtml(
+  html: string,
+  version: string,
+  options: Options,
+  { cssFileHash, jsFileHash }: { jsFileHash: string; cssFileHash: string },
+) {
   const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
 
   const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
   const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css">`
+  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
 
   res = res.replace(
     '<head>',
     `<head>
     ${cssLinkHtml}
-    <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js"></script>
+    <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>
     ${logHtml}
     ${versionScript}`,
   )
@@ -60,6 +65,11 @@ class WebUpdateNotificationPlugin {
   }
 
   apply(compiler: Compiler) {
+    /** inject script file hash */
+    let jsFileHash = ''
+    /** inject css file hash */
+    let cssFileHash = ''
+
     const { publicPath } = compiler.options.output
     if (this.options.injectFileBase === undefined)
       this.options.injectFileBase = typeof publicPath === 'string' ? publicPath : '/'
@@ -81,16 +91,20 @@ class WebUpdateNotificationPlugin {
       }
       if (!hiddenDefaultNotification) {
         const injectStyleContent = readFileSync(`${get__Dirname()}/${INJECT_STYLE_FILE_NAME}.css`, 'utf8')
+        cssFileHash = getFileHash(injectStyleContent)
+
         // @ts-expect-error
-        compilation.assets[`${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`] = {
+        compilation.assets[`${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`] = {
           source: () => injectStyleContent,
           size: () => injectStyleContent.length,
         }
       }
 
       const injectScriptContent = generateScriptContent(this.options)
+      jsFileHash = getFileHash(injectScriptContent)
+
       // @ts-expect-error
-      compilation.assets[`${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`] = {
+      compilation.assets[`${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`] = {
         source: () => injectScriptContent,
         size: () => injectScriptContent.length,
       }
@@ -102,7 +116,15 @@ class WebUpdateNotificationPlugin {
         accessSync(htmlFilePath, constants.F_OK)
 
         let html = readFileSync(htmlFilePath, 'utf8')
-        html = injectPluginHtml(html, version, this.options)
+        html = injectPluginHtml(
+          html,
+          version,
+          this.options,
+          {
+            jsFileHash,
+            cssFileHash,
+          },
+        )
         writeFileSync(htmlFilePath, html)
       }
       catch (error) {

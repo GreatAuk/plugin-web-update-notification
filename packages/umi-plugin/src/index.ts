@@ -2,7 +2,7 @@ import { resolve } from 'path'
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
 import type { Options } from '@plugin-web-update-notification/core'
-import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getVersion } from '@plugin-web-update-notification/core'
+import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getFileHash, getVersion } from '@plugin-web-update-notification/core'
 import { name as pkgName } from '../package.json'
 
 export type { Options } from '@plugin-web-update-notification/core'
@@ -61,6 +61,11 @@ export default (api: IApi) => {
       return api.env === 'production' && api?.userConfig.webUpdateNotification
     },
   })
+
+  /** inject script file hash */
+  let jsFileHash = ''
+  /** inject css file hash */
+  let cssFileHash = ''
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
   if (webUpdateNotificationOptions.injectFileBase === undefined)
     webUpdateNotificationOptions.injectFileBase = api.userConfig.publicPath || '/'
@@ -84,7 +89,7 @@ export default (api: IApi) => {
     return [
       {
         rel: 'stylesheet',
-        href: `${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`,
+        href: `${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
       },
     ]
   })
@@ -100,7 +105,7 @@ export default (api: IApi) => {
       content: injectVersionTpl(version),
     })
     scriptList.push({
-      src: `${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`,
+      src: `${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
     })
     return scriptList
   })
@@ -112,9 +117,11 @@ export default (api: IApi) => {
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
     const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
     copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`)
+    cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
 
     // write js file to dist/
     writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions))
+    jsFileHash = getFileHash(generateScriptContent(webUpdateNotificationOptions))
 
     // write version json file to dist/
     writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version, silence))
