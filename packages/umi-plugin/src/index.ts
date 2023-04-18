@@ -116,12 +116,13 @@ export default (api: IApi) => {
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
     const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
-    copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`)
     cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
+    copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`)
 
     // write js file to dist/
-    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions))
-    jsFileHash = getFileHash(generateScriptContent(webUpdateNotificationOptions))
+    const jsFileContent = generateScriptContent(webUpdateNotificationOptions)
+    jsFileHash = getFileHash(jsFileContent)
+    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`, generateScriptContent(webUpdateNotificationOptions))
 
     // write version json file to dist/
     writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version, silence))
