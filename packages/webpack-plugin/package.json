@@ -1,7 +1,7 @@
 {
   "name": "@plugin-web-update-notification/webpack",
   "type": "module",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "description": "Webpack plugin for detect web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
