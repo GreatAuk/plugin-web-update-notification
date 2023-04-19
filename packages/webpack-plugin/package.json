@@ -40,7 +40,7 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "webpack": "^5.0.0"
+    "webpack": "^4.0.0"
   },
   "dependencies": {
     "@plugin-web-update-notification/core": "workspace:*"
