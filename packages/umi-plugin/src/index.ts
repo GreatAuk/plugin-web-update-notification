@@ -111,8 +111,8 @@ export default (api: IApi) => {
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
     const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
-    copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.css`)
     cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
+    copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`)
 
     // write js file to dist/
     const filePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
