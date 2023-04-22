@@ -1,7 +1,7 @@
 {
   "name": "@plugin-web-update-notification/vite",
   "type": "module",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Vite plugin for detect web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
