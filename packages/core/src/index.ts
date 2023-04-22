@@ -180,7 +180,7 @@ export function generateJSONFileContent(version: string, silence = false) {
 }
 
 export function generateJsFileContent(fileSource: string, version: string, options: Options) {
-  const { logVersion } = options
+  const { logVersion = true } = options
   let content = `${fileSource}
   window.__checkUpdateSetup__(${JSON.stringify(options)});`
   if (logVersion) {
