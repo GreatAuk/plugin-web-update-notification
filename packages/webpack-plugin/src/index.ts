@@ -2,7 +2,18 @@
 import { accessSync, constants, readFileSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 import type { Options } from '@plugin-web-update-notification/core'
-import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getFileHash, getVersion, get__Dirname } from '@plugin-web-update-notification/core'
+import {
+  DIRECTORY_NAME,
+  INJECT_SCRIPT_FILE_NAME,
+  INJECT_STYLE_FILE_NAME,
+  JSON_FILE_NAME,
+  NOTIFICATION_ANCHOR_CLASS_NAME,
+  generateJSONFileContent,
+  generateJsFileContent,
+  getFileHash,
+  getVersion,
+  get__Dirname,
+} from '@plugin-web-update-notification/core'
 import type { Compilation, Compiler } from 'webpack'
 
 const pluginName = 'WebUpdateNotificationPlugin'
@@ -26,9 +37,8 @@ function injectPluginHtml(
   options: Options,
   { cssFileHash, jsFileHash }: { jsFileHash: string; cssFileHash: string },
 ) {
-  const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
+  const { customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
 
-  const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
   const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
   const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
@@ -38,7 +48,7 @@ function injectPluginHtml(
     `<head>
     ${cssLinkHtml}
     <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>
-    ${logHtml}
+
     ${versionScript}`,
   )
 
@@ -50,12 +60,6 @@ function injectPluginHtml(
   }
 
   return res
-}
-
-export function generateScriptContent(options: Options) {
-  const filePath = resolve(`${get__Dirname()}/${INJECT_SCRIPT_FILE_NAME}.js`)
-  return `${readFileSync(filePath, 'utf8').toString()}
-  window.__checkUpdateSetup__(${JSON.stringify(options)});`
 }
 
 class WebUpdateNotificationPlugin {
@@ -100,7 +104,12 @@ class WebUpdateNotificationPlugin {
         }
       }
 
-      const injectScriptContent = generateScriptContent(this.options)
+      const filePath = resolve(`${get__Dirname()}/${INJECT_SCRIPT_FILE_NAME}.js`)
+      const injectScriptContent = generateJsFileContent(
+        readFileSync(filePath, 'utf8').toString(),
+        version,
+        this.options,
+      )
       jsFileHash = getFileHash(injectScriptContent)
 
       // @ts-expect-error

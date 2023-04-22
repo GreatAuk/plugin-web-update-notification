@@ -229,7 +229,17 @@ export interface Options {
    * @default true
    */
   checkOnLoadFileError?: boolean
-  /** whether to output version in console */
+  /**
+   * whether to output version in console
+   *
+   * you can also pass a function to handle the version
+   * ```ts
+   * logVersion: (version) => {
+   *  console.log(`version: %c${version}`, 'color: #1890ff') // this is the default behavior
+   * }
+   * ```
+   * @default true
+   */
   logVersion?: boolean
   /**
    * whether to silence the notification.
@@ -468,7 +478,6 @@ interface Window {
      silence: true
    })
    ```
-
 
 
 ## 文章

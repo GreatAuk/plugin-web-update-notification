@@ -9,6 +9,7 @@ import {
   JSON_FILE_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
   generateJSONFileContent,
+  generateJsFileContent,
   getFileHash,
   getVersion,
   get__Dirname,
@@ -28,9 +29,8 @@ function injectPluginHtml(
   options: Options,
   { cssFileHash, jsFileHash }: { jsFileHash: string; cssFileHash: string },
 ) {
-  const { logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
+  const { customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
 
-  const logHtml = logVersion ? `<script>console.log('version: %c${version}', 'color: #1890ff');</script>` : ''
   const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
   const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
@@ -40,7 +40,6 @@ function injectPluginHtml(
     `<head>
     ${cssLinkHtml}
     <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>
-    ${logHtml}
     ${versionScript}`,
   )
 
@@ -72,8 +71,11 @@ export function webUpdateNotice(options: Options = {}): Plugin {
   const cssFileSource = readFileSync(`${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString()
   cssFileHash = getFileHash(cssFileSource)
 
-  const jsFileSource = `${readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString()}
-  window.__checkUpdateSetup__(${JSON.stringify(options)});`
+  const jsFileSource = generateJsFileContent(
+    readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString(),
+    version,
+    options,
+  )
   jsFileHash = getFileHash(jsFileSource)
 
   return {

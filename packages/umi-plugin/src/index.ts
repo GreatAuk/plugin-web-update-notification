@@ -2,23 +2,23 @@ import { resolve } from 'path'
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import type { IApi } from 'umi'
 import type { Options } from '@plugin-web-update-notification/core'
-import { DIRECTORY_NAME, INJECT_SCRIPT_FILE_NAME, INJECT_STYLE_FILE_NAME, JSON_FILE_NAME, NOTIFICATION_ANCHOR_CLASS_NAME, generateJSONFileContent, getFileHash, getVersion } from '@plugin-web-update-notification/core'
+import {
+  DIRECTORY_NAME,
+  INJECT_SCRIPT_FILE_NAME,
+  INJECT_STYLE_FILE_NAME,
+  JSON_FILE_NAME,
+  NOTIFICATION_ANCHOR_CLASS_NAME,
+  generateJSONFileContent,
+  generateJsFileContent,
+  getFileHash,
+  getVersion,
+} from '@plugin-web-update-notification/core'
 import { name as pkgName } from '../package.json'
 
 export type { Options } from '@plugin-web-update-notification/core'
 
-const logVersionTpl = (version: string) => {
-  return `console.log('version: %c${version}', 'color: #1890ff');`
-}
-
 const injectVersionTpl = (version: string) => {
   return `window.pluginWebUpdateNotice_version = '${version}';`
-}
-
-export function generateScriptContent(options: Options) {
-  const filePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
-  return `${readFileSync(filePath, 'utf8').toString()}
-  window.__checkUpdateSetup__(${JSON.stringify(options)});`
 }
 
 export default (api: IApi) => {
@@ -70,7 +70,7 @@ export default (api: IApi) => {
   if (webUpdateNotificationOptions.injectFileBase === undefined)
     webUpdateNotificationOptions.injectFileBase = api.userConfig.publicPath || '/'
 
-  const { versionType, logVersion, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '', customVersion, silence } = webUpdateNotificationOptions
+  const { versionType, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '', customVersion, silence } = webUpdateNotificationOptions
 
   let version = ''
   if (versionType === 'custom')
@@ -96,11 +96,6 @@ export default (api: IApi) => {
 
   api.addHTMLHeadScripts(() => {
     const scriptList = []
-    if (logVersion) {
-      scriptList.push({
-        content: logVersionTpl(version),
-      })
-    }
     scriptList.push({
       content: injectVersionTpl(version),
     })
@@ -120,8 +115,14 @@ export default (api: IApi) => {
     cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
 
     // write js file to dist/
-    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, generateScriptContent(webUpdateNotificationOptions))
-    jsFileHash = getFileHash(generateScriptContent(webUpdateNotificationOptions))
+    const filePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
+    const jsFileContent = generateJsFileContent(
+      readFileSync(filePath, 'utf8').toString(),
+      version,
+      webUpdateNotificationOptions,
+    )
+    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, jsFileContent)
+    jsFileHash = getFileHash(jsFileContent)
 
     // write version json file to dist/
     writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version, silence))

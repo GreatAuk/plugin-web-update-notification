@@ -7,7 +7,7 @@ import md5 from 'md5'
 import './shim.d.ts'
 
 import { name as pkgName_ } from '../package.json'
-import type { VersionJSON, VersionType } from './type'
+import type { Options, VersionJSON, VersionType } from './type'
 export * from './constant'
 export type { Options } from './type'
 export const pkgName = pkgName_
@@ -177,4 +177,23 @@ export function generateJSONFileContent(version: string, silence = false) {
     content.silence = true
 
   return JSON.stringify(content, null, 2)
+}
+
+export function generateJsFileContent(fileSource: string, version: string, options: Options) {
+  const { logVersion } = options
+  let content = `${fileSource}
+  window.__checkUpdateSetup__(${JSON.stringify(options)});`
+  if (logVersion) {
+    const fn = typeof logVersion === 'function' ? logVersion : logVersionDefault
+    content += `
+      ;const logFn = ${fn.toString()}
+      ;logFn('${version}')
+    `
+  }
+  return content
+}
+
+export function logVersionDefault(version: string) {
+  // eslint-disable-next-line no-console
+  console.log(`version: %c${version}`, 'color: #1890ff')
 }

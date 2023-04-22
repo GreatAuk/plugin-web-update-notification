@@ -30,8 +30,18 @@ export interface Options {
    * @default true
    */
   checkOnLoadFileError?: boolean
-  /** whether to output version in console */
-  logVersion?: boolean
+  /**
+   * whether to output version in console
+   *
+   * you can also pass a function to handle the version
+   * ```ts
+   * logVersion: (version) => {
+   *  console.log(`version: %c${version}`, 'color: #1890ff') // this is the default behavior
+   * }
+   * ```
+   * @default true
+   */
+  logVersion?: boolean | ((version: string) => void)
   /**
    * whether to silence the notification.
    * such as when local version is v1.0, you can set this option to true and build a new version v1.0.1, then the notification will not show

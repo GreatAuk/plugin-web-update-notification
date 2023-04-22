@@ -228,7 +228,17 @@ export interface Options {
    * @default true
    */
   checkOnLoadFileError?: boolean
-  /** whether to output version in console */
+  /**
+   * whether to output version in console
+   *
+   * you can also pass a function to handle the version
+   * ```ts
+   * logVersion: (version) => {
+   *  console.log(`version: %c${version}`, 'color: #1890ff') // this is the default behavior
+   * }
+   * ```
+   * @default true
+   */
   logVersion?: boolean
   /**
    * whether to silence the notification.
@@ -356,13 +366,13 @@ interface Window {
 
    ```ts
    // src/shim.d.ts
-   
+
    // if you use vite plugin
    /// <reference types="@plugin-web-update-notification/vite" />
-   
+
    // if you use umi plugin
    /// <reference types="@plugin-web-update-notification/umijs" />
-   
+
    // if you use webpack plugin
    /// <reference types="@plugin-web-update-notification/webpack" />
    ```
@@ -373,11 +383,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const cdnServerUrl = 'https://foo.com/'
-   
+
    export default defineConfig({
      base: prod ? cdnServerUrl : '/',
      plugins: [
@@ -393,11 +403,11 @@ interface Window {
 
    ```ts
    // vite.config.ts
-   
+
    const prod = process.env.NODE_ENV === 'production'
-   
+
    const base = '/folder/' // https://example.com/folder/
-   
+
    export default defineConfig({
      base,
      plugins: [
@@ -416,7 +426,7 @@ interface Window {
    ```ts
    // refresh button click event, if you set it, it will cover the default event (location.reload())
    window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
-   
+
    // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
    window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
    ```
@@ -427,7 +437,7 @@ interface Window {
 
    ```html
    <!-- notification html content -->
-   
+
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
@@ -466,9 +476,6 @@ interface Window {
      silence: true
    })
    ```
-   
-7. 
-
 
 ## License
 
