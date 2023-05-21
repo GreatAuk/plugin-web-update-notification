@@ -17,9 +17,15 @@ export const pkgName = pkgName_
  * @returns __dirname
  */
 export function get__Dirname() {
-  if (import.meta?.url)
-    return dirname(fileURLToPath(import.meta.url))
-  return __dirname
+  try {
+    if (import.meta && import.meta.url)
+      return dirname(fileURLToPath(import.meta.url))
+
+    return __dirname
+  }
+  catch (err) {
+    return __dirname
+  }
 }
 
 /**

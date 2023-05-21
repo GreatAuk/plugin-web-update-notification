@@ -62,10 +62,6 @@ export default (api: IApi) => {
     },
   })
 
-  /** inject script file hash */
-  let jsFileHash = ''
-  /** inject css file hash */
-  let cssFileHash = ''
   const webUpdateNotificationOptions = (api.userConfig?.webUpdateNotification || {}) as Options
   if (webUpdateNotificationOptions.injectFileBase === undefined)
     webUpdateNotificationOptions.injectFileBase = api.userConfig.publicPath || '/'
@@ -81,6 +77,19 @@ export default (api: IApi) => {
   // 插件只在生产环境时生效
   if (!version || api.env !== 'production')
     return
+
+  const jsFlePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
+  const jsFileContent = generateJsFileContent(
+    readFileSync(jsFlePath, 'utf8').toString(),
+    version,
+    webUpdateNotificationOptions,
+  )
+  /** inject script file hash */
+  const jsFileHash = getFileHash(jsFileContent)
+
+  const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
+  /** inject css file hash */
+  const cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
 
   api.addHTMLLinks(() => {
     if (customNotificationHTML || hiddenDefaultNotification)
@@ -110,19 +119,10 @@ export default (api: IApi) => {
     mkdirSync(`${outputPath}/${DIRECTORY_NAME}`)
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
-    const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
-    cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
     copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`)
 
     // write js file to dist/
-    const filePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
-    const jsFileContent = generateJsFileContent(
-      readFileSync(filePath, 'utf8').toString(),
-      version,
-      webUpdateNotificationOptions,
-    )
-    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.js`, jsFileContent)
-    jsFileHash = getFileHash(jsFileContent)
+    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`, jsFileContent)
 
     // write version json file to dist/
     writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version, silence))
