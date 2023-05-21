@@ -193,13 +193,16 @@ export function generateJsFileContent(fileSource: string, version: string, optio
     const fn = typeof logVersion === 'function' ? logVersion : logVersionDefault
     content += `
       ;const logFn = ${fn.toString()}
-      ;logFn('${version}')
+      ;logFn('${version}', ${Date.now()})
     `
   }
   return content
 }
 
-export function logVersionDefault(version: string) {
+export function logVersionDefault(version: string, releaseTime: number) {
   // eslint-disable-next-line no-console
-  console.log(`version: %c${version}`, 'color: #1890ff')
+  console.log(`version: %c${version}`, 'color: #1677ff')
+
+  // eslint-disable-next-line no-console
+  console.log(`release time: %c${new Date(releaseTime).toLocaleString()}`, 'color: #1677ff')
 }
