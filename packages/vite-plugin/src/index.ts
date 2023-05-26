@@ -71,12 +71,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
   const cssFileSource = readFileSync(`${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString()
   cssFileHash = getFileHash(cssFileSource)
 
-  const jsFileSource = generateJsFileContent(
-    readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString(),
-    version,
-    options,
-  )
-  jsFileHash = getFileHash(jsFileSource)
+  let jsFileSource = ''
 
   return {
     name: 'vue-vite-web-update-notice',
@@ -87,11 +82,17 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       viteConfig = resolvedConfig
       if (options.injectFileBase === undefined)
         options.injectFileBase = viteConfig.base
+
+      jsFileSource = generateJsFileContent(
+        readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString(),
+        version,
+        options,
+      )
+      jsFileHash = getFileHash(jsFileSource)
     },
     generateBundle(_, bundle = {}) {
       if (!version)
         return
-
       // inject version json file
       bundle[JSON_FILE_NAME] = {
         // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
