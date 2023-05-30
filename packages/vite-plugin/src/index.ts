@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import type { Plugin, ResolvedConfig } from 'vite'
 import type { Options } from '@plugin-web-update-notification/core'
+
 import {
   DIRECTORY_NAME,
   INJECT_SCRIPT_FILE_NAME,
@@ -14,6 +15,15 @@ import {
   getVersion,
   get__Dirname,
 } from '@plugin-web-update-notification/core'
+
+/**
+ * Get the version of the current Vite
+ *
+ * if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
+ */
+async function getViteVersion(): Promise<string | undefined> {
+  return await import('vite').then(({ version }) => version)
+}
 
 /**
  * It injects the hash into the HTML, and injects the notification anchor and the stylesheet and the
@@ -55,6 +65,7 @@ function injectPluginHtml(
 
 export function webUpdateNotice(options: Options = {}): Plugin {
   let viteConfig: ResolvedConfig
+  let viteVersion: string | undefined
 
   const { versionType, customVersion, silence } = options
   let version = ''
@@ -77,7 +88,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     name: 'vue-vite-web-update-notice',
     apply: 'build',
     enforce: 'post',
-    configResolved(resolvedConfig: ResolvedConfig) {
+    async configResolved(resolvedConfig: ResolvedConfig) {
       // 存储最终解析的配置
       viteConfig = resolvedConfig
       if (options.injectFileBase === undefined)
@@ -89,6 +100,8 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         options,
       )
       jsFileHash = getFileHash(jsFileSource)
+
+      viteVersion = await getViteVersion()
     },
     generateBundle(_, bundle = {}) {
       if (!version)
@@ -123,13 +136,25 @@ export function webUpdateNotice(options: Options = {}): Plugin {
         fileName: `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
       }
     },
-    transformIndexHtml: {
-      order: 'post',
-      handler(html: string, { chunk }) {
-        if (version && chunk)
-          return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
-        return html
-      },
-    },
+    transformIndexHtml:
+      // if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
+      viteVersion === undefined
+        ? {
+            enforce: 'post',
+            async transform(html: string) {
+              if (version)
+                return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
+
+              return html
+            },
+          }
+        : {
+            order: 'post',
+            handler(html: string, { chunk }) {
+              if (version && chunk)
+                return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
+              return html
+            },
+          },
   }
 }
