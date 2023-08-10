@@ -38,8 +38,7 @@
     "dist"
   ],
   "scripts": {
-    "build:core": "pnpm --filter=@plugin-web-update-notification/core build",
-    "build": "pnpm build:core && pnpm --filter=./packages/** --filter=!./packages/core build",
+    "build": "turbo run build --filter='./packages/*'",
     "dev:vite": "pnpm --filter=@plugin-web-update-notification/vite dev",
     "dev:umi": "pnpm --filter=@plugin-web-update-notification/core dev",
     "dev:webpack": "pnpm --filter=@plugin-web-update-notification/webpack dev",
@@ -70,6 +69,7 @@
     "rimraf": "^3.0.2",
     "tsup": "^6.6.3",
     "tsx": "^3.12.5",
+    "turbo": "^1.10.12",
     "typescript": "^4.9.5",
     "vite": "^4.1.4",
     "vitest": "^0.29.2"
