@@ -192,6 +192,23 @@ module.exports = defineConfig({
 })
 ```
 
+### 建议: 如果是 SPA 应用，禁用 `index.html` 的缓存
+
+```nginx
+# nginx.conf
+location / {
+  index index.html index.htm;
+
+  if ( $uri = '/index.html' ) { # disabled index.html cache
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+  }
+
+  try_files $uri $uri/ /index.html;
+}
+```
+
+
+
 ## webUpdateNotice Options
 
 ```ts

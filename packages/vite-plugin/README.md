@@ -191,6 +191,23 @@ module.exports = defineConfig({
 })
 ```
 
+### suggest: disabled index.html cache
+
+```nginx
+# nginx.conf
+location / {
+  index index.html index.htm;
+
+  if ( $uri = '/index.html' ) { # disabled index.html cache
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+  }
+
+  try_files $uri $uri/ /index.html;
+}
+```
+
+
+
 ## webUpdateNotice Options
 
 ```ts
