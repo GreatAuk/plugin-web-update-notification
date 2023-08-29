@@ -1,7 +1,7 @@
 {
   "name": "plugin-web-update-notification",
   "type": "module",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "packageManager": "pnpm@7.2.1",
   "description": "Detect web page updates and notify",
   "author": "Utopia",
