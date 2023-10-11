@@ -79,7 +79,7 @@ function __checkUpdateSetup__(options: Options) {
   } = options
   const checkSystemUpdate = () => {
     window
-      .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${performance.now()}`)
+      .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${Date.now()}`)
       .then((response) => {
         if (!response.ok)
           throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
