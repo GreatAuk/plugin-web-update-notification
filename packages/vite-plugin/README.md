@@ -59,6 +59,40 @@ pnpm add @plugin-web-update-notification/webpack -D
 
 [vite](#vite) | [umi](#umijs) | [webpack](#webpack)
 
+### Important: Disable `index.html` caching!
+
+If `index.html` is cached, the update notification may still appear after refreshing, so it is necessary to disable the caching of `index.html`. This is also a best practice for deploy SPA applications.
+
+To disable caching through `nginx`:
+
+```nginx
+# nginx.conf
+location / {
+  index index.html index.htm;
+
+  if ( $uri = '/index.html' ) { # disabled index.html cache
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+  }
+
+  try_files $uri $uri/ /index.html;
+}
+```
+
+Directly disable caching through `html meta` tags:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+</head>
+</html>
+```
+
 ### Vite
 
 **basic usage**

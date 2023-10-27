@@ -58,6 +58,40 @@ pnpm add @plugin-web-update-notification/webpack -D
 
 [vite](#vite) | [umi](#umijs) | [webpack](#webpack)
 
+### 关键：禁用 `index.html` 缓存！！！
+
+如果 `index.html` 存在缓存，可能刷新后，更新提示还会存在，所以需要禁用 `index.html` 的缓存。这也是 `SPA` 应用部署的一个最佳实践吧。
+
+通过 `nginx` ，禁用缓存：
+
+```nginx
+# nginx.conf
+location / {
+  index index.html index.htm;
+
+  if ( $uri = '/index.html' ) { # disabled index.html cache
+    add_header Cache-Control "no-cache, no-store, must-revalidate";
+  }
+
+  try_files $uri $uri/ /index.html;
+}
+```
+
+直接通过 `html meta` 标签禁用缓存：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+</head>
+</html>
+```
+
 ### Vite
 
 **基础使用**
@@ -191,23 +225,6 @@ module.exports = defineConfig({
   },
 })
 ```
-
-### 建议: 如果是 SPA 应用，禁用 `index.html` 的缓存
-
-```nginx
-# nginx.conf
-location / {
-  index index.html index.htm;
-
-  if ( $uri = '/index.html' ) { # disabled index.html cache
-    add_header Cache-Control "no-cache, no-store, must-revalidate";
-  }
-
-  try_files $uri $uri/ /index.html;
-}
-```
-
-
 
 ## webUpdateNotice Options
 
