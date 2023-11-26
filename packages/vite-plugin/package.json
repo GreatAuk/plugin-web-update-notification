@@ -40,10 +40,12 @@
     "build": "tsup"
   },
   "peerDependencies": {
-    "vite": ">4.0.0 || ^3.0.0 || ^2.0.0"
+    "vite": "^5.0.0 || >4.0.0 || ^3.0.0"
   },
   "dependencies": {
     "@plugin-web-update-notification/core": "workspace:*"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "vite": "^5.0.2"
+  }
 }

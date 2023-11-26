@@ -16,14 +16,14 @@ import {
   get__Dirname,
 } from '@plugin-web-update-notification/core'
 
-/**
- * Get the version of the current Vite
- *
- * if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
- */
-async function getViteVersion(): Promise<string | undefined> {
-  return await import('vite').then(({ version }) => version)
-}
+// /**
+//  * Get the version of the current Vite
+//  *
+//  * if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
+//  */
+// async function getViteVersion(): Promise<string | undefined> {
+//   return await import('vite').then(({ version }) => version)
+// }
 
 /**
  * It injects the hash into the HTML, and injects the notification anchor and the stylesheet and the
@@ -65,7 +65,7 @@ function injectPluginHtml(
 
 export function webUpdateNotice(options: Options = {}): Plugin {
   let viteConfig: ResolvedConfig
-  let viteVersion: string | undefined
+  // let viteVersion: string | undefined
 
   const { versionType, customVersion, silence } = options
   let version = ''
@@ -101,7 +101,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       )
       jsFileHash = getFileHash(jsFileSource)
 
-      viteVersion = await getViteVersion()
+      // viteVersion = await getViteVersion()
     },
     generateBundle(_, bundle = {}) {
       if (!version)
@@ -137,24 +137,24 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       }
     },
     transformIndexHtml:
-      // if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
-      viteVersion === undefined
-        ? {
-            enforce: 'post',
-            async transform(html: string) {
-              if (version)
-                return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
+    // if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
+    // viteVersion === undefined
+    //   ? {
+    //       enforce: 'post',
+    //       async transform(html: string) {
+    //         if (version)
+    //           return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
 
-              return html
-            },
-          }
-        : {
-            order: 'post',
-            handler(html: string, { chunk }) {
-              if (version && chunk)
-                return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
-              return html
-            },
+    //         return html
+    //       },
+    //     }
+        {
+          order: 'post',
+          handler(html: string, { chunk }) {
+            if (version && chunk)
+              return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
+            return html
           },
+        },
   }
 }
