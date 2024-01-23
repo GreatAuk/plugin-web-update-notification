@@ -34,6 +34,7 @@
     "prettier": "^2.5.1",
     "start-server-and-test": "^1.14.0",
     "typescript": "~4.7.2",
+    "vite": "3.2.8",
     "vitest": "^0.13.0",
     "vue-tsc": "^0.35.2"
   }
