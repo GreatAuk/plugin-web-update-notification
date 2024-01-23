@@ -140,18 +140,17 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     // if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
     // viteVersion === undefined
     //   ? {
-    //       enforce: 'post',
-    //       async transform(html: string) {
-    //         if (version)
-    //           return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
 
-    //         return html
-    //       },
-    //     }
         {
           order: 'post',
           handler(html: string, { chunk }) {
             if (version && chunk)
+              return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
+            return html
+          },
+          enforce: 'post', // deprecated since Vite 4
+          async transform(html: string) { // deprecated since Vite 4
+            if (version)
               return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
             return html
           },
