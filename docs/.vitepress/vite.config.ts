@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 
 import UnoCSS from 'unocss/vite'
 
-const require = createRequire(import.meta.url)
+// const require = createRequire(import.meta.url)
 
 export default defineConfig({
   server: {
@@ -26,27 +26,28 @@ export default defineConfig({
       '@plugin-web-update-notification/vite': resolve(__dirname, '../vite-plugin/src/index.ts'),
       '@plugin-web-update-notification/webpack': resolve(__dirname, '../webpack-plugin/src/index.ts'),
     },
+    preserveSymlinks: true,
   },
-  optimizeDeps: {
-    exclude: [
-      '@plugin-web-update-notification/core',
-    ],
-  },
+  // optimizeDeps: {
+  //   exclude: [
+  //     '@plugin-web-update-notification/core',
+  //   ],
+  // },
   build: {
     rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('@plugin-web-update-notification/'))
-            return 'plugin-web-update-notification'
-        },
-      },
+      // output: {
+      //   manualChunks: (id) => {
+      //     if (id.includes('@plugin-web-update-notification/'))
+      //       return 'plugin-web-update-notification'
+      //   },
+      // },
     },
   },
   css: {
     postcss: {
-      plugins: [
-        require('postcss-nested'),
-      ],
+      // plugins: [
+      //   require('postcss-nested'),
+      // ],
     },
   },
 })
