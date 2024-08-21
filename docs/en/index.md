@@ -19,7 +19,7 @@ hero:
       text: GitHub
       link: https://github.com/GreatAuk/plugin-web-update-notification
   image:
-    src: /notify.jpg
+    src: /notify-en.jpg
     alt: web-update-notification
 
 # features:

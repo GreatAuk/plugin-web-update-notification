@@ -11,4 +11,4 @@ node_modules
 temp
 example/react-umi
 *.local.json
-.vitepress/cache
+docs/.vitepress/cache/
