@@ -56,8 +56,8 @@
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:build": "vitepress build docs --base /plugin-web-update-notification/",
+    "docs:preview": "vitepress preview docs --base /plugin-web-update-notification/"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.31.0",
