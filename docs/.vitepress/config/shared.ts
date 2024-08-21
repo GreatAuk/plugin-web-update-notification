@@ -5,6 +5,10 @@ import viteConfig from '../vite.config'
 export const shared = defineConfig({
   title: 'WebUpdateNotice',
 
+  rewrites: {
+    'en/:rest*': ':rest*',
+  },
+
   lastUpdated: true,
   cleanUrls: true,
   metaChunk: true,
