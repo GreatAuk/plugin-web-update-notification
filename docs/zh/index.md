@@ -6,20 +6,20 @@ titleTemplate: Detect webpage updates and notify user to reload. support vite, u
 
 hero:
   name: Web Update Notification
-  text: Detect webpage updates and notify user to reload.
-  tagline: Easy to notify refresh, support vite, umijs and webpack
+  text: 检测网页更新并通知用户刷新。
+  tagline: 支持 vite、umijs 和 webpack 插件。
   actions:
     - theme: brand
-      text: What is Web Update Notification?
-      link: /guide/what-is-web-update-notification
+      text: 什么是 Web Update Notification?
+      link: /zh/guide/what-is-web-update-notification
     - theme: alt
-      text: Quickstart
-      link: /guide/getting-started
+      text: 快速开始
+      link: /zh/guide/getting-started
     - theme: alt
       text: GitHub
       link: https://github.com/GreatAuk/plugin-web-update-notification
   image:
-    src: /notify.jpg
+    src: /notify-zh.jpg
     alt: web-update-notification
 
 # features:

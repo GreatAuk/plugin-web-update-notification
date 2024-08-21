@@ -17,7 +17,7 @@ export const en = defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/vuejs/vitepress/edit/main/docs/:path',
+      pattern: 'https://github.com/GreatAuk/plugin-web-update-notification/edit/main/docs/:path',
       text: 'Edit this page on GitHub',
     },
 
@@ -40,19 +40,12 @@ function nav(): DefaultTheme.NavItem[] {
       link: '/reference/api',
       activeMatch: '/reference/',
     },
-    {
-      text: pkg.version,
-      items: [
-        {
-          text: 'Changelog',
-          link: 'https://github.com/vuejs/vitepress/blob/main/CHANGELOG.md',
-        },
-        {
-          text: 'Contributing',
-          link: 'https://github.com/vuejs/vitepress/blob/main/.github/contributing.md',
-        },
-      ],
-    },
+    // {
+    //   text: pkg.version,
+    //   items: [
+
+    //   ],
+    // },
   ]
 }
 

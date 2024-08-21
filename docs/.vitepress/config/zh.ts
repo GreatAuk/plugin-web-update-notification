@@ -12,12 +12,12 @@ export const zh = defineConfig({
     nav: nav(),
 
     sidebar: {
-      '/guide/': { base: '/guide/', items: sidebarGuide() },
-      '/reference/': { base: '/reference/', items: sidebarReference() },
+      '/zh/guide/': { base: '/zh/guide/', items: sidebarGuide() },
+      '/zh/reference/': { base: '/zh/reference/', items: sidebarReference() },
     },
 
     editLink: {
-      pattern: 'https://github.com/vuejs/vitepress/edit/main/docs/:path',
+      pattern: 'https://github.com/GreatAuk/plugin-web-update-notification/edit/main/docs/:path',
       text: '在 GitHub 上编辑此页面',
     },
 
@@ -32,27 +32,18 @@ function nav(): DefaultTheme.NavItem[] {
   return [
     {
       text: '指南',
-      link: '/guide/what-is-web-update-notification',
-      activeMatch: '/guide/',
+      link: '/zh/guide/what-is-web-update-notification',
+      activeMatch: '/zh/guide/',
     },
     {
       text: '参考',
-      link: '/reference/api',
-      activeMatch: '/reference/',
+      link: '/zh/reference/api',
+      activeMatch: '/zh/reference/',
     },
-    {
-      text: pkg.version,
-      items: [
-        // {
-        //   text: 'Changelog',
-        //   link: 'https://github.com/vuejs/vitepress/blob/main/CHANGELOG.md',
-        // },
-        // {
-        //   text: 'Contributing',
-        //   link: 'https://github.com/vuejs/vitepress/blob/main/.github/contributing.md',
-        // },
-      ],
-    },
+    // {
+    //   text: pkg.version,
+    //   link: 'https://www.npmjs.com/package/plugin-web-update-notification',
+    // },
   ]
 }
 
@@ -69,7 +60,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
 
     {
       text: '使用',
-      base: '/guide/with-',
+      base: '/zh/guide/with-',
       items: [
         { text: 'Vite', link: 'vite' },
         { text: 'UmiJS', link: 'umijs' },
@@ -79,7 +70,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
 
     {
       text: '进阶',
-      base: '/guide/advanced-',
+      base: '/zh/guide/advanced-',
       items: [
         { text: '国际化', link: 'i18n' },
         { text: '自定义提示文字', link: 'custom-text' },
@@ -101,7 +92,7 @@ function sidebarReference(): DefaultTheme.SidebarItem[] {
 
     {
       text: 'FAQ',
-      base: '/reference/',
+      base: '/zh/reference/',
       link: 'faq',
     },
   ]
