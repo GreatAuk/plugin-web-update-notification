@@ -55,9 +55,9 @@
     "test:e2e": "pnpm --filter vue-vite-example test:e2e",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit",
-    "docs:dev": "vitepress dev packages",
-    "docs:build": "vitepress build packages",
-    "docs:preview": "vitepress preview packages"
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.31.0",

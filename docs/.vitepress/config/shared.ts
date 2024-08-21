@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 import viteConfig from '../vite.config'
 
 export const shared = defineConfig({
-  title: 'VitePress',
+  title: 'WebUpdateNotice',
 
   rewrites: {
     'en/:rest*': ':rest*',
