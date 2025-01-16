@@ -10,7 +10,7 @@ English | [简体中文](./README.zh-CN.md)
       <img src="https://img.shields.io/npm/v/@plugin-web-update-notification/core.svg?style=flat-square&colorB=51C838" alt="NPM Version" />
     </a>
     <a href="https://www.npmjs.com/package/@plugin-web-update-notification/core" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@plugin-web-update-notification/core?color=50a36f&label="></a>
-    <a href="https://github.com/GreatAuk/plugin-web-update-notification/blob/master/LICENSE">
+    <a href="https://github.com/GreatAuk/plugin-web-update-notification/blob/main/LICENSE">
       <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="License" />
     </a>
     <a href="https://github.com/GreatAuk/plugin-web-update-notification/discussions" target="__blank">
@@ -25,10 +25,10 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
 > Take the git commit hash (also support svn revision number、package.json version、build timestamp、custom) as the version number, and write version into json file. The client polls the version of the server (visibilitychange or focus event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page (you can custom behavior).
 
 <p align="center">
-  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/vue_example.webp">
-  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_example.webp">
-  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/svelte_example.webp">
-  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/react_umi_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/main/images/vue_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/main/images/react_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/main/images/svelte_example.webp">
+  <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/main/images/react_umi_example.webp">
 </p>
 
 **When to check for updates (fetch version.json)** ?
@@ -310,7 +310,7 @@ export interface Options {
   locale?: string
   /**
    * custom locale data
-   * @link default data: https://github.com/GreatAuk/plugin-web-update-notification/blob/master/packages/core/src/locale.ts
+   * @link default data: https://github.com/GreatAuk/plugin-web-update-notification/blob/main/packages/core/src/locale.ts
    */
   localeData?: LocaleData
   /**
@@ -409,7 +409,7 @@ interface Window {
 
 ## What was changed
 
-![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/master/images/inject_content.webp)
+![inject_content](https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/main/images/inject_content.webp)
 
 ## Q&A
 
@@ -484,7 +484,7 @@ interface Window {
 
 4. Custom notification style.
 
-   you can cover css styles with higher weights. ([default css file](https://github.com/GreatAuk/plugin-web-update-notification/blob/master/packages/core/public/webUpdateNoticeInjectStyle.css))
+   you can cover css styles with higher weights. ([default css file](https://github.com/GreatAuk/plugin-web-update-notification/blob/main/packages/core/public/webUpdateNoticeInjectStyle.css))
 
    ```html
    <!-- notification html content -->

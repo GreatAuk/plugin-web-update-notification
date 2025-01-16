@@ -61,7 +61,7 @@ export interface Options {
   locale?: string
   /**
    * custom locale data
-   * @link default data: https://github.com/GreatAuk/plugin-web-update-notification/blob/master/packages/core/src/locale.ts
+   * @link default data: https://github.com/GreatAuk/plugin-web-update-notification/blob/main/packages/core/src/locale.ts
    */
   localeData?: LocaleData
   /**
