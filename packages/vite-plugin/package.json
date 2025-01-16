@@ -1,7 +1,7 @@
 {
   "name": "@plugin-web-update-notification/vite",
   "type": "module",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Vite plugin for detect web page updates and notify.",
   "author": "Utopia",
   "license": "MIT",
@@ -24,11 +24,11 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
     }
   },
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
