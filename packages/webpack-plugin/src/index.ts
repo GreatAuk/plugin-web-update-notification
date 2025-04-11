@@ -44,19 +44,17 @@ function injectPluginHtml(
   let res = html
 
   res = res.replace(
-    '<head>',
-    `<head>
-    ${cssLinkHtml}
-    <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>
-
-    ${versionScript}`,
+    '</body>',
+      `
+        ${cssLinkHtml}
+        <script defer src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>
+        ${versionScript}
+        </body>
+      `,
   )
 
   if (!hiddenDefaultNotification) {
-    res = res.replace(
-      '</body>',
-      `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`,
-    )
+    res = res.replace('</body>', `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
   }
 
   return res
@@ -64,6 +62,7 @@ function injectPluginHtml(
 
 class WebUpdateNotificationPlugin {
   options: PluginOptions
+
   constructor(options: PluginOptions) {
     this.options = options || {}
   }
