@@ -13,6 +13,6 @@ export default defineConfig((options) => { // The options here is derived from C
     dts: true,
     format: ['esm', 'cjs'],
     minify: !options.watch,
-    onSuccess: 'cp -a public/. dist',
+    onSuccess: process.platform === 'win32' ? 'xcopy /E /I public\\ dist\\' : 'cp -a public/. dist',
   }
 })
