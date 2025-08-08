@@ -151,7 +151,7 @@ function __checkUpdateSetup__(options: Options) {
       'error',
       (err) => {
         const errTagName = (err?.target as any)?.tagName
-        if (errTagName === 'SCRIPT')
+        if (errTagName === 'SCRIPT' || errTagName === 'LINK')
           checkSystemUpdate()
       },
       true,
