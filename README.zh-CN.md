@@ -195,6 +195,7 @@ import type { Options as WebUpdateNotificationOptions } from '@plugin-web-update
 export default {
   plugins: ['@plugin-web-update-notification/umijs'],
   webUpdateNotification: {
+    versionType: 'git_commit_hash',
     logVersion: true,
     checkInterval: 0.5 * 60 * 1000,
     notificationProps: {
