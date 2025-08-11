@@ -5,6 +5,7 @@ import type { Options } from '@plugin-web-update-notification/core'
 import {
   DIRECTORY_NAME,
   INJECT_SCRIPT_FILE_NAME,
+  INJECT_SCRIPT_TAG_ID,
   INJECT_STYLE_FILE_NAME,
   JSON_FILE_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
@@ -39,7 +40,6 @@ function injectPluginHtml(
 ) {
   const { customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
 
-  const versionScript = `<script>window.pluginWebUpdateNotice_version = '${version}';</script>`
   const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
 
@@ -47,9 +47,7 @@ function injectPluginHtml(
     '<head>',
     `<head>
     ${cssLinkHtml}
-    <script src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>
-
-    ${versionScript}`,
+    <script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="${version}" src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>`,
   )
 
   if (!hiddenDefaultNotification) {

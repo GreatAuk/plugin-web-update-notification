@@ -3,6 +3,7 @@
 .idea
 *.log
 *.tgz
+.turbo
 coverage
 dist
 lib-cov

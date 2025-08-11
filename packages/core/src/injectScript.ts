@@ -2,6 +2,7 @@ import type { LocaleData, Options, VersionJSON } from './type'
 import {
   CUSTOM_UPDATE_EVENT_NAME,
   DIRECTORY_NAME,
+  INJECT_SCRIPT_TAG_ID,
   JSON_FILE_NAME,
   LOCAL_STORAGE_PREFIX,
   NOTIFICATION_ANCHOR_CLASS_NAME,
@@ -65,6 +66,21 @@ window.pluginWebUpdateNotice_ = {
 }
 
 /**
+ * Get the version from the script tag
+ */
+function getLocaleVersion() {
+  const script = document.querySelector(`script[data-id="${INJECT_SCRIPT_TAG_ID}"]`)
+  if (!script)
+    return ''
+  const version = script.getAttribute('data-v')
+  if (!version)
+    return ''
+
+  window.pluginWebUpdateNotice_version = version
+  return version
+}
+
+/**
  * It checks whether the system has been updated and if so, it shows a notification.
  * @param {Options} options - Options
  */
@@ -78,6 +94,7 @@ function __checkUpdateSetup__(options: Options) {
     checkOnLoadFileError = true,
   } = options
   const checkSystemUpdate = () => {
+    const localeVersion = getLocaleVersion()
     window
       .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${Date.now()}`)
       .then((response) => {
@@ -90,7 +107,7 @@ function __checkUpdateSetup__(options: Options) {
         if (silence)
           return
         latestVersion = versionFromServer
-        if (window.pluginWebUpdateNotice_version !== versionFromServer) {
+        if (localeVersion !== versionFromServer) {
           // dispatch custom event
           document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
             detail: {

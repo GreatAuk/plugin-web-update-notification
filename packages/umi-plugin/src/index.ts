@@ -5,6 +5,7 @@ import type { Options } from '@plugin-web-update-notification/core'
 import {
   DIRECTORY_NAME,
   INJECT_SCRIPT_FILE_NAME,
+  INJECT_SCRIPT_TAG_ID,
   INJECT_STYLE_FILE_NAME,
   JSON_FILE_NAME,
   NOTIFICATION_ANCHOR_CLASS_NAME,
@@ -16,10 +17,6 @@ import {
 import { name as pkgName } from '../package.json'
 
 export type { Options } from '@plugin-web-update-notification/core'
-
-const injectVersionTpl = (version: string) => {
-  return `window.pluginWebUpdateNotice_version = '${version}';`
-}
 
 export default (api: IApi) => {
   api.describe({
@@ -103,17 +100,6 @@ export default (api: IApi) => {
     ]
   })
 
-  api.addHTMLHeadScripts(() => {
-    const scriptList = []
-    scriptList.push({
-      content: injectVersionTpl(version),
-    })
-    scriptList.push({
-      src: `${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
-    })
-    return scriptList
-  })
-
   api.onBuildComplete(() => {
     const outputPath = resolve(api.userConfig.outputPath || 'dist')
     mkdirSync(`${outputPath}/${DIRECTORY_NAME}`)
@@ -131,6 +117,9 @@ export default (api: IApi) => {
   api.modifyHTML(($) => {
     if (!hiddenDefaultNotification)
       $('body').append(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div>`)
+
+    $('head').prepend(`<script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="${version}" src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>`)
+
     return $
   })
 }
