@@ -1,7 +1,7 @@
 {
   "name": "@plugin-web-update-notification/core",
   "type": "module",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Detect web page updates and notify",
   "author": "Utopia",
   "license": "MIT",
