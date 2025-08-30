@@ -102,38 +102,33 @@ export function webUpdateNotice(options: Options = {}): Plugin {
 
       // viteVersion = await getViteVersion()
     },
-    generateBundle(_, bundle = {}) {
+    generateBundle(_) {
       if (!version)
         return
+
       // inject version json file
-      bundle[JSON_FILE_NAME] = {
-        // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
-        isAsset: true,
+      this.emitFile({
         type: 'asset',
-        name: undefined,
+        name: JSON_FILE_NAME,
         source: generateJSONFileContent(version, silence),
         fileName: `${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`,
-      }
+      })
 
       // inject css file
-      bundle[INJECT_STYLE_FILE_NAME] = {
-        // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
-        isAsset: true,
+      this.emitFile({
         type: 'asset',
-        name: undefined,
+        name: INJECT_STYLE_FILE_NAME,
         source: cssFileSource,
         fileName: `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
-      }
+      })
 
       // inject js file
-      bundle[INJECT_SCRIPT_FILE_NAME] = {
-        // @ts-expect-error: for Vite 3 support, Vite 4 has removed `isAsset` property
-        isAsset: true,
+      this.emitFile({
         type: 'asset',
-        name: undefined,
+        name: INJECT_SCRIPT_FILE_NAME,
         source: jsFileSource,
         fileName: `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
-      }
+      })
     },
     transformIndexHtml:
     // if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
