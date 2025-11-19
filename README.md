@@ -38,6 +38,11 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
 3. script resource loading failure detected (404 ?).
 4. when the tab page is refocus or revisible.
 
+**How to see the update notification**
+
+Install the current plugin (using the default configuration), package and deploy it -> Open a browser to visit the webpage (Tab A) -> Modify the code, repackage and redeploy -> Re-enter the previously opened Tab A. Here you can see the update notification in the lower right corner.
+Note that the current plugin will not take effect in development mode.
+
 ## Why
 
 Some users do not have the habit of closing web pages. If the front-end page is updated, the user page has always been a historical version, any there may be report an error (file 404) or a white screen.

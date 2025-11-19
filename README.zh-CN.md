@@ -30,12 +30,18 @@
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/main/images/svelte_example.webp">
   <img width="180" src="https://raw.githubusercontent.com/GreatAuk/plugin-web-update-notification/main/images/react_umi_example.webp">
 </p>
-**什么时候会检测更新(fetch version.json)**  ?
+
+**什么时候会检测更新(fetch version.json)** ?
 
 1. 首次加载页面。
 2. 轮询 （default: 10 * 60 * 1000 ms）。
 3. script 脚本资源加载失败 (404 ?)。
 4. 标签页 refocus or revisible。
+
+**如何才能看到更新提示**
+
+安装当前插件（使用默认配置），打包并部署 -> 打开浏览器访问网页（标签页A） -> 修改代码，重新打包并部署 -> 重新进入刚才打开的标签页 A。 这里你可以在右下角看到更新提示。
+注意，开发模式下当前插件不会生效。
 
 ## Why
 
