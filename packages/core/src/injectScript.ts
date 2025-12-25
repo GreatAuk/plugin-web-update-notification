@@ -95,6 +95,11 @@ function __checkUpdateSetup__(options: Options) {
   } = options
   const checkSystemUpdate = () => {
     const localeVersion = getLocaleVersion()
+    if (!localeVersion) {
+      console.error('[pluginWebUpdateNotice] Failed to get locale version')
+      return
+    }
+
     window
       .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${Date.now()}`)
       .then((response) => {
