@@ -22,6 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 常用命令
 
 ### 构建
+
 ```bash
 # 构建所有包
 pnpm build
@@ -34,6 +35,7 @@ pnpm dev:rspack    # 开发 rspack 插件
 ```
 
 ### 示例运行
+
 ```bash
 pnpm example:vue-vite      # 运行 Vue + Vite 示例
 pnpm example:react-vite    # 运行 React + Vite 示例
@@ -44,6 +46,7 @@ pnpm example:vue-rspack    # 运行 Vue + Rspack 示例
 ```
 
 ### 测试和检查
+
 ```bash
 pnpm test:unit    # 运行单元测试（vitest）
 pnpm test:e2e     # 运行 E2E 测试
@@ -52,6 +55,7 @@ pnpm typecheck    # 类型检查
 ```
 
 ### 发布
+
 ```bash
 pnpm release      # 使用 bumpp 更新版本号
 pnpm publish      # 发布所有包到 npm
@@ -62,6 +66,7 @@ pnpm publish      # 发布所有包到 npm
 ### 版本获取策略（packages/core/src/index.ts）
 
 通过策略模式实现多种版本类型：
+
 - `git_commit_hash`: 执行 `git rev-parse --short HEAD`
 - `svn_revision_number`: 执行 `svnversion`
 - `pkg_version`: 读取 `process.env.npm_package_version`
@@ -99,6 +104,7 @@ pnpm publish      # 发布所有包到 npm
 ### 文件哈希机制
 
 所有注入的文件都带有内容哈希（MD5 前 8 位），确保缓存更新：
+
 - `webUpdateNoticeInjectScript.[hash].js`
 - `webUpdateNoticeInjectStyle.[hash].css`
 
@@ -107,22 +113,29 @@ pnpm publish      # 发布所有包到 npm
 ## 开发注意事项
 
 ### 修改核心逻辑
+
 如果修改 `packages/core` 的代码，需要重新构建才能被其他包使用：
+
 ```bash
 pnpm --filter=@plugin-web-update-notification/core build
 ```
 
 ### 修改注入脚本
+
 注入脚本源码在 `packages/core/src/injectScript.ts`，通过 tsdown 构建为独立的 bundle。修改后需要重新构建 core 包。
 
 ### 添加新的版本类型
+
 在 `packages/core/src/index.ts` 的 `getVersionStrategies` 对象中添加新策略，并更新 `VersionType` 类型定义。
 
 ### 国际化
+
 默认语言配置在 `packages/core/src/locale.ts`，支持 `zh_CN`、`zh_TW`、`en_US`。
 
 ### TypeScript 类型
+
 如果用户需要 `window.pluginWebUpdateNotice_` 的类型提示，需要在项目中添加：
+
 ```ts
 /// <reference types="@plugin-web-update-notification/vite" />
 ```

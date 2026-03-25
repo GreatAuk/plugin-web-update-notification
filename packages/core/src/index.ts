@@ -18,12 +18,11 @@ export const pkgName = pkgName_
  */
 export function get__Dirname() {
   try {
-    if (import.meta && import.meta.url)
-      return dirname(fileURLToPath(import.meta.url))
+    if (import.meta && import.meta.url) return dirname(fileURLToPath(import.meta.url))
 
     return __dirname
-  }
-  catch (err) {
+  } catch (err) {
+    console.error(err)
     return __dirname
   }
 }
@@ -43,11 +42,9 @@ export function getFileHash(fileString: string) {
  */
 function checkRepoType() {
   const gitRepo = findUpSync('.git', { type: 'directory' })
-  if (gitRepo)
-    return 'Git'
+  if (gitRepo) return 'Git'
   const svnRepo = findUpSync('.svn', { type: 'directory' })
-  if (svnRepo)
-    return 'SVN'
+  if (svnRepo) return 'SVN'
 
   return 'unknown'
 }
@@ -59,8 +56,7 @@ function checkRepoType() {
 export function getHostProjectPkgVersion() {
   try {
     return process.env.npm_package_version as string
-  }
-  catch (err) {
+  } catch (err) {
     console.warn(`
 ======================================================
 [plugin-web-update-notice] cannot get the version of the host project's package.json file!
@@ -76,8 +72,7 @@ export function getHostProjectPkgVersion() {
 export function getGitCommitHash() {
   try {
     return execSync('git rev-parse --short HEAD').toString().replace('\n', '').trim()
-  }
-  catch (err) {
+  } catch (err) {
     console.warn(`
 ======================================================
 [plugin-web-update-notice] Not a git repository!
@@ -93,8 +88,7 @@ export function getGitCommitHash() {
 export function getSVNRevisionNumber() {
   try {
     return execSync('svnversion').toString().replace('\n', '').trim()
-  }
-  catch (err) {
+  } catch (err) {
     console.warn(`
 ======================================================
 [plugin-web-update-notice] Not a SVN repository!
@@ -117,7 +111,7 @@ export function getCustomVersion(version?: string) {
 ======================================================
 [plugin-web-update-notice] The versionType is 'custom', but the customVersion is not specified!
 ======================================================`)
-    throw new Error('The versionType is \'custom\', but the customVersion is not specified!')
+    throw new Error("The versionType is 'custom', but the customVersion is not specified!")
   }
   return version
 }
@@ -159,8 +153,7 @@ export function getVersion(versionType?: VersionType, customVersion?: string) {
     }
 
     return strategy()
-  }
-  catch (err) {
+  } catch (err) {
     console.warn(`
 ======================================================
 [plugin-web-update-notice] get version throw a error, we will use the packaging timestamp instead.
@@ -179,8 +172,7 @@ export function generateJSONFileContent(version: string, silence = false) {
   const content: VersionJSON = {
     version,
   }
-  if (silence)
-    content.silence = true
+  if (silence) content.silence = true
 
   return JSON.stringify(content, null, 2)
 }

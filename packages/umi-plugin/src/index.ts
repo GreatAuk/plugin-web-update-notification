@@ -63,17 +63,21 @@ export default (api: IApi) => {
   if (webUpdateNotificationOptions.injectFileBase === undefined)
     webUpdateNotificationOptions.injectFileBase = api.userConfig.publicPath || '/'
 
-  const { versionType, customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/', customVersion, silence } = webUpdateNotificationOptions
+  const {
+    versionType,
+    customNotificationHTML,
+    hiddenDefaultNotification,
+    injectFileBase = '/',
+    customVersion,
+    silence,
+  } = webUpdateNotificationOptions
 
   let version = ''
-  if (versionType === 'custom')
-    version = getVersion(versionType, customVersion!)
-  else
-    version = getVersion(versionType!)
+  if (versionType === 'custom') version = getVersion(versionType, customVersion!)
+  else version = getVersion(versionType!)
 
   // 插件只在生产环境时生效
-  if (!version || api.env !== 'production')
-    return
+  if (!version || api.env !== 'production') return
 
   const jsFlePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
   const jsFileContent = generateJsFileContent(
@@ -89,8 +93,7 @@ export default (api: IApi) => {
   const cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
 
   api.addHTMLLinks(() => {
-    if (customNotificationHTML || hiddenDefaultNotification)
-      return []
+    if (customNotificationHTML || hiddenDefaultNotification) return []
 
     return [
       {
@@ -105,20 +108,31 @@ export default (api: IApi) => {
     mkdirSync(`${outputPath}/${DIRECTORY_NAME}`)
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
-    copyFileSync(cssFilePath, `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`)
+    copyFileSync(
+      cssFilePath,
+      `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
+    )
 
     // write js file to dist/
-    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`, jsFileContent)
+    writeFileSync(
+      `${outputPath}/${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
+      jsFileContent,
+    )
 
     // write version json file to dist/
-    writeFileSync(`${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, generateJSONFileContent(version, silence))
+    writeFileSync(
+      `${outputPath}/${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`,
+      generateJSONFileContent(version, silence),
+    )
   })
 
   api.modifyHTML(($) => {
     if (!hiddenDefaultNotification)
       $('body').append(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div>`)
 
-    $('head').prepend(`<script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="${version}" src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>`)
+    $('head').prepend(
+      `<script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="${version}" src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>`,
+    )
 
     return $
   })

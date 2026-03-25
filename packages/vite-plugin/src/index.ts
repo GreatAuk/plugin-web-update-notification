@@ -42,7 +42,10 @@ function injectPluginHtml(
 ) {
   const { customNotificationHTML, hiddenDefaultNotification, injectFileBase = '' } = options
 
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
+  const cssLinkHtml =
+    customNotificationHTML || hiddenDefaultNotification
+      ? ''
+      : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
 
   res = res.replace(
@@ -53,10 +56,7 @@ function injectPluginHtml(
   )
 
   if (!hiddenDefaultNotification) {
-    res = res.replace(
-      '</body>',
-      `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`,
-    )
+    res = res.replace('</body>', `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
   }
 
   return res
@@ -68,17 +68,18 @@ export function webUpdateNotice(options: Options = {}): Plugin {
 
   const { versionType, customVersion, silence } = options
   let version = ''
-  if (versionType === 'custom')
-    version = getVersion(versionType, customVersion!)
-  else
-    version = getVersion(versionType!)
+  if (versionType === 'custom') version = getVersion(versionType, customVersion!)
+  else version = getVersion(versionType!)
 
   /** inject script file hash */
   let jsFileHash = ''
   /** inject css file hash */
   let cssFileHash = ''
 
-  const cssFileSource = readFileSync(`${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`, 'utf8').toString()
+  const cssFileSource = readFileSync(
+    `${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`,
+    'utf8',
+  ).toString()
   cssFileHash = getFileHash(cssFileSource)
 
   let jsFileSource = ''
@@ -90,8 +91,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
     async configResolved(resolvedConfig: ResolvedConfig) {
       // 存储最终解析的配置
       viteConfig = resolvedConfig
-      if (options.injectFileBase === undefined)
-        options.injectFileBase = viteConfig.base
+      if (options.injectFileBase === undefined) options.injectFileBase = viteConfig.base
 
       jsFileSource = generateJsFileContent(
         readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString(),
@@ -103,8 +103,7 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       // viteVersion = await getViteVersion()
     },
     generateBundle(_) {
-      if (!version)
-        return
+      if (!version) return
 
       // inject version json file
       this.emitFile({
@@ -131,23 +130,23 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       })
     },
     transformIndexHtml:
-    // if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
-    // viteVersion === undefined
-    //   ? {
+      // if the viteVersion is undefined, we assume that vite is less than v3.0（after v3.0, vite export version）
+      // viteVersion === undefined
+      //   ? {
 
-        {
-          order: 'post',
-          handler(html: string, { chunk }) {
-            if (version && chunk)
-              return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
-            return html
-          },
-          enforce: 'post', // deprecated since Vite 4
-          async transform(html: string) { // deprecated since Vite 4
-            if (version)
-              return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
-            return html
-          },
+      {
+        order: 'post',
+        handler(html: string, { chunk }) {
+          if (version && chunk)
+            return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
+          return html
         },
+        enforce: 'post', // deprecated since Vite 4
+        async transform(html: string) {
+          // deprecated since Vite 4
+          if (version) return injectPluginHtml(html, version, options, { jsFileHash, cssFileHash })
+          return html
+        },
+      },
   }
 }

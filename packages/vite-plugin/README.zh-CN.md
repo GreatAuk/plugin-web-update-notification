@@ -1,8 +1,7 @@
-
-
 [English](./README.md) | 简体中文
 
 # plugin-web-update-notification
+
 <p align="center">
     <a href="https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js" target="__blank">
       <img src="https://img.badgesize.io/https://unpkg.com/@plugin-web-update-notification/core/dist/webUpdateNoticeInjectScript.js?compression=gzip&style=flat-square" alt="Gzip Size" />
@@ -33,7 +32,7 @@
 **什么时候会检测更新(fetch version.json)**  ?
 
 1. 首次加载页面。
-2. 轮询 （default: 10 * 60 * 1000 ms）。
+2. 轮询 （default: 10*60*1000 ms）。
 3. script 脚本资源加载失败 (404 ?)。
 4. 标签页 refocus or revisible。
 
@@ -82,13 +81,11 @@ location / {
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-
-</head>
+  <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+  </head>
 </html>
 ```
 
@@ -109,7 +106,7 @@ export default defineConfig({
     webUpdateNotice({
       logVersion: true,
     }),
-  ]
+  ],
 })
 ```
 
@@ -125,10 +122,10 @@ export default defineConfig({
         title: '标题',
         description: 'System update, please refresh the page',
         buttonText: '刷新',
-        dismissButtonText: '忽略'
+        dismissButtonText: '忽略',
       },
     }),
-  ]
+  ],
 })
 ```
 
@@ -164,15 +161,16 @@ window.pluginWebUpdateNotice_.setLocale('zh_CN')
 ```
 
 **取消默认的通知栏，监听更新事件自定义行为**
+
 ```ts
 // vite.config.ts
 export default defineConfig({
   plugins: [
     vue(),
     webUpdateNotice({
-      hiddenDefaultNotification: true
+      hiddenDefaultNotification: true,
     }),
-  ]
+  ],
 })
 
 // 在其他文件中监听自定义更新事件
@@ -203,7 +201,7 @@ export default {
       buttonText: 'refresh',
       dismissButtonText: 'dismiss',
     },
-  } as WebUpdateNotificationOptions
+  } as WebUpdateNotificationOptions,
 }
 ```
 
@@ -228,7 +226,7 @@ module.exports = defineConfig({
 
 ## webUpdateNotice Options
 
-```ts
+````ts
 function webUpdateNotice(options?: Options): Plugin
 
 export interface Options {
@@ -323,7 +321,7 @@ export interface Options {
    * * Empty string(default) or ./
    *
    * !!! Don't forget / at the end of the path
-  */
+   */
   injectFileBase?: string
 }
 
@@ -333,12 +331,12 @@ export interface NotificationConfig {
   /**
    * refresh button color
    * @default '#1677ff'
-  */
+   */
   primaryColor?: string
   /**
    * dismiss button color
    * @default 'rgba(0,0,0,.25)'
-  */
+   */
   secondaryColor?: string
   /** @default 'bottomRight' */
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
@@ -354,23 +352,24 @@ export interface NotificationProps {
 }
 
 export type LocaleData = Record<string, NotificationProps>
-```
+````
 
 ## 曝露的方法
 
-| name                                            | params                              | describe                                                     |
-| ----------------------------------------------- | ----------------------------------- | ------------------------------------------------------------ |
-| window.pluginWebUpdateNotice_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                   |
-| window.pluginWebUpdateNotice_.closeNotification |                                     | close notification                                           |
-| window.pluginWebUpdateNotice_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
-| window.pluginWebUpdateNotice_.checkUpdate       |                                     | manual check update, a function wrap by debounce(5000ms)     |
+| name                                             | params                              | describe                                                                      |
+| ------------------------------------------------ | ----------------------------------- | ----------------------------------------------------------------------------- |
+| window.pluginWebUpdateNotice\_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                                    |
+| window.pluginWebUpdateNotice\_.closeNotification |                                     | close notification                                                            |
+| window.pluginWebUpdateNotice\_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
+| window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, a function wrap by debounce(5000ms)                      |
+
 ```ts
 interface Window {
   pluginWebUpdateNotice_: {
     /**
      * set language.
      * preset: zh_CN、zh_TW、en_US
-    */
+     */
     setLocale: (locale: string) => void
     /**
      * manual check update, a function wrap by debounce(5000ms)
@@ -429,9 +428,9 @@ interface Window {
      plugins: [
        vue(),
        webUpdateNotice({
-         injectFileBase: cdnServerUrl
-       })
-     ]
+         injectFileBase: cdnServerUrl,
+       }),
+     ],
    })
    ```
 
@@ -449,9 +448,9 @@ interface Window {
      plugins: [
        vue(),
        webUpdateNotice({
-         injectFileBase: base
-       })
-     ]
+         injectFileBase: base,
+       }),
+     ],
    })
    ```
 
@@ -461,10 +460,14 @@ interface Window {
 
    ```ts
    // refresh button click event, if you set it, it will cover the default event (location.reload())
-   window.pluginWebUpdateNotice_.onClickRefresh = (version) => { alert(`click refresh btn: ${version}`) }
+   window.pluginWebUpdateNotice_.onClickRefresh = (version) => {
+     alert(`click refresh btn: ${version}`)
+   }
 
    // dismiss button click event, if you set it, it will cover the default event (dismissUpdate())
-   window.pluginWebUpdateNotice_.onClickDismiss = (version) => { alert(`click dismiss btn: ${version}`) }
+   window.pluginWebUpdateNotice_.onClickDismiss = (version) => {
+     alert(`click dismiss btn: ${version}`)
+   }
    ```
 
 4. 自定义 notification 样式。
@@ -477,9 +480,7 @@ interface Window {
    <div class="plugin-web-update-notice-anchor">
      <div class="plugin-web-update-notice">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
-         <div class="plugin-web-update-notice-content-title">
-           📢  system update
-         </div>
+         <div class="plugin-web-update-notice-content-title">📢 system update</div>
          <div class="plugin-web-update-notice-content-desc">
            System update, please refresh the page
          </div>
@@ -513,10 +514,9 @@ interface Window {
    })
    ```
 
-
 ## 文章
-* https://juejin.cn/post/7209234917288886331
 
+- https://juejin.cn/post/7209234917288886331
 
 ## License
 

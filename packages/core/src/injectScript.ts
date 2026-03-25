@@ -16,7 +16,7 @@ let hasShowSystemUpdateNotice = false
 /** latest version from server */
 let latestVersion = ''
 let currentLocale = ''
-let intervalTimer: NodeJS.Timer | undefined
+let intervalTimer: NodeJS.Timeout | undefined
 
 /**
  * limit function
@@ -26,9 +26,8 @@ let intervalTimer: NodeJS.Timer | undefined
  */
 function limit(fn: Function, delay: number) {
   let pending = false
-  return function (this: any, ...args: any[]) {
-    if (pending)
-      return
+  return function (this: unknown, ...args: unknown[]) {
+    if (pending) return
     pending = true
     fn.apply(this, args)
     setTimeout(() => {
@@ -70,11 +69,9 @@ window.pluginWebUpdateNotice_ = {
  */
 function getLocaleVersion() {
   const script = document.querySelector(`script[data-id="${INJECT_SCRIPT_TAG_ID}"]`)
-  if (!script)
-    return ''
+  if (!script) return ''
   const version = script.getAttribute('data-v')
-  if (!version)
-    return ''
+  if (!version) return ''
 
   window.pluginWebUpdateNotice_version = version
   return version
@@ -103,26 +100,27 @@ function __checkUpdateSetup__(options: Options) {
     window
       .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${Date.now()}`)
       .then((response) => {
-        if (!response.ok)
-          throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
+        if (!response.ok) throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
 
         return response.json()
       })
       .then(({ version: versionFromServer, silence }: VersionJSON) => {
-        if (silence)
-          return
+        if (silence) return
         latestVersion = versionFromServer
         if (localeVersion !== versionFromServer) {
           // dispatch custom event
-          document.body.dispatchEvent(new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
-            detail: {
-              options,
-              version: versionFromServer,
-            },
-            bubbles: true,
-          }))
+          document.body.dispatchEvent(
+            new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
+              detail: {
+                options,
+                version: versionFromServer,
+              },
+              bubbles: true,
+            }),
+          )
 
-          const dismiss = localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
+          const dismiss =
+            localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
           if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
             showNotification(options)
         }
@@ -141,8 +139,7 @@ function __checkUpdateSetup__(options: Options) {
    * polling check system update
    */
   const pollingCheck = () => {
-    if (checkInterval > 0)
-      intervalTimer = setInterval(checkSystemUpdate, checkInterval)
+    if (checkInterval > 0) intervalTimer = setInterval(checkSystemUpdate, checkInterval)
   }
   pollingCheck()
 
@@ -154,17 +151,14 @@ function __checkUpdateSetup__(options: Options) {
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       pollingCheck()
-      if (checkOnWindowFocus)
-        limitCheckSystemUpdate()
+      if (checkOnWindowFocus) limitCheckSystemUpdate()
     }
-    if (document.visibilityState === 'hidden')
-      intervalTimer && clearInterval(intervalTimer)
+    if (document.visibilityState === 'hidden' && intervalTimer) clearInterval(intervalTimer)
   })
 
   // when page focus, check system update
   window.addEventListener('focus', () => {
-    if (checkOnWindowFocus)
-      limitCheckSystemUpdate()
+    if (checkOnWindowFocus) limitCheckSystemUpdate()
   })
 
   if (checkOnLoadFileError) {
@@ -172,9 +166,8 @@ function __checkUpdateSetup__(options: Options) {
     window.addEventListener(
       'error',
       (err) => {
-        const errTagName = (err?.target as any)?.tagName
-        if (errTagName === 'SCRIPT' || errTagName === 'LINK')
-          checkSystemUpdate()
+        const errTagName = (err?.target as unknown as HTMLElement)?.tagName
+        if (errTagName === 'SCRIPT' || errTagName === 'LINK') checkSystemUpdate()
       },
       true,
     )
@@ -198,8 +191,7 @@ function dismissUpdate() {
   try {
     closeNotification()
     localStorage.setItem(`${LOCAL_STORAGE_PREFIX}${latestVersion}`, 'true')
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err)
   }
 }
@@ -251,7 +243,14 @@ function showNotification(options: Options) {
   try {
     hasShowSystemUpdateNotice = true
 
-    const { notificationProps, notificationConfig, customNotificationHTML, hiddenDismissButton, locale = 'zh_CN', localeData: localeData_ } = options
+    const {
+      notificationProps,
+      notificationConfig,
+      customNotificationHTML,
+      hiddenDismissButton,
+      locale = 'zh_CN',
+      localeData: localeData_,
+    } = options
     const localeData = Object.assign({}, presetLocaleData, localeData_)
     if (!currentLocale) {
       currentLocale = locale
@@ -263,14 +262,19 @@ function showNotification(options: Options) {
 
     if (customNotificationHTML) {
       notificationInnerHTML = customNotificationHTML
-    }
-    else {
+    } else {
       const { placement = 'bottomRight', primaryColor, secondaryColor } = notificationConfig || {}
       const title = notificationProps?.title ?? getLocaleText(currentLocale, 'title', localeData)
-      const description = notificationProps?.description ?? getLocaleText(currentLocale, 'description', localeData)
-      const buttonText = notificationProps?.buttonText ?? getLocaleText(currentLocale, 'buttonText', localeData)
-      const dismissButtonText = notificationProps?.dismissButtonText ?? getLocaleText(currentLocale, 'dismissButtonText', localeData)
-      const dismissButtonHtml = hiddenDismissButton ? '' : `<a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn" style="color:${secondaryColor}">${dismissButtonText}</a>`
+      const description =
+        notificationProps?.description ?? getLocaleText(currentLocale, 'description', localeData)
+      const buttonText =
+        notificationProps?.buttonText ?? getLocaleText(currentLocale, 'buttonText', localeData)
+      const dismissButtonText =
+        notificationProps?.dismissButtonText ??
+        getLocaleText(currentLocale, 'dismissButtonText', localeData)
+      const dismissButtonHtml = hiddenDismissButton
+        ? ''
+        : `<a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn" style="color:${secondaryColor}">${dismissButtonText}</a>`
 
       notificationWrap.classList.add('plugin-web-update-notice')
       notificationWrap.style.cssText = `${NOTIFICATION_POSITION_MAP[placement]}`
@@ -292,18 +296,13 @@ function showNotification(options: Options) {
     }
 
     notificationWrap.innerHTML = notificationInnerHTML
-    document
-      .querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!
-      .appendChild(notificationWrap)
+    document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!.appendChild(notificationWrap)
 
     bindBtnEvent()
-  }
-  catch (err) {
+  } catch (err) {
     console.error('[pluginWebUpdateNotice] Failed to show notification', err)
   }
 }
 
 // meaningless export, in order to let tsup bundle these functions
-export {
-  __checkUpdateSetup__,
-}
+export { __checkUpdateSetup__ }

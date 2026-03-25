@@ -40,7 +40,10 @@ function injectPluginHtml(
 ) {
   const { customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
 
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification ? '' : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
+  const cssLinkHtml =
+    customNotificationHTML || hiddenDefaultNotification
+      ? ''
+      : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
 
   res = res.replace(
@@ -51,10 +54,7 @@ function injectPluginHtml(
   )
 
   if (!hiddenDefaultNotification) {
-    res = res.replace(
-      '</body>',
-      `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`,
-    )
+    res = res.replace('</body>', `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
   }
 
   return res
@@ -76,12 +76,11 @@ class WebUpdateNotificationPlugin {
     if (this.options.injectFileBase === undefined)
       this.options.injectFileBase = typeof publicPath === 'string' ? publicPath : '/'
 
-    const { hiddenDefaultNotification, versionType, indexHtmlFilePath, customVersion, silence } = this.options
+    const { hiddenDefaultNotification, versionType, indexHtmlFilePath, customVersion, silence } =
+      this.options
     let version = ''
-    if (versionType === 'custom')
-      version = getVersion(versionType, customVersion!)
-    else
-      version = getVersion(versionType!)
+    if (versionType === 'custom') version = getVersion(versionType, customVersion!)
+    else version = getVersion(versionType!)
 
     compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
       // const outputPath = compiler.outputPath
@@ -92,7 +91,10 @@ class WebUpdateNotificationPlugin {
         size: () => jsonFileContent.length,
       }
       if (!hiddenDefaultNotification) {
-        const injectStyleContent = readFileSync(`${get__Dirname()}/${INJECT_STYLE_FILE_NAME}.css`, 'utf8')
+        const injectStyleContent = readFileSync(
+          `${get__Dirname()}/${INJECT_STYLE_FILE_NAME}.css`,
+          'utf8',
+        )
         cssFileHash = getFileHash(injectStyleContent)
 
         // @ts-expect-error
@@ -123,20 +125,16 @@ class WebUpdateNotificationPlugin {
         accessSync(htmlFilePath, constants.F_OK)
 
         let html = readFileSync(htmlFilePath, 'utf8')
-        html = injectPluginHtml(
-          html,
-          version,
-          this.options,
-          {
-            jsFileHash,
-            cssFileHash,
-          },
-        )
+        html = injectPluginHtml(html, version, this.options, {
+          jsFileHash,
+          cssFileHash,
+        })
         writeFileSync(htmlFilePath, html)
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error)
-        console.error(`${pluginName} failed to inject the plugin into the HTML file. index.html（${htmlFilePath}） not found.`)
+        console.error(
+          `${pluginName} failed to inject the plugin into the HTML file. index.html（${htmlFilePath}） not found.`,
+        )
       }
     })
   }

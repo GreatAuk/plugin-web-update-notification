@@ -9,11 +9,11 @@ declare global {
      */
     __checkUpdateSetup__: (options: Options) => void
     pluginWebUpdateNotice_: {
-      locale?: string;
+      locale?: string
       /**
        * set language.
        * preset: zh_CN、zh_TW、en_US
-      */
+       */
       setLocale: (locale: string) => void
       /**
        * manual check update, a function wrap by debounce(5000ms)
@@ -34,6 +34,6 @@ declare global {
     }
   }
   interface GlobalEventHandlersEventMap {
-    plugin_web_update_notice: CustomEvent<{ version: string; options: Options }>;
+    plugin_web_update_notice: CustomEvent<{ version: string; options: Options }>
   }
 }

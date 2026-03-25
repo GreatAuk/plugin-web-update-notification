@@ -42,10 +42,8 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
 
     const { hiddenDefaultNotification, versionType, customVersion, silence } = this.options
     let version = ''
-    if (versionType === 'custom')
-      version = getVersion(versionType, customVersion!)
-    else
-      version = getVersion(versionType!)
+    if (versionType === 'custom') version = getVersion(versionType, customVersion!)
+    else version = getVersion(versionType!)
 
     compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation: Compilation) => {
       const { Compilation } = compiler.rspack
@@ -107,8 +105,7 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
         let html = readFileSync(htmlFilePath, 'utf8')
         html = injectPluginHtml(html, version, this.options, { jsFileHash, cssFileHash })
         writeFileSync(htmlFilePath, html)
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error)
         console.error(
           `${PLUGIN_NAME} failed to inject the plugin into the HTML file. index.html（${htmlFilePath}） not found.`,
@@ -129,9 +126,10 @@ function injectPluginHtml(
 ) {
   const { customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
 
-  const cssLinkHtml = customNotificationHTML || hiddenDefaultNotification
-    ? ''
-    : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
+  const cssLinkHtml =
+    customNotificationHTML || hiddenDefaultNotification
+      ? ''
+      : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
   let res = html
 
   res = res.replace(
@@ -142,10 +140,7 @@ function injectPluginHtml(
   )
 
   if (!hiddenDefaultNotification) {
-    res = res.replace(
-      '</body>',
-      `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`,
-    )
+    res = res.replace('</body>', `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
   }
 
   return res

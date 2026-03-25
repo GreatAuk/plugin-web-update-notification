@@ -90,22 +90,27 @@ export interface Options {
    * * Empty string(default) or ./
    *
    * !!! Don't forget / at the end of the path
-  */
+   */
   injectFileBase?: string
 }
 
-export type VersionType = 'git_commit_hash' | 'svn_revision_number' | 'pkg_version' | 'build_timestamp' | 'custom'
+export type VersionType =
+  | 'git_commit_hash'
+  | 'svn_revision_number'
+  | 'pkg_version'
+  | 'build_timestamp'
+  | 'custom'
 
 export interface NotificationConfig {
   /**
    * refresh button color
    * @default '#1677ff'
-  */
+   */
   primaryColor?: string
   /**
    * dismiss button color
    * @default 'rgba(0,0,0,.25)'
-  */
+   */
   secondaryColor?: string
   /** @default 'bottomRight' */
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'

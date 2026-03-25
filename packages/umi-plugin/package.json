@@ -2,24 +2,30 @@
   "name": "@plugin-web-update-notification/umijs",
   "version": "2.0.2",
   "description": "Umi plugin for detect web page updates and notify.",
-  "author": "Utopia",
-  "license": "MIT",
+  "keywords": [
+    "@plugin-web-update-notification/core",
+    "umi",
+    "umi-plugin",
+    "web-update-notification"
+  ],
   "homepage": "https://github.com/GreatAuk/plugin-web-update-notification",
+  "bugs": {
+    "url": "https://github.com/GreatAuk/plugin-web-update-notification/issues"
+  },
+  "license": "MIT",
+  "author": "Utopia",
   "repository": {
     "type": "git",
     "url": "https://github.com/GreatAuk/plugin-web-update-notification",
     "directory": "packages/umi-plugin"
   },
-  "bugs": {
-    "url": "https://github.com/GreatAuk/plugin-web-update-notification/issues"
-  },
-  "keywords": [
-    "umi",
-    "umi-plugin",
-    "@plugin-web-update-notification/core",
-    "web-update-notification"
+  "files": [
+    "dist"
   ],
   "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "exports": {
     ".": {
       "types": {
@@ -30,24 +36,18 @@
       "import": "./dist/index.mjs"
     }
   },
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.mts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "start": "tsx src/index.ts",
     "build": "tsdown",
     "dev": "tsdown --watch"
-  },
-  "peerDependencies": {
-    "umi": "*"
   },
   "dependencies": {
     "@plugin-web-update-notification/core": "workspace:*"
   },
   "devDependencies": {
     "umi": "^4.0.2"
+  },
+  "peerDependencies": {
+    "umi": "*"
   }
 }
