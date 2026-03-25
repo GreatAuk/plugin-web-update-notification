@@ -24,7 +24,7 @@ English | [简体中文](./README.zh-CN.md)
   <a href="https://deepwiki.com/GreatAuk/plugin-web-update-notification"><img src="https://img.shields.io/badge/DeepWiki-GreatAuk%2Fplugin--web--update--notification-blue.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAyCAYAAAAnWDnqAAAAAXNSR0IArs4c6QAAA05JREFUaEPtmUtyEzEQhtWTQyQLHNak2AB7ZnyXZMEjXMGeK/AIi+QuHrMnbChYY7MIh8g01fJoopFb0uhhEqqcbWTp06/uv1saEDv4O3n3dV60RfP947Mm9/SQc0ICFQgzfc4CYZoTPAswgSJCCUJUnAAoRHOAUOcATwbmVLWdGoH//PB8mnKqScAhsD0kYP3j/Yt5LPQe2KvcXmGvRHcDnpxfL2zOYJ1mFwrryWTz0advv1Ut4CJgf5uhDuDj5eUcAUoahrdY/56ebRWeraTjMt/00Sh3UDtjgHtQNHwcRGOC98BJEAEymycmYcWwOprTgcB6VZ5JK5TAJ+fXGLBm3FDAmn6oPPjR4rKCAoJCal2eAiQp2x0vxTPB3ALO2CRkwmDy5WohzBDwSEFKRwPbknEggCPB/imwrycgxX2NzoMCHhPkDwqYMr9tRcP5qNrMZHkVnOjRMWwLCcr8ohBVb1OMjxLwGCvjTikrsBOiA6fNyCrm8V1rP93iVPpwaE+gO0SsWmPiXB+jikdf6SizrT5qKasx5j8ABbHpFTx+vFXp9EnYQmLx02h1QTTrl6eDqxLnGjporxl3NL3agEvXdT0WmEost648sQOYAeJS9Q7bfUVoMGnjo4AZdUMQku50McDcMWcBPvr0SzbTAFDfvJqwLzgxwATnCgnp4wDl6Aa+Ax283gghmj+vj7feE2KBBRMW3FzOpLOADl0Isb5587h/U4gGvkt5v60Z1VLG8BhYjbzRwyQZemwAd6cCR5/XFWLYZRIMpX39AR0tjaGGiGzLVyhse5C9RKC6ai42ppWPKiBagOvaYk8lO7DajerabOZP46Lby5wKjw1HCRx7p9sVMOWGzb/vA1hwiWc6jm3MvQDTogQkiqIhJV0nBQBTU+3okKCFDy9WwferkHjtxib7t3xIUQtHxnIwtx4mpg26/HfwVNVDb4oI9RHmx5WGelRVlrtiw43zboCLaxv46AZeB3IlTkwouebTr1y2NjSpHz68WNFjHvupy3q8TFn3Hos2IAk4Ju5dCo8B3wP7VPr/FGaKiG+T+v+TQqIrOqMTL1VdWV1DdmcbO8KXBz6esmYWYKPwDL5b5FA1a0hwapHiom0r/cKaoqr+27/XcrS5UwSMbQAAAABJRU5ErkJggg==" alt="DeepWiki"></a>
 </p>
 
-Detect webpage updates and notify user to reload. support vite, umijs and webpack.
+Detect webpage updates and notify user to reload. support Vite, UmiJS, Webpack and Rspack
 
 > Take the git commit hash (also support svn revision number、package.json version、build timestamp、custom) as the version number, and write version into json file. The client polls the version of the server (visibilitychange or focus event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page (you can custom behavior).
 
@@ -62,11 +62,14 @@ pnpm add @plugin-web-update-notification/umijs -D
 
 # webpack plugin
 pnpm add @plugin-web-update-notification/webpack -D
+
+# rspack plugin
+pnpm add @plugin-web-update-notification/rspack -D
 ```
 
 ## Usage
 
-[vite](#vite) | [umi](#umijs) | [webpack](#webpack)
+[Vite](#vite) | [UmiJS](#umijs) | [Webpack](#webpack) | [Rspack](#rspack)
 
 ### Important: Disable `index.html` caching!
 
@@ -231,6 +234,43 @@ module.exports = defineConfig({
         logVersion: true,
       }),
     ],
+  },
+})
+```
+
+### Rspack
+
+```js
+// rspack.config.js
+const { HtmlRspackPlugin } = require('@rspack/core')
+const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/rspack')
+
+module.exports = {
+  plugins: [
+    new HtmlRspackPlugin(),
+    new WebUpdateNotificationPlugin({
+      logVersion: true,
+    }),
+  ],
+}
+```
+
+Also works with **Rsbuild**:
+
+```ts
+// rsbuild.config.ts
+import { defineConfig } from '@rsbuild/core'
+import { WebUpdateNotificationPlugin } from '@plugin-web-update-notification/rspack'
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      plugins: [
+        new WebUpdateNotificationPlugin({
+          logVersion: true,
+        }),
+      ],
+    },
   },
 })
 ```

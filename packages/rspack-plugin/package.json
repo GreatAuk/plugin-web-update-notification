@@ -1,0 +1,51 @@
+{
+  "name": "@plugin-web-update-notification/rspack",
+  "type": "module",
+  "version": "2.0.2",
+  "description": "Rspack plugin for detect web page updates and notify.",
+  "author": "Utopia",
+  "license": "MIT",
+  "homepage": "https://github.com/GreatAuk/plugin-web-update-notification",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GreatAuk/plugin-web-update-notification",
+    "directory": "packages/rspack-plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/GreatAuk/plugin-web-update-notification/issues"
+  },
+  "keywords": [
+    "rspack",
+    "rspack-plugin",
+    "@plugin-web-update-notification/rspack",
+    "web-update-notification"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsup --watch",
+    "build": "tsup"
+  },
+  "peerDependencies": {
+    "@rspack/core": "^1.0.0 || ^0.7.0"
+  },
+  "dependencies": {
+    "@plugin-web-update-notification/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@rspack/core": "^1.3.9"
+  }
+}

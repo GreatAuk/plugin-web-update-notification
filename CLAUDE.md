@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-这是一个用于检测网页更新并通知用户刷新的插件系统，支持 Vite、UmiJS 和 Webpack。核心原理是：通过 git commit hash（也支持 svn revision、package.json version、build timestamp、custom）作为版本号，打包时将版本号写入 JSON 文件，客户端轮询服务器上的版本号并与本地比较，如果不同则通知用户刷新。
+这是一个用于检测网页更新并通知用户刷新的插件系统，支持 Vite、UmiJS、Webpack 和 Rspack。核心原理是：通过 git commit hash（也支持 svn revision、package.json version、build timestamp、custom）作为版本号，打包时将版本号写入 JSON 文件，客户端轮询服务器上的版本号并与本地比较，如果不同则通知用户刷新。
 
 ## Monorepo 架构
 
@@ -14,7 +14,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **packages/vite-plugin**: Vite 插件实现
 - **packages/umi-plugin**: UmiJS 插件实现
 - **packages/webpack-plugin**: Webpack 插件实现
-- **example/**: 各种框架的示例项目（vue-vite、react-vite、svelte-vite、react-umi、vue-webpack）
+- **packages/rspack-plugin**: Rspack 插件实现（同时支持 Rsbuild）
+- **example/**: 各种框架的示例项目（vue-vite、react-vite、svelte-vite、react-umi、vue-webpack、vue-rspack）
 
 各插件包依赖 core 包（通过 `workspace:*`），共享核心功能。
 
@@ -29,6 +30,7 @@ pnpm build
 pnpm dev:vite      # 开发 vite 插件
 pnpm dev:umi       # 开发 umi 插件
 pnpm dev:webpack   # 开发 webpack 插件
+pnpm dev:rspack    # 开发 rspack 插件
 ```
 
 ### 示例运行
@@ -38,6 +40,7 @@ pnpm example:react-vite    # 运行 React + Vite 示例
 pnpm example:svelte-vite   # 运行 Svelte + Vite 示例
 pnpm example:react-umi     # 运行 React + Umi 示例
 pnpm example:vue-webpack   # 运行 Vue + Webpack 示例
+pnpm example:vue-rspack    # 运行 Vue + Rspack 示例
 ```
 
 ### 测试和检查
