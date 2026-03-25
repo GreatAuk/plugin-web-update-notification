@@ -44,7 +44,7 @@ Detect webpage updates and notify user to reload. support Vite, UmiJS, Webpack a
 
 **How to see the update notification**
 
-Install the current plugin (using the default configuration), package and deploy it -> Open a browser to visit the webpage (Tab A) -> Modify the code, repackage and redeploy -> Re-enter the previously opened Tab A. Here you can see the update notification in the lower right corner.
+Install the current plugin (using the default configuration), package and deploy it -> Open a browser to visit the webpage (Tab A) -> Modify the code, repackage and redeploy(the default versionType requires a git commit to update the version number.) -> Re-enter the previously opened Tab A. Here you can see the update notification in the lower right corner.
 Note that the current plugin will not take effect in development mode.
 
 ## Why

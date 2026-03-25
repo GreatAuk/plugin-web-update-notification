@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { defineConfig } from 'tsup'
+import { defineConfig } from 'tsdown'
 import { pkgName } from '@plugin-web-update-notification/core'
 
 export default defineConfig((options) => {
@@ -7,13 +7,12 @@ export default defineConfig((options) => {
     entry: {
       index: 'src/index.ts',
     },
-    splitting: false,
     sourcemap: true,
     clean: true,
     dts: true,
-    format: ['cjs', 'esm'],
+    format: ['esm'],
     minify: !options.watch,
     // after bundle success, run script, copy inject file from @plugin-web-update-notification/core
-    onSuccess: `node ${resolve('node_modules', pkgName, 'dist', 'pluginBuildScript.js')}`,
+    onSuccess: `node ${resolve('node_modules', pkgName, 'dist', 'pluginBuildScript.mjs')}`,
   }
 })

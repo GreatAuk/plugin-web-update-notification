@@ -102,6 +102,8 @@ pnpm publish      # 发布所有包到 npm
 - `webUpdateNoticeInjectScript.[hash].js`
 - `webUpdateNoticeInjectStyle.[hash].css`
 
+注意：IIFE 输出后缀为 `.iife`（由 tsdown 生成）。
+
 ## 开发注意事项
 
 ### 修改核心逻辑
@@ -111,7 +113,7 @@ pnpm --filter=@plugin-web-update-notification/core build
 ```
 
 ### 修改注入脚本
-注入脚本源码在 `packages/core/src/injectScript.ts`，通过 tsup 构建为独立的 bundle。修改后需要重新构建 core 包。
+注入脚本源码在 `packages/core/src/injectScript.ts`，通过 tsdown 构建为独立的 bundle。修改后需要重新构建 core 包。
 
 ### 添加新的版本类型
 在 `packages/core/src/index.ts` 的 `getVersionStrategies` 对象中添加新策略，并更新 `VersionType` 类型定义。
@@ -127,7 +129,7 @@ pnpm --filter=@plugin-web-update-notification/core build
 
 ## 技术栈
 
-- **构建工具**: tsup（基于 esbuild）
+- **构建工具**: tsdown（基于 Rolldown）
 - **包管理器**: pnpm (v10.8.0)
 - **Node.js**: 使用 package.json 中的 packageManager 字段指定版本
 - **Monorepo**: Turborepo

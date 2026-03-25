@@ -20,21 +20,24 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "require": "./dist/index.d.cts",
+        "import": "./dist/index.d.mts"
+      },
       "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "import": "./dist/index.mjs"
     }
   },
   "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
     "start": "tsx src/index.ts",
-    "build": "tsup && tsup --config tsup.config.injectFile.ts",
-    "dev": "tsup --watch"
+    "build": "tsdown && tsdown --config tsdown.config.injectFile.ts",
+    "dev": "tsdown --watch"
   },
   "devDependencies": {
     "find-up": "^6.3.0"
