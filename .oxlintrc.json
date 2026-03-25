@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "no-duplicate-imports": "error",
+    "eqeqeq": ["error", "smart"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-template": "warn",
+    "no-useless-constructor": "warn",
+    "import/no-duplicates": "error",
+    "typescript/no-unused-vars": "warn",
+    "typescript/no-explicit-any": "warn",
+    "unicorn/no-new-array": "warn",
+    "unicorn/prefer-number-properties": "warn"
+  },
+  "ignorePatterns": ["dist", "node_modules", "*.min.js", "pnpm-lock.yaml", "example/**"]
+}
