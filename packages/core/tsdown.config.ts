@@ -12,6 +12,6 @@ export default defineConfig((options) => {
     dts: true,
     format: ['esm', 'cjs'],
     minify: !options.watch,
-    onSuccess: process.platform === 'win32' ? 'xcopy /E /I public\\ dist\\' : 'cp -a public/. dist',
+    copy: ['public/**/*.css'],
   }
 })
