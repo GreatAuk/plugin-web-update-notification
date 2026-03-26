@@ -75,7 +75,6 @@ export function webUpdateNotice(options: Options = {}): Plugin {
   let jsFileHash = ''
   /** inject css file hash */
   let cssFileHash = ''
-
   const cssFileSource = readFileSync(
     `${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`,
     'utf8',

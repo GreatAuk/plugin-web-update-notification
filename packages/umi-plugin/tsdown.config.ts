@@ -1,6 +1,4 @@
-import { resolve } from 'path'
 import { defineConfig } from 'tsdown'
-import { pkgName } from '@plugin-web-update-notification/core'
 
 export default defineConfig((options) => {
   return {
@@ -12,6 +10,5 @@ export default defineConfig((options) => {
     dts: true,
     format: ['cjs', 'esm'],
     minify: !options.watch,
-    onSuccess: `node ${resolve('node_modules', pkgName, 'dist', 'pluginBuildScript.mjs')}`,
   }
 })

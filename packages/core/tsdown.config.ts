@@ -4,7 +4,6 @@ export default defineConfig((options) => {
   return {
     entry: {
       index: 'src/index.ts',
-      pluginBuildScript: 'src/pluginBuildScript.ts',
     },
     target: 'es2020',
     sourcemap: true,
