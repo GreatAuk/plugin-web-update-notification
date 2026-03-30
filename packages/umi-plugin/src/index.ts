@@ -108,10 +108,12 @@ export default (api: IApi) => {
     mkdirSync(`${outputPath}/${DIRECTORY_NAME}`)
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
-    copyFileSync(
-      cssFilePath,
-      `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
-    )
+    if (!hiddenDefaultNotification) {
+      copyFileSync(
+        cssFilePath,
+        `${outputPath}/${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
+      )
+    }
 
     // write js file to dist/
     writeFileSync(

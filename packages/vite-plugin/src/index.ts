@@ -113,12 +113,14 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       })
 
       // inject css file
-      this.emitFile({
-        type: 'asset',
-        name: INJECT_STYLE_FILE_NAME,
-        source: cssFileSource,
-        fileName: `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
-      })
+      if (!options.hiddenDefaultNotification) {
+        this.emitFile({
+          type: 'asset',
+          name: INJECT_STYLE_FILE_NAME,
+          source: cssFileSource,
+          fileName: `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
+        })
+      }
 
       // inject js file
       this.emitFile({
