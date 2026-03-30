@@ -13,8 +13,8 @@ import {
   generateJsFileContent,
   getFileHash,
   getVersion,
+  get__Dirname,
 } from '@plugin-web-update-notification/core'
-import { name as pkgName } from '../package.json'
 
 export type { Options } from '@plugin-web-update-notification/core'
 
@@ -79,7 +79,7 @@ export default (api: IApi) => {
   // 插件只在生产环境时生效
   if (!version || api.env !== 'production') return
 
-  const jsFlePath = resolve('node_modules', pkgName, 'dist', `${INJECT_SCRIPT_FILE_NAME}.js`)
+  const jsFlePath = resolve(get__Dirname(), `${INJECT_SCRIPT_FILE_NAME}.js`)
   const jsFileContent = generateJsFileContent(
     readFileSync(jsFlePath, 'utf8').toString(),
     version,
@@ -88,7 +88,7 @@ export default (api: IApi) => {
   /** inject script file hash */
   const jsFileHash = getFileHash(jsFileContent)
 
-  const cssFilePath = resolve('node_modules', pkgName, 'dist', `${INJECT_STYLE_FILE_NAME}.css`)
+  const cssFilePath = resolve(get__Dirname(), `${INJECT_STYLE_FILE_NAME}.css`)
   /** inject css file hash */
   const cssFileHash = getFileHash(readFileSync(cssFilePath, 'utf8').toString())
 
