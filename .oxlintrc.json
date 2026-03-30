@@ -9,7 +9,7 @@
     "no-unused-vars": "warn",
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "no-debugger": "error",
-    "no-duplicate-imports": "error",
+    "no-duplicate-imports": ["error", { "allowSeparateTypeImports": true }],
     "eqeqeq": ["error", "smart"],
     "no-var": "error",
     "prefer-const": "error",
