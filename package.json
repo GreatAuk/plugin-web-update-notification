@@ -1,6 +1,6 @@
 {
   "name": "plugin-web-update-notification",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Detect web page updates and notify",
   "keywords": [
     "plugin-web-update-notification"

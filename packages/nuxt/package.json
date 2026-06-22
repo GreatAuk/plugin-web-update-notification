@@ -1,6 +1,6 @@
 {
   "name": "@plugin-web-update-notification/nuxt",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Nuxt module for detect web page updates and notify.",
   "keywords": [
     "@plugin-web-update-notification/nuxt",
