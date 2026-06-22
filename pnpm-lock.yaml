@@ -65,6 +65,22 @@ importers:
       vue-router:
         specifier: ^5.1.0
         version: 5.1.0(@vue/compiler-sfc@3.5.38)(vite@7.3.5(@types/node@18.19.122)(jiti@2.7.0)(less@4.4.0)(lightningcss@1.22.1)(sass@1.90.0)(terser@5.43.1)(tsx@3.14.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.28.1
+        version: 1.54.2
+      '@plugin-web-update-notification/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@plugin-web-update-notification/nuxt':
+        specifier: workspace:*
+        version: link:../../packages/nuxt
+      rimraf:
+        specifier: ^3.0.2
+        version: 3.0.2
+      start-server-and-test:
+        specifier: ^1.14.0
+        version: 1.15.5
 
   example/react-umi:
     dependencies:
