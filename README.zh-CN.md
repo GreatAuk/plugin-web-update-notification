@@ -47,6 +47,71 @@
 安装当前插件（使用默认配置），打包并部署 -> 打开浏览器访问网页（标签页A） -> 修改代码，重新打包并部署(默认 versionType 需要提交 git commit 才会更新版本号) -> 重新进入刚才打开的标签页 A。 这里你可以在右下角看到更新提示。
 注意，开发模式下当前插件不会生效。
 
+## 工作原理
+
+### 构建时（版本获取策略）
+
+```mermaid
+flowchart TD
+    Start([插件启动: 构建阶段]) --> Detect[自动检测仓库类型<br/>查找 .git / .svn 目录]
+    Detect --> Type{versionType?}
+
+    Type -->|git_commit_hash| Git["git rev-parse --short HEAD"]
+    Type -->|svn_revision_number| Svn["svnversion"]
+    Type -->|pkg_version| Pkg["process.env.npm_package_version"]
+    Type -->|build_timestamp| Ts["Date.now()"]
+    Type -->|custom| Custom["customVersion 选项"]
+
+    Git --> Check{获取成功?}
+    Svn --> Check
+    Pkg --> Check
+    Check -->|失败| Fallback[降级到 build_timestamp]
+    Check -->|成功| Version[得到 version]
+    Ts --> Version
+    Custom --> Version
+    Fallback --> Version
+
+    Version --> Emit[emitFile 生成产物<br/>version.json / .js / .css<br/>带 MD5 前 8 位内容哈希]
+    Emit --> Inject[transformIndexHtml<br/>注入标签与锚点]
+    Inject --> End([构建完成])
+```
+
+### 运行时（检测时机与动作）
+
+```mermaid
+sequenceDiagram
+    participant U as 用户/浏览器
+    participant S as 注入脚本
+    participant Srv as 服务器(version.json)
+
+    Note over S: 内置 LOCAL_VERSION（打包时写入）
+
+    rect rgb(235, 245, 255)
+    Note over U,S: 触发检查的 4 种时机
+    U->>S: 1. 首次加载页面 (checkImmediately)
+    U->>S: 2. 轮询 (checkInterval, 默认 10 分钟)
+    U->>S: 3. script 资源加载失败 404 (checkOnLoadFileError)
+    U->>S: 4. 标签页 refocus / revisible (checkOnWindowFocus)
+    end
+
+    S->>Srv: fetch version.json
+    Srv-->>S: { version, silence }
+
+    alt 版本相同
+        S-->>U: 不处理
+    else 版本不同
+        alt silence = true
+            S-->>U: 静默，不提示
+        else hiddenDefaultNotification = false
+            S-->>U: 显示右下角更新通知
+            U->>S: 点击「刷新」-> location.reload() / onClickRefresh
+            U->>S: 点击「忽略」-> dismissUpdate()
+        else hiddenDefaultNotification = true
+            S-->>U: 派发 plugin_web_update_notice 事件<br/>（自定义通知/行为）
+        end
+    end
+```
+
 ## Why
 
 部分用户（老板）没有关闭网页的习惯，在网页有新版本更新或问题修复时，用户继续使用旧的版本，影响用户体验和后端数据准确性。也有可能会出现报错（文件404）、白屏的情况。

@@ -47,6 +47,71 @@ Detect webpage updates and notify user to reload. support Vite, UmiJS, Webpack, 
 Install the current plugin (using the default configuration), package and deploy it -> Open a browser to visit the webpage (Tab A) -> Modify the code, repackage and redeploy(the default versionType requires a git commit to update the version number.) -> Re-enter the previously opened Tab A. Here you can see the update notification in the lower right corner.
 Note that the current plugin will not take effect in development mode.
 
+## How it works
+
+### Build time (version strategy)
+
+```mermaid
+flowchart TD
+    Start([Plugin start: build phase]) --> Detect[Auto detect repo type<br/>look for .git / .svn]
+    Detect --> Type{versionType?}
+
+    Type -->|git_commit_hash| Git["git rev-parse --short HEAD"]
+    Type -->|svn_revision_number| Svn["svnversion"]
+    Type -->|pkg_version| Pkg["process.env.npm_package_version"]
+    Type -->|build_timestamp| Ts["Date.now()"]
+    Type -->|custom| Custom["customVersion option"]
+
+    Git --> Check{success?}
+    Svn --> Check
+    Pkg --> Check
+    Check -->|fail| Fallback[fallback to build_timestamp]
+    Check -->|success| Version[version resolved]
+    Ts --> Version
+    Custom --> Version
+    Fallback --> Version
+
+    Version --> Emit[emitFile artifacts<br/>version.json / .js / .css<br/>with MD5 first-8 content hash]
+    Emit --> Inject[transformIndexHtml<br/>inject tags and anchor]
+    Inject --> End([Build done])
+```
+
+### Runtime (check triggers and actions)
+
+```mermaid
+sequenceDiagram
+    participant U as User / Browser
+    participant S as Inject script
+    participant Srv as Server (version.json)
+
+    Note over S: built-in LOCAL_VERSION (written at build time)
+
+    rect rgb(235, 245, 255)
+    Note over U,S: 4 triggers to check
+    U->>S: 1. first load page (checkImmediately)
+    U->>S: 2. poll (checkInterval, default 10 min)
+    U->>S: 3. script resource 404 (checkOnLoadFileError)
+    U->>S: 4. tab refocus / revisible (checkOnWindowFocus)
+    end
+
+    S->>Srv: fetch version.json
+    Srv-->>S: { version, silence }
+
+    alt same version
+        S-->>U: do nothing
+    else different version
+        alt silence = true
+            S-->>U: silent, no prompt
+        else hiddenDefaultNotification = false
+            S-->>U: show notification (bottom-right)
+            U->>S: click refresh -> location.reload() / onClickRefresh
+            U->>S: click dismiss -> dismissUpdate()
+        else hiddenDefaultNotification = true
+            S-->>U: dispatch plugin_web_update_notice event<br/>(custom notification / behavior)
+        end
+    end
+```
+
 ## Why
 
 Some users do not have the habit of closing web pages. If the front-end page is updated, the user page has always been a historical version, any there may be report an error (file 404) or a white screen.
