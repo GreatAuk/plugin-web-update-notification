@@ -94,9 +94,10 @@ export default defineNuxtModule<Options>({
     // `nitro:init`/`nitro:build:public-assets`/`render:html` are added by Nitro's
     // runtime (@nuxt/nitro-server) at app build time, so they aren't present on the
     // public `@nuxt/schema`/`nitropack` types this package is built against. Casting
-    // `nuxt.hook` locally (instead of augmenting those external modules) keeps full type
-    // safety for the callback bodies below without bloating this package's published
-    // `.d.ts` with Nitro's internal type graph.
+    // `nuxt.hook` locally (instead of augmenting those external modules) keeps this
+    // package's published `.d.ts` slim without bloating it with Nitro's internal type
+    // graph. The `render:html` cast intentionally narrows the full signature to only
+    // what this callback uses (the first parameter).
     type NitroHook = (name: string, fn: (nitro: NitroInstance) => void | Promise<void>) => void
     const nuxtHook = nuxt.hook as unknown as NitroHook
 
@@ -104,7 +105,7 @@ export default defineNuxtModule<Options>({
       nuxtHook('nitro:init', (nitro) => {
         const nitroHook = nitro.hooks.hook as unknown as (
           name: string,
-          fn: (html: NuxtRenderHTMLContext) => void | Promise<void>,
+          fn: (html: NuxtRenderHTMLContext, context?: { event: unknown }) => void | Promise<void>,
         ) => void
         nitroHook('render:html', (html) => {
           html.bodyAppend.push(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div>`)
