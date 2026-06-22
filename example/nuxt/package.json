@@ -1,0 +1,30 @@
+{
+  "name": "nuxt-example",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "build:spa": "NUXT_SSR=false nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "preview:spa": "NUXT_SSR=false nuxt preview",
+    "postinstall": "nuxt prepare",
+    "test:e2e:ssr": "rimraf .output && pnpm build && start-server-and-test preview http://localhost:3000 'PW_EXPERIMENTAL_TS_ESM=1 npx playwright test --project=ssr'",
+    "test:e2e:spa": "rimraf .output && pnpm build:spa && start-server-and-test preview:spa http://localhost:3000 'PW_EXPERIMENTAL_TS_ESM=1 npx playwright test --project=spa'",
+    "test:e2e:ssg": "rimraf .output && pnpm generate && start-server-and-test preview http://localhost:3000 'PW_EXPERIMENTAL_TS_ESM=1 npx playwright test --project=ssg'",
+    "test:e2e": "pnpm test:e2e:ssr && pnpm test:e2e:spa && pnpm test:e2e:ssg"
+  },
+  "dependencies": {
+    "nuxt": "^4.4.8",
+    "vue": "^3.5.35",
+    "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.28.1",
+    "@plugin-web-update-notification/core": "workspace:*",
+    "@plugin-web-update-notification/nuxt": "workspace:*",
+    "rimraf": "^3.0.2",
+    "start-server-and-test": "^1.14.0"
+  }
+}
