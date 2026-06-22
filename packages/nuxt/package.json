@@ -43,6 +43,8 @@
     "@nuxt/kit": "^3.0.0"
   },
   "devDependencies": {
+    "@nuxt/schema": "^3.0.0",
+    "nitropack": "^2.0.0",
     "nuxt": "^3.0.0"
   },
   "peerDependencies": {
