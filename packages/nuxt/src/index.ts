@@ -25,7 +25,7 @@ export default defineNuxtModule<Options>({
     name: '@plugin-web-update-notification/nuxt',
     configKey: 'webUpdateNotification',
     compatibility: {
-      nuxt: '>=3.0.0',
+      nuxt: '^3.0.0 || ^4.0.0',
     },
   },
   defaults: {},
