@@ -1,7 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import { defineNuxtModule } from '@nuxt/kit'
-import type { NuxtRenderHTMLContext } from 'nuxt/app'
+import { addServerPlugin, addTemplate, defineNuxtModule } from '@nuxt/kit'
 import type { Nitro as NitroInstance } from 'nitropack/types'
 import type { Options } from '@plugin-web-update-notification/core'
 import {
@@ -89,31 +88,39 @@ export default defineNuxtModule<Options>({
       })
     }
 
-    // 2) 注入 body 通知锚点（Nitro render:html，覆盖三模式渲染产物）
+    // 2) 注入 body 通知锚点
     //
-    // `nitro:init`/`nitro:build:public-assets`/`render:html` are added by Nitro's
-    // runtime (@nuxt/nitro-server) at app build time, so they aren't present on the
-    // public `@nuxt/schema`/`nitropack` types this package is built against. Casting
-    // `nuxt.hook` locally (instead of augmenting those external modules) keeps this
-    // package's published `.d.ts` slim without bloating it with Nitro's internal type
-    // graph. The `render:html` cast intentionally narrows the full signature to only
-    // what this callback uses (the first parameter).
-    type NitroHook = (name: string, fn: (nitro: NitroInstance) => void | Promise<void>) => void
-    const nuxtHook = nuxt.hook as unknown as NitroHook
-
+    // 不能用构建期的 `nitro.hooks.hook('render:html', ...)`：通过 `nitro:init` 拿到的
+    // `nitro` 是构建期对象，构建过程中根本不会有 HTML 渲染请求经过它，挂在它上面的
+    // `render:html` 监听器永远不会被调用。真正在每次渲染时触发 `render:html` 的是部署后
+    // 的运行时 `nitroApp`（@nuxt/nitro-server 的 renderer 在每次请求时
+    // `nitroApp.hooks.callHook('render:html', ...)`），SSR 运行时渲染、SSG prerender（内部
+    // 仍是对编译产物发起请求）、SPA shell 渲染三种模式走的都是这同一条运行时渲染链路。
+    // 所以要用 Nitro server plugin（`addServerPlugin`）把回调注册到运行时 nitroApp 上。
     if (!hiddenDefaultNotification) {
-      nuxtHook('nitro:init', (nitro) => {
-        const nitroHook = nitro.hooks.hook as unknown as (
-          name: string,
-          fn: (html: NuxtRenderHTMLContext, context?: { event: unknown }) => void | Promise<void>,
-        ) => void
-        nitroHook('render:html', (html) => {
-          html.bodyAppend.push(`<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div>`)
-        })
+      const renderHtmlPlugin = addTemplate({
+        filename: 'plugin-web-update-notification-render-html.mjs',
+        write: true,
+        getContents: () =>
+          [
+            'export default (nitroApp) => {',
+            '  nitroApp.hooks.hook(\'render:html\', (html) => {',
+            `    html.bodyAppend.push('<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div>')`,
+            '  })',
+            '}',
+            '',
+          ].join('\n'),
       })
+      addServerPlugin(renderHtmlPlugin.dst)
     }
 
     // 3) 产出静态资源到 Nitro publicDir
+    //
+    // `nitro:build:public-assets` 是 Nitro 在构建期触发的 hook，未出现在公开的
+    // `@nuxt/schema`/`nitropack` 类型里，这里本地 cast `nuxt.hook` 而不是改写那些外部模块
+    // 的类型，避免把 Nitro 内部类型图灌进本包发布的 `.d.ts`。
+    type NitroHook = (name: string, fn: (nitro: NitroInstance) => void | Promise<void>) => void
+    const nuxtHook = nuxt.hook as unknown as NitroHook
     nuxtHook('nitro:build:public-assets', (nitro) => {
       const publicDir = nitro.options.output.publicDir
 
