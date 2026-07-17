@@ -118,6 +118,8 @@ sequenceDiagram
 
 ## 安装
 
+> **仅支持 ESM：**当前版本仅支持 ESM。如果你的项目仍依赖 CommonJS，请安装 `1.8.1` 版本。
+
 ```bash
 # vite
 pnpm add @plugin-web-update-notification/vite -D

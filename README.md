@@ -118,6 +118,8 @@ Some users do not have the habit of closing web pages. If the front-end page is 
 
 ## Install
 
+> **ESM-only:** The current release only supports ESM. If your project still relies on CommonJS, please install version `1.8.1` instead.
+
 ```bash
 # vite
 pnpm add @plugin-web-update-notification/vite -D
