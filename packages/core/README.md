@@ -19,7 +19,12 @@ English | [简体中文](./README.zh-CN.md)
     <br>
 </p>
 
-Detect webpage updates and notify user to reload. support vite, umijs and webpack.
+<p align="center">
+  <a href="https://zread.ai/GreatAuk/plugin-web-update-notification" target="_blank"><img src="https://img.shields.io/badge/Ask_Zread-_.svg?style=flat-square&color=00b0aa&labelColor=000000&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuOTYxNTYgMS42MDAxSDIuMjQxNTZDMS44ODgxIDEuNjAwMSAxLjYwMTU2IDEuODg2NjQgMS42MDE1NiAyLjI0MDFWNC45NjAxQzEuNjAxNTYgNS4zMTM1NiAxLjg4ODEgNS42MDAxIDIuMjQxNTYgNS42MDAxSDQuOTYxNTZDNS4zMTUwMiA1LjYwMDEgNS42MDE1NiA1LjMxMzU2IDUuNjAxNTYgNC45NjAxVjIuMjQwMUM1LjYwMTU2IDEuODg2NjQgNS4zMTUwMiAxLjYwMDEgNC45NjE1NiAxLjYwMDFaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00Ljk2MTU2IDEwLjM5OTlIMi4yNDE1NkMxLjg4ODEgMTAuMzk5OSAxLjYwMTU2IDEwLjY4NjQgMS42MDE1NiAxMS4wMzk5VjEzLjc1OTlDMS42MDE1NiAxNC4xMTM0IDEuODg4MSAxNC4zOTk5IDIuMjQxNTYgMTQuMzk5OUg0Ljk2MTU2QzUuMzE1MDIgMTQuMzk5OSA1LjYwMTU2IDE0LjExMzQgNS42MDE1NiAxMy43NTk5VjExLjAzOTlDNS42MDE1NiAxMC42ODY0IDUuMzE1MDIgMTAuMzk5OSA0Ljk2MTU2IDEwLjM5OTlaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik0xMy43NTg0IDEuNjAwMUgxMS4wMzg0QzEwLjY4NSAxLjYwMDEgMTAuMzk4NCAxLjg4NjY0IDEwLjM5ODQgMi4yNDAxVjQuOTYwMUMxMC4zOTg0IDUuMzEzNTYgMTAuNjg1IDUuNjAwMSAxMS4wMzg0IDUuNjAwMUgxMy43NTg0QzE0LjExMTkgNS42MDAxIDE0LjM5ODQgNS4zMTM1NiAxNC4zOTg0IDQuOTYwMVYyLjI0MDFDMTQuMzk4NCAxLjg4NjY0IDE0LjExMTkgMS42MDAxIDEzLjc1ODQgMS42MDAxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNNCAxMkwxMiA0TDQgMTJaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00IDEyTDEyIDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K&logoColor=ffffff" alt="zread"/></a>
+  <a href="https://deepwiki.com/GreatAuk/plugin-web-update-notification"><img src="https://img.shields.io/badge/DeepWiki-GreatAuk%2Fplugin--web--update--notification-blue.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAyCAYAAAAnWDnqAAAAAXNSR0IArs4c6QAAA05JREFUaEPtmUtyEzEQhtWTQyQLHNak2AB7ZnyXZMEjXMGeK/AIi+QuHrMnbChYY7MIh8g01fJoopFb0uhhEqqcbWTp06/uv1saEDv4O3n3dV60RfP947Mm9/SQc0ICFQgzfc4CYZoTPAswgSJCCUJUnAAoRHOAUOcATwbmVLWdGoH//PB8mnKqScAhsD0kYP3j/Yt5LPQe2KvcXmGvRHcDnpxfL2zOYJ1mFwrryWTz0advv1Ut4CJgf5uhDuDj5eUcAUoahrdY/56ebRWeraTjMt/00Sh3UDtjgHtQNHwcRGOC98BJEAEymycmYcWwOprTgcB6VZ5JK5TAJ+fXGLBm3FDAmn6oPPjR4rKCAoJCal2eAiQp2x0vxTPB3ALO2CRkwmDy5WohzBDwSEFKRwPbknEggCPB/imwrycgxX2NzoMCHhPkDwqYMr9tRcP5qNrMZHkVnOjRMWwLCcr8ohBVb1OMjxLwGCvjTikrsBOiA6fNyCrm8V1rP93iVPpwaE+gO0SsWmPiXB+jikdf6SizrT5qKasx5j8ABbHpFTx+vFXp9EnYQmLx02h1QTTrl6eDqxLnGjporxl3NL3agEvXdT0WmEost648sQOYAeJS9Q7bfUVoMGnjo4AZdUMQku50McDcMWcBPvr0SzbTAFDfvJqwLzgxwATnCgnp4wDl6Aa+Ax283gghmj+vj7feE2KBBRMW3FzOpLOADl0Isb5587h/U4gGvkt5v60Z1VLG8BhYjbzRwyQZemwAd6cCR5/XFWLYZRIMpX39AR0tjaGGiGzLVyhse5C9RKC6ai42ppWPKiBagOvaYk8lO7DajerabOZP46Lby5wKjw1HCRx7p9sVMOWGzb/vA1hwiWc6jm3MvQDTogQkiqIhJV0nBQBTU+3okKCFDy9WwferkHjtxib7t3xIUQtHxnIwtx4mpg26/HfwVNVDb4oI9RHmx5WGelRVlrtiw43zboCLaxv46AZeB3IlTkwouebTr1y2NjSpHz68WNFjHvupy3q8TFn3Hos2IAk4Ju5dCo8B3wP7VPr/FGaKiG+T+v+TQqIrOqMTL1VdWV1DdmcbO8KXBz6esmYWYKPwDL5b5FA1a0hwapHiom0r/cKaoqr+27/XcrS5UwSMbQAAAABJRU5ErkJggg==" alt="DeepWiki"></a>
+</p>
+
+Detect webpage updates and notify user to reload. support Vite, UmiJS, Webpack, Rspack and Nuxt
 
 > Take the git commit hash (also support svn revision number、package.json version、build timestamp、custom) as the version number, and write version into json file. The client polls the version of the server (visibilitychange or focus event assistant), compares it with the local one, and if it is not the same, notifies the user to refresh the page (you can custom behavior).
 
@@ -37,11 +42,83 @@ Detect webpage updates and notify user to reload. support vite, umijs and webpac
 3. script resource loading failure detected (404 ?).
 4. when the tab page is refocus or revisible.
 
+**How to see the update notification**
+
+Install the current plugin (using the default configuration), package and deploy it -> Open a browser to visit the webpage (Tab A) -> Modify the code, repackage and redeploy(the default versionType requires a git commit to update the version number.) -> Re-enter the previously opened Tab A. Here you can see the update notification in the lower right corner.
+Note that the current plugin will not take effect in development mode.
+
+## How it works
+
+### Build time (version strategy)
+
+```mermaid
+flowchart TD
+    Start([Plugin start: build phase]) --> Detect[Auto detect repo type<br/>look for .git / .svn]
+    Detect --> Type{versionType?}
+
+    Type -->|git_commit_hash| Git["git rev-parse --short HEAD"]
+    Type -->|svn_revision_number| Svn["svnversion"]
+    Type -->|pkg_version| Pkg["process.env.npm_package_version"]
+    Type -->|build_timestamp| Ts["Date.now()"]
+    Type -->|custom| Custom["customVersion option"]
+
+    Git --> Check{success?}
+    Svn --> Check
+    Pkg --> Check
+    Check -->|fail| Fallback[fallback to build_timestamp]
+    Check -->|success| Version[version resolved]
+    Ts --> Version
+    Custom --> Version
+    Fallback --> Version
+
+    Version --> Emit[emitFile artifacts<br/>version.json / .js / .css<br/>with MD5 first-8 content hash]
+    Emit --> Inject[transformIndexHtml<br/>inject tags and anchor]
+    Inject --> End([Build done])
+```
+
+### Runtime (check triggers and actions)
+
+```mermaid
+sequenceDiagram
+    participant U as User / Browser
+    participant S as Inject script
+    participant Srv as Server (version.json)
+
+    Note over S: built-in LOCAL_VERSION (written at build time)
+
+    rect rgb(235, 245, 255)
+    Note over U,S: 4 triggers to check
+    U->>S: 1. first load page (checkImmediately)
+    U->>S: 2. poll (checkInterval, default 10 min)
+    U->>S: 3. script resource 404 (checkOnLoadFileError)
+    U->>S: 4. tab refocus / revisible (checkOnWindowFocus)
+    end
+
+    S->>Srv: fetch version.json
+    Srv-->>S: { version, silence }
+
+    alt same version
+        S-->>U: do nothing
+    else different version
+        alt silence = true
+            S-->>U: silent, no prompt
+        else hiddenDefaultNotification = false
+            S-->>U: show notification (bottom-right)
+            U->>S: click refresh -> location.reload() / onClickRefresh
+            U->>S: click dismiss -> dismissUpdate()
+        else hiddenDefaultNotification = true
+            S-->>U: dispatch plugin_web_update_notice event<br/>(custom notification / behavior)
+        end
+    end
+```
+
 ## Why
 
 Some users do not have the habit of closing web pages. If the front-end page is updated, the user page has always been a historical version, any there may be report an error (file 404) or a white screen.
 
 ## Install
+
+> **ESM-only:** The current release only supports ESM. If your project still relies on CommonJS, please install version `1.8.1` instead.
 
 ```bash
 # vite
@@ -52,11 +129,17 @@ pnpm add @plugin-web-update-notification/umijs -D
 
 # webpack plugin
 pnpm add @plugin-web-update-notification/webpack -D
+
+# rspack plugin
+pnpm add @plugin-web-update-notification/rspack -D
+
+# nuxt module
+pnpm add @plugin-web-update-notification/nuxt -D
 ```
 
 ## Usage
 
-[vite](#vite) | [umi](#umijs) | [webpack](#webpack)
+[Vite](#vite) | [UmiJS](#umijs) | [Webpack](#webpack) | [Rspack](#rspack) | [Nuxt](#nuxt)
 
 ### Important: Disable `index.html` caching!
 
@@ -191,6 +274,7 @@ import type { Options as WebUpdateNotificationOptions } from '@plugin-web-update
 export default {
   plugins: ['@plugin-web-update-notification/umijs'],
   webUpdateNotification: {
+    versionType: 'git_commit_hash',
     logVersion: true,
     checkInterval: 0.5 * 60 * 1000,
     notificationProps: {
@@ -221,6 +305,58 @@ module.exports = defineConfig({
   },
 })
 ```
+
+### Rspack
+
+```js
+// rspack.config.js
+const { HtmlRspackPlugin } = require('@rspack/core')
+const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/rspack')
+
+module.exports = {
+  plugins: [
+    new HtmlRspackPlugin(),
+    new WebUpdateNotificationPlugin({
+      logVersion: true,
+    }),
+  ],
+}
+```
+
+Also works with **Rsbuild**:
+
+```ts
+// rsbuild.config.ts
+import { defineConfig } from '@rsbuild/core'
+import { WebUpdateNotificationPlugin } from '@plugin-web-update-notification/rspack'
+
+export default defineConfig({
+  tools: {
+    rspack: {
+      plugins: [
+        new WebUpdateNotificationPlugin({
+          logVersion: true,
+        }),
+      ],
+    },
+  },
+})
+```
+
+### Nuxt
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@plugin-web-update-notification/nuxt'],
+  webUpdateNotification: {
+    logVersion: true,
+  },
+})
+```
+
+Supports SSG (`nuxt generate`), SPA (`ssr: false`) and SSR (`nuxt build`). The module
+only takes effect in production builds.
 
 ### suggest: disabled index.html cache
 
@@ -256,7 +392,7 @@ export interface Options {
   customVersion?: string
   /** polling interval（ms）
    * if set to 0, it will not polling
-   * @default 10 * 60 * 1000
+   * @default 10*60*1000
    */
   checkInterval?: number
   /**
