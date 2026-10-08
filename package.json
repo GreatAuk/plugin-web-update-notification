@@ -58,7 +58,8 @@
     "test:e2e": "pnpm --filter vue-vite-example test:e2e && pnpm --filter nuxt-example test:e2e",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit",
-    "logCIVersion": "echo \"Node version: $(node -v)\" && echo \"pnpm version: $(pnpm -v)\""
+    "logCIVersion": "echo \"Node version: $(node -v)\" && echo \"pnpm version: $(pnpm -v)\"",
+    "test:webpack": "pnpm exec turbo run build --filter=@plugin-web-update-notification/webpack... && node --trace-deprecation --test packages/webpack-plugin/test/*.integration.cjs"
   },
   "devDependencies": {
     "@antfu/ni": "^0.18.8",
