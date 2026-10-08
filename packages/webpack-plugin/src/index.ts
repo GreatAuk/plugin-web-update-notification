@@ -82,14 +82,9 @@ class WebUpdateNotificationPlugin {
     if (versionType === 'custom') version = getVersion(versionType, customVersion!)
     else version = getVersion(versionType!)
 
-    compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
-      // const outputPath = compiler.outputPath
+    const emitAssets = (emitAsset: (name: string, content: string) => void) => {
       const jsonFileContent = generateJSONFileContent(version, silence)
-      // @ts-expect-error
-      compilation.assets[`${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`] = {
-        source: () => jsonFileContent,
-        size: () => jsonFileContent.length,
-      }
+      emitAsset(`${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`, jsonFileContent)
       if (!hiddenDefaultNotification) {
         const injectStyleContent = readFileSync(
           `${get__Dirname()}/${INJECT_STYLE_FILE_NAME}.css`,
@@ -97,11 +92,10 @@ class WebUpdateNotificationPlugin {
         )
         cssFileHash = getFileHash(injectStyleContent)
 
-        // @ts-expect-error
-        compilation.assets[`${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`] = {
-          source: () => injectStyleContent,
-          size: () => injectStyleContent.length,
-        }
+        emitAsset(
+          `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
+          injectStyleContent,
+        )
       }
 
       const filePath = resolve(`${get__Dirname()}/${INJECT_SCRIPT_FILE_NAME}.js`)
@@ -112,12 +106,33 @@ class WebUpdateNotificationPlugin {
       )
       jsFileHash = getFileHash(injectScriptContent)
 
-      // @ts-expect-error
-      compilation.assets[`${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`] = {
-        source: () => injectScriptContent,
-        size: () => injectScriptContent.length,
-      }
-    })
+      emitAsset(
+        `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
+        injectScriptContent,
+      )
+    }
+
+    // Use the compiler's webpack instance; webpack 4 also exposes emitAsset in later releases.
+    const webpack = compiler.webpack
+    if (webpack && Number.parseInt(webpack.version, 10) >= 5) {
+      compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
+        compilation.hooks.processAssets.tap(
+          { name: pluginName, stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL },
+          () => {
+            emitAssets((name, content) => {
+              compilation.emitAsset(name, new webpack.sources.RawSource(content))
+            })
+          },
+        )
+      })
+    } else {
+      compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
+        emitAssets((name, content) => {
+          // @ts-expect-error webpack 4 accepts source/size assets without webpack 5 Source methods
+          compilation.assets[name] = { source: () => content, size: () => content.length }
+        })
+      })
+    }
 
     compiler.hooks.afterEmit.tap(pluginName, () => {
       const htmlFilePath = resolve(compiler.outputPath, indexHtmlFilePath || './index.html')

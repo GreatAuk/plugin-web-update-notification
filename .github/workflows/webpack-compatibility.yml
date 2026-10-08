@@ -1,0 +1,20 @@
+name: Webpack compatibility
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  webpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 23.11.0
+      - run: npm install --global pnpm@10.8.0
+      # Example lifecycle scripts depend on workspace packages that are not built yet.
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm test:webpack
