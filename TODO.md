@@ -20,7 +20,7 @@
 - 影响：`exports.types.import` 指向 `index.d.mts`，所以 Vite、Nuxt 用户以及所有以 ESM 方式解析类型的 webpack / rspack 用户，按 README「Q&A 1」加上 `/// <reference types="@plugin-web-update-notification/vite" />` 后仍然拿不到 `window.pluginWebUpdateNotice_`、`plugin_web_update_notice` 事件的类型。这是 tsup 迁移到 tsdown 时引入的回归（commit `d2cd214`）。
 - 建议：不要用副作用 `import './shim.d.ts'`（oxlint 也对此告警），改为把全局声明放进 `src/type.ts` 或单独的 `client.d.ts`，并在 `package.json` 的 `exports` 中显式暴露（如 `"./client"`），或在 `tsdown.config.ts` 里确认 dts 插件会内联 `declare global`。修复后在 CI 增加一个 `tsc` 消费测试，断言 `window.pluginWebUpdateNotice_` 可用。
 
-#### B2. `versionType: 'pkg_version'` 在不通过 npm scripts 运行时静默产出字符串 `"undefined"`
+#### B2. [Done] `versionType: 'pkg_version'` 在不通过 npm scripts 运行时静默产出字符串 `"undefined"`
 
 - 位置：`packages/core/src/index.ts:58`
 - 现象：`getHostProjectPkgVersion` 直接返回 `process.env.npm_package_version`，这个环境变量只在 `pnpm run xxx` / `npm run xxx` 下存在。直接执行 `npx vite build`、在 Docker / CI 用 `node` 调用构建脚本、或通过 Turborepo 等工具调度时，它是 `undefined`。读取环境变量永远不会抛错，所以外层 `try/catch` 和「降级到时间戳」逻辑都不会触发。

@@ -1,6 +1,7 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import { findUpSync } from 'find-up'
 import md5 from 'md5'
 
@@ -50,12 +51,25 @@ function checkRepoType() {
 }
 
 /**
- * It returns the version of the host project's package.json file
+ * It returns the version of the host project's package.json file.
+ * Prefer `process.env.npm_package_version` (only set when run via npm/pnpm/yarn scripts),
+ * otherwise fall back to the nearest package.json found upward from `process.cwd()`.
+ * Throws when no version can be resolved, so the caller falls back to the build timestamp.
  * @returns The version of the package.json file in the root of the project.
  */
 export function getHostProjectPkgVersion() {
   try {
-    return process.env.npm_package_version as string
+    const envVersion = process.env.npm_package_version?.trim()
+    if (envVersion) return envVersion
+
+    const pkgPath = findUpSync('package.json')
+    if (!pkgPath) throw new Error('Cannot find package.json of the host project!')
+
+    const version = JSON.parse(readFileSync(pkgPath, 'utf-8')).version
+    if (typeof version !== 'string' || !version.trim())
+      throw new Error(`The "version" field is missing or empty in ${pkgPath}!`)
+
+    return version.trim()
   } catch (err) {
     console.warn(`
 ======================================================
