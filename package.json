@@ -74,8 +74,8 @@
     "tsx": "^3.12.5",
     "turbo": "^1.10.12",
     "typescript": "^5.9.3",
-    "vite": "^5.0.2",
-    "vitest": "^0.29.2"
+    "vite": "^8.3.7",
+    "vitest": "^5.1.0"
   },
   "packageManager": "pnpm@10.8.0"
 }
