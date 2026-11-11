@@ -88,28 +88,25 @@ class WebUpdateNotificationPlugin {
     if (versionType === 'custom') version = getVersion(versionType, customVersion!)
     else version = getVersion(versionType!)
 
-    compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
-      // watchMode is only known once compiler.watch() runs, after apply()
-      if (compiler.watchMode) return
+    /** Builds the files to emit, as [file name, content] pairs, and records their hashes. */
+    const generateAssets = (): Array<[string, string]> => {
+      const assets: Array<[string, string]> = []
 
-      const jsonFileContent = generateJSONFileContent(version, silence)
-      // @ts-expect-error
-      compilation.assets[`${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`] = {
-        source: () => jsonFileContent,
-        size: () => jsonFileContent.length,
-      }
+      assets.push([
+        `${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`,
+        generateJSONFileContent(version, silence),
+      ])
+
       if (!hiddenDefaultNotification) {
         const injectStyleContent = readFileSync(
           `${get__Dirname()}/${INJECT_STYLE_FILE_NAME}.css`,
           'utf8',
         )
         cssFileHash = getFileHash(injectStyleContent)
-
-        // @ts-expect-error
-        compilation.assets[`${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`] = {
-          source: () => injectStyleContent,
-          size: () => injectStyleContent.length,
-        }
+        assets.push([
+          `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
+          injectStyleContent,
+        ])
       }
 
       const filePath = resolve(`${get__Dirname()}/${INJECT_SCRIPT_FILE_NAME}.js`)
@@ -119,13 +116,42 @@ class WebUpdateNotificationPlugin {
         this.options,
       )
       jsFileHash = getFileHash(injectScriptContent)
+      assets.push([`${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`, injectScriptContent])
 
-      // @ts-expect-error
-      compilation.assets[`${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`] = {
-        source: () => injectScriptContent,
-        size: () => injectScriptContent.length,
-      }
-    })
+      return assets
+    }
+
+    // `compiler.webpack` only exists since webpack 5
+    const webpack = (compiler as Partial<Pick<Compiler, 'webpack'>>).webpack
+    if (webpack) {
+      compiler.hooks.thisCompilation.tap(pluginName, (compilation: Compilation) => {
+        // watchMode is only known once compiler.watch() runs, after apply()
+        if (compiler.watchMode) return
+
+        compilation.hooks.processAssets.tap(
+          { name: pluginName, stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL },
+          () => {
+            // `minimized` keeps minimizers (e.g. terser) from processing these files again, so
+            // they are emitted as generated, like they were before when added in `emit`
+            for (const [name, content] of generateAssets())
+              compilation.emitAsset(name, new webpack.sources.RawSource(content), { minimized: true })
+          },
+        )
+      })
+    } else {
+      // webpack 4 has neither processAssets nor compiler.webpack.sources
+      compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
+        if (compiler.watchMode) return
+
+        for (const [name, content] of generateAssets()) {
+          // @ts-expect-error webpack 4 accepts any object with source() and size()
+          compilation.assets[name] = {
+            source: () => content,
+            size: () => Buffer.byteLength(content),
+          }
+        }
+      })
+    }
 
     compiler.hooks.afterEmit.tap(pluginName, () => {
       if (compiler.watchMode) return
