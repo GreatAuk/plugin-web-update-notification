@@ -289,6 +289,8 @@ export default {
 
 ### webpack
 
+> The plugin only runs for production builds. It does nothing when `mode` is `development` or the compiler runs in watch mode (including `webpack-dev-server` and `vue-cli-service serve`), because it injects into the `index.html` written to disk. If `mode` is not set, webpack builds as production and the plugin runs.
+
 ```js
 // vue.config.js(vue-cli project)
 const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/webpack')
@@ -307,6 +309,8 @@ module.exports = defineConfig({
 ```
 
 ### Rspack
+
+> The plugin only runs for production builds. It does nothing when `mode` is `development` or the compiler runs in watch mode (including `rspack serve` and `rsbuild dev`), because it injects into the `index.html` written to disk. If `mode` is not set, Rspack builds as production and the plugin runs.
 
 ```js
 // rspack.config.js

@@ -31,6 +31,12 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
   }
 
   apply(compiler: Compiler) {
+    // Only production builds are handled. The dev server keeps its output in memory, so there is
+    // no index.html on disk to inject into, and in watch mode an unchanged index.html is not
+    // re-emitted, so every rebuild would inject into the same file on disk again.
+    // `mode` is undefined when not set, which rspack builds as production.
+    if (compiler.options.mode === 'development') return
+
     /** inject script file hash */
     let jsFileHash = ''
     /** inject css file hash */
@@ -46,6 +52,8 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
     else version = getVersion(versionType!)
 
     compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation: Compilation) => {
+      // watchMode is only known once compiler.watch() runs, after apply()
+      if (compiler.watchMode) return
       const { Compilation } = compiler.rspack
 
       compilation.hooks.processAssets.tap(
@@ -95,6 +103,7 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
     })
 
     compiler.hooks.afterEmit.tap(PLUGIN_NAME, () => {
+      if (compiler.watchMode) return
       const htmlFilePath = resolve(
         compiler.outputPath,
         this.options.indexHtmlFilePath || './index.html',

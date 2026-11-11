@@ -294,6 +294,8 @@ export default {
 
 ### Webpack
 
+> 插件只在生产构建时生效。`mode` 为 `development`，或以 watch 模式运行（包括 `webpack-dev-server`、`vue-cli-service serve`）时，插件不做任何处理，因为它需要改写写入磁盘的 `index.html`。未设置 `mode` 时，webpack 按 production 构建，插件正常生效。
+
 ```js
 // vue.config.js(vue-cli project)
 const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/webpack')
@@ -312,6 +314,8 @@ module.exports = defineConfig({
 ```
 
 ### Rspack
+
+> 插件只在生产构建时生效。`mode` 为 `development`，或以 watch 模式运行（包括 `rspack serve`、`rsbuild dev`）时，插件不做任何处理，因为它需要改写写入磁盘的 `index.html`。未设置 `mode` 时，Rspack 按 production 构建，插件正常生效。
 
 ```js
 // rspack.config.js

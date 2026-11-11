@@ -67,6 +67,12 @@ class WebUpdateNotificationPlugin {
   }
 
   apply(compiler: Compiler) {
+    // Only production builds are handled. The dev server keeps its output in memory, so there is
+    // no index.html on disk to inject into, and in watch mode an unchanged index.html is not
+    // re-emitted, so every rebuild would inject into the same file on disk again.
+    // `mode` is undefined when not set, which webpack builds as production.
+    if (compiler.options.mode === 'development') return
+
     /** inject script file hash */
     let jsFileHash = ''
     /** inject css file hash */
@@ -83,7 +89,9 @@ class WebUpdateNotificationPlugin {
     else version = getVersion(versionType!)
 
     compiler.hooks.emit.tap(pluginName, (compilation: Compilation) => {
-      // const outputPath = compiler.outputPath
+      // watchMode is only known once compiler.watch() runs, after apply()
+      if (compiler.watchMode) return
+
       const jsonFileContent = generateJSONFileContent(version, silence)
       // @ts-expect-error
       compilation.assets[`${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`] = {
@@ -120,6 +128,7 @@ class WebUpdateNotificationPlugin {
     })
 
     compiler.hooks.afterEmit.tap(pluginName, () => {
+      if (compiler.watchMode) return
       const htmlFilePath = resolve(compiler.outputPath, indexHtmlFilePath || './index.html')
       try {
         accessSync(htmlFilePath, constants.F_OK)
