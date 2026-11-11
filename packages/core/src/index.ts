@@ -149,7 +149,7 @@ export function getVersion(versionType?: VersionType, customVersion?: string) {
   const defaultStrategyMap = {
     Git: 'git_commit_hash',
     SVN: 'svn_revision_number',
-    unknown: '',
+    unknown: 'build_timestamp',
   }
 
   const versionType_ = (versionType || defaultStrategyMap[checkRepoType()]) as VersionType
@@ -159,7 +159,7 @@ export function getVersion(versionType?: VersionType, customVersion?: string) {
     if (!strategy) {
       console.warn(`
       ======================================================
-      [plugin-web-update-notice] The version type '${versionType}' is not supported!, we will use the packaging timestamp instead.
+      [plugin-web-update-notice] The version type '${versionType_}' is not supported!, we will use the packaging timestamp instead.
       ======================================================`)
       return getTimestamp()
     }
