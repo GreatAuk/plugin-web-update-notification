@@ -135,7 +135,7 @@
 
 ### 1.3 低影响
 
-#### B19. 根 `package.json` 缺少 `"private": true`，且 `main` / `exports` 指向不存在的 `./dist/index.js`
+#### [Done] B19. 根 `package.json` 缺少 `"private": true`，且 `main` / `exports` 指向不存在的 `./dist/index.js`
 
 - 位置：根 `package.json:21-39`
 - 影响：误执行 `npm publish` 会发布一个空壳包；`files: ["dist"]` 在根目录没有意义。
