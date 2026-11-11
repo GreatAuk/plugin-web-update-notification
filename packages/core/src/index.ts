@@ -8,6 +8,7 @@ import md5 from 'md5'
 import { name as pkgName_ } from '../package.json'
 import type { Options, VersionJSON, VersionType } from './type'
 export * from './constant'
+export { injectPluginHtml } from './injectHtml'
 export type { Options } from './type'
 export const pkgName = pkgName_
 

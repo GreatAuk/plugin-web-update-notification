@@ -5,15 +5,14 @@ import type { Options } from '@plugin-web-update-notification/core'
 import {
   DIRECTORY_NAME,
   INJECT_SCRIPT_FILE_NAME,
-  INJECT_SCRIPT_TAG_ID,
   INJECT_STYLE_FILE_NAME,
   JSON_FILE_NAME,
-  NOTIFICATION_ANCHOR_CLASS_NAME,
   generateJSONFileContent,
   generateJsFileContent,
   getFileHash,
   getVersion,
   get__Dirname,
+  injectPluginHtml,
 } from '@plugin-web-update-notification/core'
 
 const PLUGIN_NAME = 'WebUpdateNotificationPlugin'
@@ -128,37 +127,6 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
       }
     })
   }
-}
-
-/**
- * Fallback: inject tags directly into HTML string when HtmlRspackPlugin is not available
- */
-function injectPluginHtml(
-  html: string,
-  version: string,
-  options: Options,
-  { cssFileHash, jsFileHash }: { jsFileHash: string; cssFileHash: string },
-) {
-  const { customNotificationHTML, hiddenDefaultNotification, injectFileBase = '/' } = options
-
-  const cssLinkHtml =
-    customNotificationHTML || hiddenDefaultNotification
-      ? ''
-      : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
-  let res = html
-
-  res = res.replace(
-    '<head>',
-    `<head>
-    ${cssLinkHtml}
-    <script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="${version}" src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>`,
-  )
-
-  if (!hiddenDefaultNotification) {
-    res = res.replace('</body>', `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div></body>`)
-  }
-
-  return res
 }
 
 export { WebUpdateNotificationPlugin }
