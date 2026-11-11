@@ -16,7 +16,7 @@ let hasShowSystemUpdateNotice = false
 /** latest version from server */
 let latestVersion = ''
 let currentLocale = ''
-let intervalTimer: NodeJS.Timeout | undefined
+let intervalTimer: ReturnType<typeof setInterval> | undefined
 
 /**
  * limit function
