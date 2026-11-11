@@ -140,6 +140,14 @@ pnpm --filter=@plugin-web-update-notification/core build
 
 在 `packages/core/src/index.ts` 的 `getVersionStrategies` 对象中添加新策略，并更新 `VersionType` 类型定义。
 
+### 修改文档
+
+只编辑根目录的 `README.md` 和 `README.zh-CN.md`，不要直接改 `packages/*/README*.md`。子包文档是根目录文档的副本，改完后运行以下命令同步（`LICENSE` 也会一并复制）：
+
+```bash
+pnpm synchronous-doc
+```
+
 ### 国际化
 
 默认语言配置在 `packages/core/src/locale.ts`，支持 `zh_CN`、`zh_TW`、`en_US`。
