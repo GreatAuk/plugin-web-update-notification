@@ -41,7 +41,8 @@ export function getFileHash(fileString: string) {
  * @returns 'Git' | 'SVN' | 'unknown'
  */
 function checkRepoType() {
-  const gitRepo = findUpSync('.git', { type: 'directory' })
+  // `.git` is a file (`gitdir: ...`) rather than a directory in git worktrees and submodules
+  const gitRepo = findUpSync('.git', { type: 'directory' }) || findUpSync('.git', { type: 'file' })
   if (gitRepo) return 'Git'
   const svnRepo = findUpSync('.svn', { type: 'directory' })
   if (svnRepo) return 'SVN'

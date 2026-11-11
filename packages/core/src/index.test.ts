@@ -172,6 +172,21 @@ describe('getVersion', () => {
       expect(console.warn).not.toHaveBeenCalled()
     })
 
+    it('git worktree / submodule (`.git` is a file) -> git commit hash', () => {
+      const tmp = mkdtempSync(join(tmpdir(), 'pwun-'))
+      try {
+        writeFileSync(join(tmp, '.git'), 'gitdir: /somewhere/.git/worktrees/x\n')
+        const sub = join(tmp, 'src')
+        mkdirSync(sub)
+        vi.spyOn(process, 'cwd').mockReturnValue(sub)
+        mockedExecSync.mockReturnValue(Buffer.from('cafe123\n'))
+        expect(getVersion()).toBe('cafe123')
+        expect(mockedExecSync).toHaveBeenCalledWith('git rev-parse --short HEAD')
+      } finally {
+        rmSync(tmp, { recursive: true, force: true })
+      }
+    })
+
     it('explicit versionType wins over the detected repository type', () => {
       mockRepo('Git')
       expect(getVersion('build_timestamp')).toBe(`${NOW}`)
