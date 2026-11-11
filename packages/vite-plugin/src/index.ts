@@ -30,20 +30,17 @@ export function webUpdateNotice(options: Options = {}): Plugin {
   // let viteVersion: string | undefined
 
   const { versionType, customVersion, silence } = options
+  /**
+   * Computed lazily in `configResolved`, which only runs when the plugin is applied
+   * (i.e. `vite build`), so `vite dev` never spawns `git rev-parse` / `svnversion`.
+   */
   let version = ''
-  if (versionType === 'custom') version = getVersion(versionType, customVersion!)
-  else version = getVersion(versionType!)
 
   /** inject script file hash */
   let jsFileHash = ''
   /** inject css file hash */
   let cssFileHash = ''
-  const cssFileSource = readFileSync(
-    `${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`,
-    'utf8',
-  ).toString()
-  cssFileHash = getFileHash(cssFileSource)
-
+  let cssFileSource = ''
   let jsFileSource = ''
 
   return {
@@ -54,6 +51,15 @@ export function webUpdateNotice(options: Options = {}): Plugin {
       // 存储最终解析的配置
       viteConfig = resolvedConfig
       if (options.injectFileBase === undefined) options.injectFileBase = viteConfig.base
+
+      if (versionType === 'custom') version = getVersion(versionType, customVersion!)
+      else version = getVersion(versionType!)
+
+      cssFileSource = readFileSync(
+        `${resolve(get__Dirname(), INJECT_STYLE_FILE_NAME)}.css`,
+        'utf8',
+      ).toString()
+      cssFileHash = getFileHash(cssFileSource)
 
       jsFileSource = generateJsFileContent(
         readFileSync(`${resolve(get__Dirname(), INJECT_SCRIPT_FILE_NAME)}.js`, 'utf8').toString(),
