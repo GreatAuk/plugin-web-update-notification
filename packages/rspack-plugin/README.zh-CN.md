@@ -35,7 +35,7 @@ module.exports = {
 | `checkOnWindowFocus`        | `boolean`             | `true`           | 窗口获得焦点时检查更新                                                                    |
 | `checkImmediately`          | `boolean`             | `true`           | 页面加载后立即检查更新                                                                    |
 | `checkOnLoadFileError`      | `boolean`             | `true`           | 加载 js 文件失败时检查更新                                                                |
-| `logVersion`                | `boolean \| function` | `true`           | 是否在控制台输出版本号                                                                    |
+| `logVersion`                | `boolean \| function` | `true`           | 是否在控制台输出版本号。传函数时会经 `toString()` 内联到浏览器执行，不能引用闭包变量或 import |
 | `silence`                   | `boolean`             | `false`          | 是否静默通知                                                                              |
 | `hiddenDefaultNotification` | `boolean`             | `false`          | 是否隐藏默认通知                                                                          |
 | `hiddenDismissButton`       | `boolean`             | `false`          | 是否隐藏关闭按钮                                                                          |

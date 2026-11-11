@@ -192,16 +192,21 @@ export function generateJSONFileContent(version: string, silence = false) {
 
 export function generateJsFileContent(fileSource: string, version: string, options: Options) {
   const { logVersion = true } = options
-  let content = `${fileSource}
+  // The injected file is a classic <script>: wrap our statements in an IIFE so
+  // no binding (e.g. `logFn`) leaks into the page's global lexical scope and
+  // collides with host scripts declaring the same name.
+  let body = `
   window.__checkUpdateSetup__(${JSON.stringify(options)});`
   if (logVersion) {
     const fn = typeof logVersion === 'function' ? logVersion : logVersionDefault
-    content += `
-      ;const logFn = ${fn.toString()}
-      ;logFn('${version}', ${Date.now()})
-    `
+    body += `
+  const logFn = ${fn.toString()};
+  logFn('${version}', ${Date.now()});`
   }
-  return content
+  return `${fileSource}
+;(function () {${body}
+})();
+`
 }
 
 export function logVersionDefault(version: string, releaseTime: number) {

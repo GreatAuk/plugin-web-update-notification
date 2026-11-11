@@ -35,7 +35,7 @@ module.exports = {
 | `checkOnWindowFocus`        | `boolean`             | `true`           | Check update when window focus                                                               |
 | `checkImmediately`          | `boolean`             | `true`           | Check update immediately after page loaded                                                   |
 | `checkOnLoadFileError`      | `boolean`             | `true`           | Check update when load js file error                                                         |
-| `logVersion`                | `boolean \| function` | `true`           | Whether to output version in console                                                         |
+| `logVersion`                | `boolean \| function` | `true`           | Whether to output version in console. A function is inlined via `toString()` and runs in the browser, so it cannot use closure variables or imports |
 | `silence`                   | `boolean`             | `false`          | Whether to silence the notification                                                          |
 | `hiddenDefaultNotification` | `boolean`             | `false`          | Whether to hide the default notification                                                     |
 | `hiddenDismissButton`       | `boolean`             | `false`          | Whether to hide the dismiss button                                                           |

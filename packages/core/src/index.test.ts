@@ -2,6 +2,7 @@ import { execSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { createContext, runInContext } from 'node:vm'
 import { findUpSync } from 'find-up'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
@@ -247,6 +248,21 @@ describe('generateJsFileContent', () => {
   it('uses the default logger source for logVersion: true', () => {
     const content = generateJsFileContent(fileSource, 'v1', { logVersion: true })
     expect(content).toContain(logVersionDefault.toString())
+  })
+
+  it('does not leak bindings into the global lexical scope of a classic script', () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const context = createContext({ console })
+    context.window = context
+    context.__checkUpdateSetup__ = vi.fn()
+    // a host page script that happens to declare the same top-level name
+    runInContext('const logFn = "host"', context)
+
+    const content = generateJsFileContent(fileSource, 'v3', {})
+    expect(() => runInContext(content, context)).not.toThrow()
+    expect(context.__checkUpdateSetup__).toHaveBeenCalledWith({})
+    expect(log).toHaveBeenCalledWith('version: %cv3', 'color: #1677ff')
+    expect(runInContext('logFn', context)).toBe('host')
   })
 
   it('does not log when logVersion is false', () => {

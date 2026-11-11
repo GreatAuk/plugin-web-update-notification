@@ -39,6 +39,12 @@ export interface Options {
    *  console.log(`version: %c${version}`, 'color: #1890ff') // this is the default behavior
    * }
    * ```
+   *
+   * Note: the function is serialized with `fn.toString()` at build time and inlined
+   * into the injected script, so it must be self-contained. It runs in the browser and
+   * cannot reference closure variables, imports or Node.js APIs from your build config;
+   * only browser globals are available. Use an arrow function or `function` expression
+   * (method shorthand like `logVersion(v) {}` does not serialize to a valid expression).
    * @default true
    */
   logVersion?: boolean | ((version: string) => void)

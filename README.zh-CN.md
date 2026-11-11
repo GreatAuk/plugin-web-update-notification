@@ -412,6 +412,10 @@ export interface Options {
    *   console.log(`version: %c${version}`, 'color: #1890ff') // 默认行为
    * }
    * ```
+   *
+   * 注意：函数会在构建时通过 `fn.toString()` 序列化并原样写入注入脚本，因此必须自包含。
+   * 它在浏览器中执行，不能引用构建配置里的闭包变量、import 或 Node.js API，只能使用浏览器全局对象。
+   * 请使用箭头函数或 `function` 表达式（`logVersion(v) {}` 这类方法简写序列化后不是合法表达式）。
    * @default true
    */
   logVersion?: boolean | ((version: string) => void)
