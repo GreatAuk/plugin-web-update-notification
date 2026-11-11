@@ -27,7 +27,7 @@
 - 影响：`version.json` 里写入 `"version": "undefined"`，所有后续构建都相等，用户永远收不到更新通知，且没有任何告警。
 - 建议：用 `find-up` 找到宿主项目 `package.json` 并读取 `version` 字段；找不到或为空时抛错以触发降级，同时输出告警。
 
-#### B3. `.git` 为文件（git worktree / submodule）时仓库类型检测失败，静默降级到时间戳
+#### [Done] B3. `.git` 为文件（git worktree / submodule）时仓库类型检测失败，静默降级到时间戳
 
 - 位置：`packages/core/src/index.ts:44`（`findUpSync('.git', { type: 'directory' })`）
 - 现象：git worktree 和 submodule 中的 `.git` 是一个文件而不是目录，`checkRepoType` 返回 `'unknown'`，默认策略变成空字符串。
