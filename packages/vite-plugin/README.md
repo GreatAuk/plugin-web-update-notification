@@ -289,6 +289,8 @@ export default {
 
 ### webpack
 
+> The plugin only runs for production builds. It does nothing when `mode` is `development` or the compiler runs in watch mode (including `webpack-dev-server` and `vue-cli-service serve`), because it injects into the `index.html` written to disk. If `mode` is not set, webpack builds as production and the plugin runs.
+
 ```js
 // vue.config.js(vue-cli project)
 const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/webpack')
@@ -307,6 +309,8 @@ module.exports = defineConfig({
 ```
 
 ### Rspack
+
+> The plugin only runs for production builds. It does nothing when `mode` is `development` or the compiler runs in watch mode (including `rspack serve` and `rsbuild dev`), because it injects into the `index.html` written to disk. If `mode` is not set, Rspack builds as production and the plugin runs.
 
 ```js
 // rspack.config.js
@@ -419,6 +423,12 @@ export interface Options {
    *  console.log(`version: %c${version}`, 'color: #1890ff') // this is the default behavior
    * }
    * ```
+   *
+   * Note: the function is serialized with `fn.toString()` at build time and inlined
+   * into the injected script, so it must be self-contained. It runs in the browser and
+   * cannot reference closure variables, imports or Node.js APIs from your build config;
+   * only browser globals are available. Use an arrow function or `function` expression
+   * (method shorthand like `logVersion(v) {}` does not serialize to a valid expression).
    * @default true
    */
   logVersion?: boolean | ((version: string) => void)
@@ -467,7 +477,7 @@ export interface Options {
    * Base public path for inject file, Valid values include:
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
-   * * Empty string(default) or ./
+   * * Empty string(default) or ./ (not recommended, see FAQ)
    *
    * !!! Don't forget / at the end of the path
    */
@@ -604,6 +614,8 @@ interface Window {
    ```
 
    > After version 1.2.0, in most case, you not need to set injectFileBase, it will be automatically detected from the base of vite config、publicPath of webpack config or publicPath of umi config
+
+   > **Relative paths (e.g. `base: './'`) are not recommended.** The inject script resolves a relative base against its own URL, so the version check keeps working after client-side navigation to nested routes. However, when a nested route such as `/user/profile` is opened directly in a history-mode SPA, the browser resolves the `./` script tags in `index.html` against `/user/`, so both the inject script and your app's own assets return 404. Use an absolute path that matches the deployment (e.g. `'/'` or `'/folder/'`) instead. If you must use a relative path, use hash routing or add `<base href="/">` to `index.html`.
 
 3. Custom notification button event.
 

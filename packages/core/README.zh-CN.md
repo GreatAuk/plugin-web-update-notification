@@ -294,6 +294,8 @@ export default {
 
 ### Webpack
 
+> 插件只在生产构建时生效。`mode` 为 `development`，或以 watch 模式运行（包括 `webpack-dev-server`、`vue-cli-service serve`）时，插件不做任何处理，因为它需要改写写入磁盘的 `index.html`。未设置 `mode` 时，webpack 按 production 构建，插件正常生效。
+
 ```js
 // vue.config.js(vue-cli project)
 const { WebUpdateNotificationPlugin } = require('@plugin-web-update-notification/webpack')
@@ -312,6 +314,8 @@ module.exports = defineConfig({
 ```
 
 ### Rspack
+
+> 插件只在生产构建时生效。`mode` 为 `development`，或以 watch 模式运行（包括 `rspack serve`、`rsbuild dev`）时，插件不做任何处理，因为它需要改写写入磁盘的 `index.html`。未设置 `mode` 时，Rspack 按 production 构建，插件正常生效。
 
 ```js
 // rspack.config.js
@@ -408,6 +412,10 @@ export interface Options {
    *   console.log(`version: %c${version}`, 'color: #1890ff') // 默认行为
    * }
    * ```
+   *
+   * 注意：函数会在构建时通过 `fn.toString()` 序列化并原样写入注入脚本，因此必须自包含。
+   * 它在浏览器中执行，不能引用构建配置里的闭包变量、import 或 Node.js API，只能使用浏览器全局对象。
+   * 请使用箭头函数或 `function` 表达式（`logVersion(v) {}` 这类方法简写序列化后不是合法表达式）。
    * @default true
    */
   logVersion?: boolean | ((version: string) => void)
@@ -456,7 +464,7 @@ export interface Options {
    * 注入文件的公共基础路径，可取：
    * - 绝对路径，如 /foo/。
    * - 完整 URL，如 https://foo.com/。
-   * - 空字符串（默认值）或 ./。
+   * - 空字符串（默认值）或 ./（不推荐，见常见问题）。
    *
    * 路径末尾必须保留 /。
    */
@@ -602,6 +610,8 @@ interface Window {
    ```
 
    > 自 1.2.0 版本起，通常无需设置 `injectFileBase`。插件会自动读取 Vite 的 base、Webpack 的 publicPath 或 Umi 的 publicPath。
+
+   > **不推荐使用相对路径（如 `base: './'`）。** 注入脚本会基于自身 URL 解析相对路径，所以在 history 路由中跳转到嵌套路由后，版本检测仍能正常工作。但如果直接打开 `/user/profile` 这样的嵌套路由，浏览器会把 `index.html` 中 `./` 开头的脚本按 `/user/` 解析，注入脚本和应用自身的资源都会返回 404。建议按实际部署位置使用绝对路径（如 `'/'` 或 `'/folder/'`）。如必须使用相对路径，请改用 hash 路由，或在 `index.html` 中添加 `<base href="/">`。
 
 3. 如何自定义通知的“刷新”和“忽略”按钮事件？
 
