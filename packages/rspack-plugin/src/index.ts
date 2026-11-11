@@ -63,12 +63,16 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
         },
         () => {
           const { RawSource } = compiler.rspack.sources
+          // `minimized` keeps minimizers (e.g. SwcJsMinimizerRspackPlugin) from processing these
+          // files again, so they are emitted as generated
+          const info = { minimized: true }
 
           // emit version json file
           const jsonFileContent = generateJSONFileContent(version, silence)
           compilation.emitAsset(
             `${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`,
             new RawSource(jsonFileContent),
+            info,
           )
 
           // emit css file
@@ -82,6 +86,7 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
             compilation.emitAsset(
               `${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css`,
               new RawSource(injectStyleContent),
+              info,
             )
           }
 
@@ -97,6 +102,7 @@ class WebUpdateNotificationPlugin implements RspackPluginInstance {
           compilation.emitAsset(
             `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
             new RawSource(injectScriptContent),
+            info,
           )
         },
       )
