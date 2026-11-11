@@ -127,7 +127,7 @@
 - 现象：捕获阶段的 `error` 监听里直接调用 `checkSystemUpdate()`，而不是 `limitCheckSystemUpdate`。一次部署切换时若多个 chunk 同时 404，会瞬间并发多次 `version.json` 请求。
 - 建议：改用节流版本。
 
-#### B18. Nuxt 包依赖 `@nuxt/kit@^3`，但 peer 声明支持 Nuxt 4
+#### [Done] B18. Nuxt 包依赖 `@nuxt/kit@^3`，但 peer 声明支持 Nuxt 4
 
 - 位置：`packages/nuxt/package.json:43`
 - 现象：Nuxt 4 项目会同时安装 `@nuxt/kit@3` 和 `@nuxt/kit@4`，两份 kit 的内部状态（`useNuxt()` 等）可能不一致。

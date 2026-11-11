@@ -347,8 +347,8 @@ importers:
   packages/nuxt:
     dependencies:
       '@nuxt/kit':
-        specifier: ^3.0.0
-        version: 3.21.8(magicast@0.5.3)
+        specifier: ^3.0.0 || ^4.0.0
+        version: 4.4.8(magicast@0.5.3)
       '@plugin-web-update-notification/core':
         specifier: workspace:*
         version: link:../core
@@ -12666,9 +12666,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  ufo@1.6.1:
-    resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
-
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
 
@@ -17943,7 +17940,7 @@ snapshots:
       debug: 4.4.1(supports-color@10.2.2)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.2
+      semver: 7.8.5
       tsutils: 3.21.0(typescript@4.7.4)
     optionalDependencies:
       typescript: 4.7.4
@@ -17957,7 +17954,7 @@ snapshots:
       debug: 4.4.1(supports-color@10.2.2)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.2
+      semver: 7.8.5
       tsutils: 3.21.0(typescript@4.9.5)
     optionalDependencies:
       typescript: 4.9.5
@@ -17971,7 +17968,7 @@ snapshots:
       debug: 4.4.1(supports-color@10.2.2)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.7.2
+      semver: 7.8.5
       tsutils: 3.21.0(typescript@5.9.3)
     optionalDependencies:
       typescript: 5.9.3
@@ -17988,7 +17985,7 @@ snapshots:
       '@typescript-eslint/typescript-estree': 5.62.0(supports-color@10.2.2)(typescript@4.7.4)
       eslint: 8.57.1(supports-color@10.2.2)
       eslint-scope: 5.1.1
-      semver: 7.7.2
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -18003,7 +18000,7 @@ snapshots:
       '@typescript-eslint/typescript-estree': 5.62.0(supports-color@10.2.2)(typescript@4.9.5)
       eslint: 8.57.1(supports-color@10.2.2)
       eslint-scope: 5.1.1
-      semver: 7.7.2
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -18018,7 +18015,7 @@ snapshots:
       '@typescript-eslint/typescript-estree': 5.62.0(supports-color@10.2.2)(typescript@5.9.3)
       eslint: 8.57.1(supports-color@10.2.2)
       eslint-scope: 5.1.1
-      semver: 7.7.2
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -18354,7 +18351,7 @@ snapshots:
       react-refresh: 0.14.2
       resolve: 1.22.10
       sass-loader: 16.0.5(@rspack/core@1.7.10(@swc/helpers@0.5.19))(sass@1.90.0)(webpack@5.101.0(esbuild@0.28.1))
-      semver: 7.7.2
+      semver: 7.8.5
       yargs-parser: 21.1.1
     optionalDependencies:
       '@umijs/mako-darwin-arm64': 0.11.10
@@ -18393,7 +18390,7 @@ snapshots:
       react-refresh: 0.14.2
       resolve: 1.22.10
       sass-loader: 16.0.5(@rspack/core@1.7.10(@swc/helpers@0.5.19))(sass@1.90.0)(webpack@5.101.0(esbuild@0.28.1))
-      semver: 7.7.2
+      semver: 7.8.5
       yargs-parser: 21.1.1
     optionalDependencies:
       '@umijs/mako-darwin-arm64': 0.11.10
@@ -20697,7 +20694,7 @@ snapshots:
       postcss-modules-scope: 3.2.1(postcss@8.5.6)
       postcss-modules-values: 4.0.0(postcss@8.5.6)
       postcss-value-parser: 4.2.0
-      semver: 7.7.2
+      semver: 7.8.5
       webpack: 5.101.0(esbuild@0.28.1)
 
   css-minimizer-webpack-plugin@3.4.1(clean-css@5.3.3)(csso@5.0.5)(esbuild@0.28.1)(webpack@5.101.0(esbuild@0.28.1)):
@@ -21180,7 +21177,7 @@ snapshots:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.7.2
+      semver: 7.8.5
 
   ee-first@1.1.1: {}
 
@@ -22203,7 +22200,7 @@ snapshots:
       minimatch: 3.1.2
       node-abort-controller: 3.1.1
       schema-utils: 3.3.0
-      semver: 7.7.2
+      semver: 7.8.5
       tapable: 2.2.2
       typescript: 4.9.5
       webpack: 5.101.0(esbuild@0.28.1)
@@ -22220,7 +22217,7 @@ snapshots:
       minimatch: 3.1.2
       node-abort-controller: 3.1.1
       schema-utils: 3.3.0
-      semver: 7.7.2
+      semver: 7.8.5
       tapable: 2.2.2
       typescript: 5.9.3
       webpack: 5.101.0(esbuild@0.28.1)
@@ -22353,7 +22350,7 @@ snapshots:
     dependencies:
       citty: 0.1.6
       consola: 3.4.2
-      defu: 6.1.4
+      defu: 6.1.7
       node-fetch-native: 1.6.7
       nypm: 0.5.4
       pathe: 2.0.3
@@ -23751,7 +23748,7 @@ snapshots:
       acorn: 8.15.0
       pathe: 2.0.3
       pkg-types: 1.3.1
-      ufo: 1.6.1
+      ufo: 1.6.4
 
   mlly@1.8.2:
     dependencies:
@@ -24452,7 +24449,7 @@ snapshots:
       pathe: 2.0.3
       pkg-types: 1.3.1
       tinyexec: 0.3.2
-      ufo: 1.6.1
+      ufo: 1.6.4
 
   nypm@0.6.7:
     dependencies:
@@ -25013,7 +25010,7 @@ snapshots:
   pkg-types@1.3.1:
     dependencies:
       confbox: 0.1.8
-      mlly: 1.7.4
+      mlly: 1.8.2
       pathe: 2.0.3
 
   pkg-types@2.3.1:
@@ -25962,7 +25959,7 @@ snapshots:
 
   rc9@2.1.2:
     dependencies:
-      defu: 6.1.4
+      defu: 6.1.7
       destr: 2.0.5
 
   rc9@3.0.1:
@@ -27519,8 +27516,6 @@ snapshots:
   typescript@5.3.3: {}
 
   typescript@5.9.3: {}
-
-  ufo@1.6.1: {}
 
   ufo@1.6.4: {}
 
