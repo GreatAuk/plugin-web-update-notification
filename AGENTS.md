@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-这是一个用于检测网页更新并通知用户刷新的插件系统，支持 Vite、UmiJS、Webpack 和 Rspack。核心原理是：通过 git commit hash（也支持 svn revision、package.json version、build timestamp、custom）作为版本号，打包时将版本号写入 JSON 文件，客户端轮询服务器上的版本号并与本地比较，如果不同则通知用户刷新。
+这是一个用于检测网页更新并通知用户刷新的插件系统，支持 Vite、UmiJS、Webpack、Rspack 和 Nuxt。核心原理是：通过 git commit hash（也支持 svn revision、package.json version、build timestamp、custom）作为版本号，打包时将版本号写入 JSON 文件，客户端轮询服务器上的版本号并与本地比较，如果不同则通知用户刷新。
 
 ## Monorepo 架构
 
@@ -15,7 +15,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **packages/umi-plugin**: UmiJS 插件实现
 - **packages/webpack-plugin**: Webpack 插件实现
 - **packages/rspack-plugin**: Rspack 插件实现（同时支持 Rsbuild）
-- **example/**: 各种框架的示例项目（vue-vite、react-vite、svelte-vite、react-umi、vue-webpack、vue-rspack）
+- **packages/nuxt**: Nuxt module 实现
+- **example/**: 各种框架的示例项目（目录名 → 包名）：
+  - `vue-vite3` → `vue-vite-example`（另有 `vue-vite5`、`vue-vite7` 两个 Vite 版本示例，没有对应的根脚本）
+  - `react-vite` → `react-vite-example`
+  - `svelte-vite` → `svelte-vite-example`
+  - `react-umi` → `react-umi-example`
+  - `vue-cli` → `vue-cli`（Webpack 示例）
+  - `vue-rspack` → `vue-rspack`
+  - `nuxt` → `nuxt-example`
 
 各插件包依赖 core 包（通过 `workspace:*`），共享核心功能。
 
@@ -32,6 +40,7 @@ pnpm dev:vite      # 开发 vite 插件
 pnpm dev:umi       # 开发 umi 插件
 pnpm dev:webpack   # 开发 webpack 插件
 pnpm dev:rspack    # 开发 rspack 插件
+pnpm dev:nuxt      # 开发 nuxt module
 ```
 
 ### 示例运行
@@ -43,14 +52,17 @@ pnpm example:svelte-vite   # 运行 Svelte + Vite 示例
 pnpm example:react-umi     # 运行 React + Umi 示例
 pnpm example:vue-webpack   # 运行 Vue + Webpack 示例
 pnpm example:vue-rspack    # 运行 Vue + Rspack 示例
+pnpm example:nuxt          # 运行 Nuxt 示例
 ```
 
 ### 测试和检查
 
 ```bash
-pnpm test:unit    # 运行单元测试（vitest）
-pnpm test:e2e     # 运行 E2E 测试
-pnpm lint         # 代码检查
+pnpm test         # 单次运行单元测试（vitest run）
+pnpm test:unit    # 以 watch 模式运行单元测试（vitest）
+pnpm test:e2e     # 运行 E2E 测试（vue-vite-example 与 nuxt-example）
+pnpm lint         # 代码检查（oxlint）
+pnpm format       # 代码格式化（oxfmt），只检查不改写用 pnpm format:check
 pnpm typecheck    # 类型检查
 ```
 
@@ -147,4 +159,4 @@ pnpm --filter=@plugin-web-update-notification/core build
 - **Node.js**: 使用 package.json 中的 packageManager 字段指定版本
 - **Monorepo**: Turborepo
 - **测试**: Vitest + Playwright (E2E)
-- **代码规范**: @antfu/eslint-config
+- **代码规范**: oxlint（`.oxlintrc.json`）+ oxfmt（`.oxfmtrc.json`）
