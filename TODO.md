@@ -13,7 +13,7 @@
 
 ### 1.1 高影响
 
-#### B1. ESM 类型产物丢失了 `window.pluginWebUpdateNotice_` 全局类型增强
+#### [Done] B1. ESM 类型产物丢失了 `window.pluginWebUpdateNotice_` 全局类型增强
 
 - 位置：`packages/core/src/index.ts:7`（`import './shim.d.ts'`）、`packages/core/dist/index.d.mts`
 - 现象：构建后 `dist/index.d.cts` 包含 `declare global { interface Window { pluginWebUpdateNotice_ ... } }`，但 `dist/index.d.mts` 完全没有这段声明（`grep pluginWebUpdateNotice_ dist/index.d.mts` 结果为 0）。
@@ -34,28 +34,28 @@
 - 影响：用户没有设置 `versionType` 时，实际使用了 `build_timestamp`，与文档描述的「Git 仓库默认 `git_commit_hash`」不符；并且会打印一条令人困惑的告警（见 B4）。
 - 建议：`findUpSync('.git')` 不限定类型，或直接尝试 `git rev-parse --is-inside-work-tree`。
 
-#### B4. 仓库类型为 `unknown` 时告警文案错误且多余
+#### [Done] B4. 仓库类型为 `unknown` 时告警文案错误且多余
 
 - 位置：`packages/core/src/index.ts:140`、`:150`
 - 现象：`defaultStrategyMap.unknown = ''`，导致 `versionType_` 为空字符串，进入「version type 不支持」分支，打印的是 `The version type 'undefined' is not supported!`（模板里用的是原始参数 `versionType`，不是 `versionType_`）。
 - 影响：没有 `.git` / `.svn` 的项目（例如 CI 里只拷贝源码、或者下载 zip 的项目）每次构建都看到一条错误的告警，容易误以为配置写错。
 - 建议：`unknown` 直接映射到 `'build_timestamp'`，并把告警文案里的变量改为 `versionType_`。
 
-#### B5. 后台标签页加载后会创建重复的轮询定时器
+#### [Done] B5. 后台标签页加载后会创建重复的轮询定时器
 
 - 位置：`packages/core/src/injectScript.ts:144`、`:153`
 - 现象：`__checkUpdateSetup__` 启动时无条件调用一次 `pollingCheck()` 创建 `setInterval`；`visibilitychange` 变为 `visible` 时再次调用 `pollingCheck()`，但只有 `hidden` 事件才会 `clearInterval`。页面在后台标签页中打开（初始状态就是 `hidden`，不会触发 `hidden` 事件），用户切回来时会出现第二个定时器，旧的永远不会被清理。
 - 影响：轮询频率翻倍，多次切换后持续累积，造成服务器无意义请求与内存泄漏。
 - 建议：`pollingCheck` 内先 `clearInterval(intervalTimer)` 再创建；或在启动时根据 `document.visibilityState` 决定是否立即开启轮询。
 
-#### B6. Vite `base: './'`（相对路径）时，嵌套路由下 `version.json` 请求 404
+#### [Done] B6. Vite `base: './'`（相对路径）时，嵌套路由下 `version.json` 请求 404
 
 - 位置：`packages/vite-plugin/src/index.ts:93`、`packages/core/src/injectScript.ts:101`
 - 现象：插件自动把 `viteConfig.base` 作为 `injectFileBase`。当用户配置 `base: './'` 时，运行时 `fetch('./pluginWebUpdateNotice/web_version_by_plugin.json')` 相对于当前页面 URL 解析。在 history 模式的 SPA 中访问 `/user/profile`，请求会落到 `/user/pluginWebUpdateNotice/...`。
 - 影响：非首页路径上更新检测全部失败，控制台持续报错。README「Options」把 `./` 列为合法值，但没有说明这个限制。
 - 建议：检测到相对 base 时，在注入脚本里用 `document.currentScript.src` 或 `script[data-id]` 的 `src` 推导绝对目录；至少在文档中明确说明 `./` 仅适用于 hash 路由。
 
-#### B7. CI 工作流 `test` 任务必然失败
+#### [Done] B7. CI 工作流 `test` 任务必然失败
 
 - 位置：`.github/workflows/ci.yml:75`（`run: nr test`）、根 `package.json`
 - 现象：根目录只有 `test:unit` 和 `test:e2e`，没有 `test` 脚本。本地执行 `nr test` 输出 `ERR_PNPM_NO_SCRIPT Missing script: test`。
@@ -68,7 +68,7 @@
 - 现象：根 `tsc --noEmit` 把所有 `example/**` 一并检查，遇到：示例里的 JSX 没有 `--jsx` 配置；`example/vue-vite3` 使用 vite 3 的 `Plugin` 类型与插件包依赖的 vite 5 类型冲突；`nuxt.config.ts` 里 `webUpdateNotification` 键不被识别（示例没有拿到包内 `declare module '@nuxt/schema'` 增强，与 B1 同源）；umi 示例的 e2e 引用了早已改名的 `web-update-notification-core`。
 - 建议：根 `tsconfig.json` 加 `"include": ["packages/*/src"]`，示例各自独立类型检查；或者用 `tsc -b` 分别引用各包。
 
-#### B9. 单元测试完全缺失，`pnpm test:unit` 以退出码 1 结束
+#### [Done] B9. 单元测试完全缺失，`pnpm test:unit` 以退出码 1 结束
 
 - 位置：`vitest.config.ts`、整个 `packages/` 目录
 - 现象：`vitest --run` 输出 `No test files found, exiting with code 1`。AGENTS.md 和 README 都声称有单元测试。
@@ -84,13 +84,13 @@
 - 另外 `.gitignore` 里有一行 `example/react-umi`，整个 umi 示例（含 e2e）没有进入版本库，`git ls-files example/react-umi` 为空。
 - 建议：把 vue-vite3 的选择器改成与 nuxt 示例一致的正则匹配；重写 umi e2e；从 `.gitignore` 移除 `example/react-umi`；根 `test:e2e` 覆盖 webpack / rspack / umi 示例。
 
-#### B11. Umi 插件 `mkdirSync` 没有 `recursive`，输出目录已存在时直接抛错
+#### [Done] B11. Umi 插件 `mkdirSync` 没有 `recursive`，输出目录已存在时直接抛错
 
 - 位置：`packages/umi-plugin/src/index.ts:108`
 - 现象：`mkdirSync(\`${outputPath}/${DIRECTORY_NAME}\`)`在目录已存在时抛`EEXIST`。用户关闭 Umi 的清理输出目录行为、或自定义 `outputPath` 指向已有目录时构建失败。
 - 建议：`mkdirSync(dir, { recursive: true })`，与 Nuxt 包里的 `writeFileSafe` 保持一致；同时 `outputPath` 应使用 `api.paths.absOutputPath` 而不是 `api.userConfig.outputPath`。
 
-#### B12. Umi 插件的 Joi 校验拒绝 `logVersion` 传函数
+#### [Done] B12. Umi 插件的 Joi 校验拒绝 `logVersion` 传函数
 
 - 位置：`packages/umi-plugin/src/index.ts:32`（`logVersion: Joi.boolean()`）
 - 现象：`Options.logVersion` 类型是 `boolean | ((version: string) => void)`，README 也示范了传函数，但 Umi 的 schema 只允许 boolean，传函数时配置校验报错。
