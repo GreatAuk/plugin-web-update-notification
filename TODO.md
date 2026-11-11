@@ -153,7 +153,7 @@
 - `packages/umi-plugin/package.json`：`keywords` 第一项是 `@plugin-web-update-notification/core`。
 - `scripts/copyFile.ts` 只同步 README / LICENSE 到 core、vite、umi、webpack 四个包，rspack 与 nuxt 没有纳入（`diff README.md packages/rspack-plugin/README.md` 有差异）。
 
-#### B22. 文档与实现不一致
+#### [Done] B22. 文档与实现不一致
 
 - README `:477` 的 `VersionType` 漏掉了 `svn_revision_number`（`README.zh-CN.md:466` 同样）。
 - README `:513`、`:524` 说 `checkUpdate` 是 `debounce(5000ms)`，实现 `limit()` 是「5 秒内只执行第一次」的节流。
