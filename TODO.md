@@ -115,7 +115,7 @@
 - 现象：`html.replace('<head>', ...)` 对 `<head lang="zh">`、`<HEAD>`、`<head\n>` 都不生效，脚本会静默不注入，运行时 `getLocaleVersion` 找不到 script 标签。
 - 建议：Vite 插件应使用 `transformIndexHtml` 返回 `{ html, tags: [{ tag: 'script', attrs, injectTo: 'head-prepend' }] }`，由 Vite 负责插入；webpack / rspack 优先接入 `html-webpack-plugin` / `HtmlRspackPlugin` 的 `alterAssetTags` 钩子，字符串替换只作为兜底并改用不区分大小写的正则。
 
-#### B16. 注入脚本在全局词法作用域声明 `const logFn`
+#### [Done] B16. 注入脚本在全局词法作用域声明 `const logFn`
 
 - 位置：`packages/core/src/index.ts:187`
 - 现象：注入的是经典 `<script>`（非 module），`;const logFn = ...` 直接写在顶层，会在页面全局词法环境创建 `logFn` 绑定。宿主页面任何其他脚本若也在顶层声明 `const logFn` / `let logFn`，浏览器抛 `SyntaxError: Identifier 'logFn' has already been declared`，整段脚本不执行。
