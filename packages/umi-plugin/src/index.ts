@@ -105,7 +105,7 @@ export default (api: IApi) => {
 
   api.onBuildComplete(() => {
     const outputPath = resolve(api.userConfig.outputPath || 'dist')
-    mkdirSync(`${outputPath}/${DIRECTORY_NAME}`)
+    mkdirSync(`${outputPath}/${DIRECTORY_NAME}`, { recursive: true })
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
     if (!hiddenDefaultNotification) {
