@@ -37,11 +37,10 @@ jobs:
           node-version: 23.11.0
           registry-url: 'https://registry.npmjs.org'
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         id: pnpm-install
         with:
-          version: 10.8.0
           run_install: false
 
       - name: Get pnpm store directory

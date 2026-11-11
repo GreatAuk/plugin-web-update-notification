@@ -155,8 +155,9 @@ pnpm --filter=@plugin-web-update-notification/core build
 ## 技术栈
 
 - **构建工具**: tsdown（基于 Rolldown）
-- **包管理器**: pnpm (v10.8.0)
-- **Node.js**: 使用 package.json 中的 packageManager 字段指定版本
+- **包管理器**: pnpm (v11.24.0)，由根 `package.json` 的 `packageManager` 字段锁定
+- **Node.js**: 23.11.0，由根 `package.json` 的 `devEngines.runtime` 锁定（`onFail: download`），pnpm 会下载该版本并用它运行所有脚本，包括 workspace 包的 lifecycle 脚本；本机 Node 只需满足 pnpm 11 自身的要求（>= 22.13）
+- **pnpm 配置**: pnpm 11 只从 `.npmrc` 读取 registry 与认证设置，其余设置（如 `ignoreWorkspaceRootCheck`、依赖构建脚本白名单 `allowBuilds`）都写在 `pnpm-workspace.yaml`。新增带构建脚本的依赖时，需要在 `allowBuilds` 中显式声明 `true` 或 `false`，否则安装会报 `ERR_PNPM_IGNORED_BUILDS`
 - **Monorepo**: Turborepo
 - **测试**: Vitest + Playwright (E2E)
 - **代码规范**: oxlint（`.oxlintrc.json`）+ oxfmt（`.oxfmtrc.json`）

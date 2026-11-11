@@ -1,4 +1,14 @@
-useNodeVersion: 23.11.0
 packages:
   - example/*
   - packages/*
+
+ignoreWorkspaceRootCheck: true
+strictPeerDependencies: false
+
+# 与 pnpm 10 时的行为保持一致：这些依赖的构建脚本一直未执行
+allowBuilds:
+  '@parcel/watcher': false
+  core-js: false
+  core-js-pure: false
+  esbuild: false
+  svelte-preprocess: false

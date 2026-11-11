@@ -59,5 +59,12 @@
     "vite": "^8.3.7",
     "vitest": "^5.1.0"
   },
-  "packageManager": "pnpm@10.8.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "23.11.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@11.24.0"
 }
