@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rsbuild build",
     "dev": "rsbuild dev --open",
-    "preview": "rsbuild preview"
+    "preview": "pnpm build && rsbuild preview"
   },
   "dependencies": {
     "vue": "^3.5.26"
