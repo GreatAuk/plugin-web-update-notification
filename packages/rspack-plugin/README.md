@@ -269,9 +269,8 @@ document.body.addEventListener('plugin_web_update_notice', (e) => {
 ```ts
 // .umirc.ts
 import { defineConfig } from 'umi'
-import type { Options as WebUpdateNotificationOptions } from '@plugin-web-update-notification/umijs'
 
-export default {
+export default defineConfig({
   plugins: ['@plugin-web-update-notification/umijs'],
   webUpdateNotification: {
     versionType: 'git_commit_hash',
@@ -283,9 +282,11 @@ export default {
       buttonText: 'refresh',
       dismissButtonText: 'dismiss',
     },
-  } as WebUpdateNotificationOptions,
-}
+  },
+})
 ```
+
+> `defineConfig` takes the type of `webUpdateNotification` from the files Umi generates in `src/.umi`, so field completion is available once `umi setup`, `umi dev` or `umi build` has run with the plugin registered. Umi generates every function option as `() => any`, so a custom `logVersion` needs optional parameters to pass type checking, e.g. `logVersion: (version?: string, releaseTime?: number) => { ... }`.
 
 ### webpack
 
@@ -417,10 +418,13 @@ export interface Options {
   /**
    * whether to output version in console
    *
-   * you can also pass a function to handle the version
+   * you can also pass a function to handle the version. It receives the version and
+   * the release time (a millisecond timestamp taken by `Date.now()` at build time)
    * ```ts
-   * logVersion: (version) => {
-   *  console.log(`version: %c${version}`, 'color: #1890ff') // this is the default behavior
+   * logVersion: (version, releaseTime) => {
+   *  // this is the default behavior
+   *  console.log(`version: %c${version}`, 'color: #1677ff')
+   *  console.log(`release time: %c${new Date(releaseTime).toLocaleString()}`, 'color: #1677ff')
    * }
    * ```
    *
@@ -431,7 +435,7 @@ export interface Options {
    * (method shorthand like `logVersion(v) {}` does not serialize to a valid expression).
    * @default true
    */
-  logVersion?: boolean | ((version: string) => void)
+  logVersion?: boolean | ((version: string, releaseTime: number) => void)
   /**
    * whether to silence the notification.
    * such as when local version is v1.0, you can set this option to true and build a new version v1.0.1, then the notification will not show
@@ -484,7 +488,12 @@ export interface Options {
   injectFileBase?: string
 }
 
-export type VersionType = 'git_commit_hash' | 'pkg_version' | 'build_timestamp' | 'custom'
+export type VersionType =
+  | 'git_commit_hash'
+  | 'svn_revision_number'
+  | 'pkg_version'
+  | 'build_timestamp'
+  | 'custom'
 
 export interface NotificationConfig {
   /**
@@ -520,7 +529,7 @@ export type LocaleData = Record<string, NotificationProps>
 | window.pluginWebUpdateNotice\_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                                    |
 | window.pluginWebUpdateNotice\_.closeNotification |                                     | close notification                                                            |
 | window.pluginWebUpdateNotice\_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
-| window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, a function wrap by debounce(5000ms)                      |
+| window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, throttled: calls within 5000ms after a check are ignored |
 
 ```ts
 interface Window {
@@ -531,7 +540,7 @@ interface Window {
      */
     setLocale: (locale: string) => void
     /**
-     * manual check update, a function wrap by debounce(5000ms)
+     * manual check update. Throttled: calls within 5000ms after a check are ignored
      */
     checkUpdate: () => void
     /** dismiss current update and close notification, same behavior as dismiss the button */

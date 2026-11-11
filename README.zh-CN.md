@@ -274,9 +274,8 @@ document.body.addEventListener('plugin_web_update_notice', (e) => {
 ```ts
 // .umirc.ts
 import { defineConfig } from 'umi'
-import type { Options as WebUpdateNotificationOptions } from '@plugin-web-update-notification/umijs'
 
-export default {
+export default defineConfig({
   plugins: ['@plugin-web-update-notification/umijs'],
   webUpdateNotification: {
     versionType: 'git_commit_hash',
@@ -288,9 +287,11 @@ export default {
       buttonText: 'refresh',
       dismissButtonText: 'dismiss',
     },
-  } as WebUpdateNotificationOptions,
-}
+  },
+})
 ```
+
+> `defineConfig` 中 `webUpdateNotification` 的类型来自 Umi 在 `src/.umi` 下生成的文件，注册插件后执行过 `umi setup`、`umi dev` 或 `umi build` 才有字段补全。Umi 生成的类型把所有函数类型的选项都写成 `() => any`，因此自定义 `logVersion` 时需将参数声明为可选才能通过类型检查，例如 `logVersion: (version?: string, releaseTime?: number) => { ... }`。
 
 ### Webpack
 
@@ -406,10 +407,12 @@ export interface Options {
   /**
    * 是否在控制台输出版本号。
    *
-   * 也可传入函数以自定义版本号的处理方式。
+   * 也可传入函数以自定义版本号的处理方式。函数接收版本号和发布时间（构建时由 `Date.now()` 得到的毫秒时间戳）。
    * ```ts
-   * logVersion: (version) => {
-   *   console.log(`version: %c${version}`, 'color: #1890ff') // 默认行为
+   * logVersion: (version, releaseTime) => {
+   *   // 默认行为
+   *   console.log(`version: %c${version}`, 'color: #1677ff')
+   *   console.log(`release time: %c${new Date(releaseTime).toLocaleString()}`, 'color: #1677ff')
    * }
    * ```
    *
@@ -418,7 +421,7 @@ export interface Options {
    * 请使用箭头函数或 `function` 表达式（`logVersion(v) {}` 这类方法简写序列化后不是合法表达式）。
    * @default true
    */
-  logVersion?: boolean | ((version: string) => void)
+  logVersion?: boolean | ((version: string, releaseTime: number) => void)
   /**
    * 是否静默更新通知。
    * 例如，当前版本为 v1.0 时，可为 v1.0.1 设置 true。用户升级到该版本时不会看到通知。
@@ -507,12 +510,12 @@ export type LocaleData = Record<string, NotificationProps>
 
 ## 运行时方法
 
-| 方法                                              | 参数                                  | 说明                                           |
-| ------------------------------------------------- | ------------------------------------- | ---------------------------------------------- |
-| `window.pluginWebUpdateNotice_.setLocale`         | `locale`：`zh_CN`、`zh_TW` 或 `en_US` | 设置通知语言。                                 |
-| `window.pluginWebUpdateNotice_.closeNotification` | —                                     | 关闭通知。                                     |
-| `window.pluginWebUpdateNotice_.dismissUpdate`     | —                                     | 忽略当前更新并关闭通知，行为与“忽略”按钮一致。 |
-| `window.pluginWebUpdateNotice_.checkUpdate`       | —                                     | 手动检测更新。该方法内置 5,000 ms 防抖。       |
+| 方法                                              | 参数                                  | 说明                                                                                    |
+| ------------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------- |
+| `window.pluginWebUpdateNotice_.setLocale`         | `locale`：`zh_CN`、`zh_TW` 或 `en_US` | 设置通知语言。                                                                          |
+| `window.pluginWebUpdateNotice_.closeNotification` | —                                     | 关闭通知。                                                                              |
+| `window.pluginWebUpdateNotice_.dismissUpdate`     | —                                     | 忽略当前更新并关闭通知，行为与“忽略”按钮一致。                                          |
+| `window.pluginWebUpdateNotice_.checkUpdate`       | —                                     | 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用会被忽略。 |
 
 ```ts
 interface Window {
@@ -523,7 +526,7 @@ interface Window {
      */
     setLocale: (locale: string) => void
     /**
-     * 手动检测更新。该方法内置 5,000 ms 防抖。
+     * 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用会被忽略。
      */
     checkUpdate: () => void
     /** 忽略当前更新并关闭通知，行为与“忽略”按钮一致。 */

@@ -33,10 +33,13 @@ export interface Options {
   /**
    * whether to output version in console
    *
-   * you can also pass a function to handle the version
+   * you can also pass a function to handle the version. It receives the version and
+   * the release time (a millisecond timestamp taken by `Date.now()` at build time)
    * ```ts
-   * logVersion: (version) => {
-   *  console.log(`version: %c${version}`, 'color: #1890ff') // this is the default behavior
+   * logVersion: (version, releaseTime) => {
+   *  // this is the default behavior
+   *  console.log(`version: %c${version}`, 'color: #1677ff')
+   *  console.log(`release time: %c${new Date(releaseTime).toLocaleString()}`, 'color: #1677ff')
    * }
    * ```
    *
@@ -47,7 +50,7 @@ export interface Options {
    * (method shorthand like `logVersion(v) {}` does not serialize to a valid expression).
    * @default true
    */
-  logVersion?: boolean | ((version: string) => void)
+  logVersion?: boolean | ((version: string, releaseTime: number) => void)
   /**
    * whether to silence the notification.
    * such as when local version is v1.0, you can set this option to true and build a new version v1.0.1, then the notification will not show
@@ -138,7 +141,6 @@ export interface VersionJSON {
   silence?: boolean
 }
 
-
 declare global {
   interface Window {
     /** version number */
@@ -155,7 +157,7 @@ declare global {
        */
       setLocale: (locale: string) => void
       /**
-       * manual check update, a function wrap by debounce(5000ms)
+       * manual check update. Throttled: calls within 5000ms after a check are ignored
        */
       checkUpdate: () => void
       /** dismiss current update and close notification, same behavior as dismiss the button */
