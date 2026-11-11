@@ -109,7 +109,7 @@
 - 现象：直接给 `compilation.assets[...]` 赋值 `{ source, size }`，需要三处 `@ts-expect-error` 绕过类型检查；`size()` 用的是 `string.length`，对包含中文（locale 文案）的 JS / CSS 内容返回的是字符数而不是字节数，webpack stats 中的资源大小不准。webpack 5 推荐 `compilation.hooks.processAssets` + `webpack.sources.RawSource`。
 - 建议：对齐 Rspack 包的实现方式（`thisCompilation` → `processAssets` + `RawSource`）。
 
-#### B15. HTML 注入依赖字面量 `'<head>'` / `'</body>'` 替换
+#### [Done] B15. HTML 注入依赖字面量 `'<head>'` / `'</body>'` 替换
 
 - 位置：`packages/vite-plugin/src/index.ts:47`、`packages/webpack-plugin/src/index.ts:48`、`packages/rspack-plugin/src/index.ts:128`
 - 现象：`html.replace('<head>', ...)` 对 `<head lang="zh">`、`<HEAD>`、`<head\n>` 都不生效，脚本会静默不注入，运行时 `getLocaleVersion` 找不到 script 标签。
