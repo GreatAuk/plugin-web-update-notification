@@ -50,8 +50,8 @@ function limit(fn: Function, delay: number) {
  * @param {string} selector - string
  * @returns The first element that matches the selector.
  */
-function querySelector(selector: string) {
-  return document.querySelector(selector)
+function querySelector<E extends Element = Element>(selector: string) {
+  return document.querySelector<E>(selector)
 }
 
 window.pluginWebUpdateNotice_ = {
@@ -68,7 +68,7 @@ window.pluginWebUpdateNotice_ = {
  * Get the version from the script tag
  */
 function getLocaleVersion() {
-  const script = document.querySelector(`script[data-id="${INJECT_SCRIPT_TAG_ID}"]`)
+  const script = querySelector(`script[data-id="${INJECT_SCRIPT_TAG_ID}"]`)
   if (!script) return ''
   const version = script.getAttribute('data-v')
   if (!version) return ''
@@ -90,9 +90,7 @@ function getVersionFileUrl(injectFileBase: string) {
   // root-relative path, protocol-relative or absolute URL: independent of the page URL
   if (injectFileBase.startsWith('/') || /^[a-z][a-z\d+.-]*:/i.test(injectFileBase)) return path
 
-  const script = document.querySelector<HTMLScriptElement>(
-    `script[data-id="${INJECT_SCRIPT_TAG_ID}"]`,
-  )
+  const script = querySelector<HTMLScriptElement>(`script[data-id="${INJECT_SCRIPT_TAG_ID}"]`)
   try {
     if (script?.src) return new URL(`${JSON_FILE_NAME}.json`, script.src).href
     return new URL(path, document.baseURI).href
@@ -330,7 +328,7 @@ function showNotification(options: Options) {
     }
 
     notificationWrap.innerHTML = notificationInnerHTML
-    document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!.appendChild(notificationWrap)
+    querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!.appendChild(notificationWrap)
 
     bindBtnEvent()
   } catch (err) {
