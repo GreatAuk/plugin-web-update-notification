@@ -5,8 +5,6 @@ import { readFileSync } from 'node:fs'
 import { findUpSync } from 'find-up'
 import md5 from 'md5'
 
-import './shim.d.ts'
-
 import { name as pkgName_ } from '../package.json'
 import type { Options, VersionJSON, VersionType } from './type'
 export * from './constant'
