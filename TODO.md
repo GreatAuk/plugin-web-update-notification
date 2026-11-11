@@ -147,7 +147,7 @@
 - AGENTS.md 说代码规范是 `@antfu/eslint-config`，实际是 oxlint + oxfmt；说 monorepo 有四个插件包，实际还有 `packages/nuxt`。
 - `pnpm-workspace.yaml` 里的 `useNodeVersion` 字段当前 pnpm 不识别（每条命令都打印告警），应为 `nodeVersion` 或改用 `engines` / `.nvmrc`。
 
-#### B21. 包元数据复制粘贴错误
+#### [Done] B21. 包元数据复制粘贴错误
 
 - `packages/webpack-plugin/package.json:20`：`repository.directory` 写的是 `packages/vite-plugin`。
 - `packages/umi-plugin/package.json`：`keywords` 第一项是 `@plugin-web-update-notification/core`。
