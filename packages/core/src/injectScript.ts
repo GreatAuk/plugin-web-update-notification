@@ -138,10 +138,19 @@ function __checkUpdateSetup__(options: Options) {
   /**
    * polling check system update
    */
+  const stopPolling = () => {
+    if (intervalTimer) {
+      clearInterval(intervalTimer)
+      intervalTimer = undefined
+    }
+  }
   const pollingCheck = () => {
+    // always clear the previous timer first, so repeated calls never stack intervals
+    stopPolling()
     if (checkInterval > 0) intervalTimer = setInterval(checkSystemUpdate, checkInterval)
   }
-  pollingCheck()
+  // a page opened in a background tab starts hidden; polling starts when it becomes visible
+  if (document.visibilityState !== 'hidden') pollingCheck()
 
   const limitCheckSystemUpdate = limit(checkSystemUpdate, 5000)
 
@@ -153,7 +162,7 @@ function __checkUpdateSetup__(options: Options) {
       pollingCheck()
       if (checkOnWindowFocus) limitCheckSystemUpdate()
     }
-    if (document.visibilityState === 'hidden' && intervalTimer) clearInterval(intervalTimer)
+    if (document.visibilityState === 'hidden') stopPolling()
   })
 
   // when page focus, check system update
