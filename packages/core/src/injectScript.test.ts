@@ -209,16 +209,41 @@ describe('timers', () => {
     expect(fetchCount()).toBe(2)
   })
 
-  it('checks when a script or link fails to load', async () => {
+  it('checks when a script or link fails to load, but not other elements', async () => {
     await setup({ checkInterval: 0 })
     const script = document.createElement('script')
     const link = document.createElement('link')
     const img = document.createElement('img')
     document.body.append(script, link, img)
 
-    script.dispatchEvent(new Event('error'))
-    link.dispatchEvent(new Event('error'))
     img.dispatchEvent(new Event('error'))
+    expect(fetchCount()).toBe(0)
+
+    script.dispatchEvent(new Event('error'))
+    expect(fetchCount()).toBe(1)
+
+    vi.advanceTimersByTime(5000)
+    link.dispatchEvent(new Event('error'))
+    expect(fetchCount()).toBe(2)
+  })
+
+  it('throttles a burst of resource errors to a single check', async () => {
+    await setup({ checkInterval: 0 })
+    // e.g. several chunks 404 at once right after a deploy
+    const scripts = Array.from({ length: 5 }, () => document.createElement('script'))
+    const link = document.createElement('link')
+    document.body.append(...scripts, link)
+
+    scripts.forEach((s) => s.dispatchEvent(new Event('error')))
+    link.dispatchEvent(new Event('error'))
+    expect(fetchCount()).toBe(1)
+
+    vi.advanceTimersByTime(4999)
+    scripts[0].dispatchEvent(new Event('error'))
+    expect(fetchCount()).toBe(1)
+
+    vi.advanceTimersByTime(1)
+    scripts[0].dispatchEvent(new Event('error'))
     expect(fetchCount()).toBe(2)
   })
 

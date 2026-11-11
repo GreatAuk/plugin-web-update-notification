@@ -199,7 +199,8 @@ function __checkUpdateSetup__(options: Options) {
       'error',
       (err) => {
         const errTagName = (err?.target as unknown as HTMLElement)?.tagName
-        if (errTagName === 'SCRIPT' || errTagName === 'LINK') checkSystemUpdate()
+        // throttled: several chunks often 404 at once after a deploy, one version check is enough
+        if (errTagName === 'SCRIPT' || errTagName === 'LINK') limitCheckSystemUpdate()
       },
       true,
     )

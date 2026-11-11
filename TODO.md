@@ -121,7 +121,7 @@
 - 现象：注入的是经典 `<script>`（非 module），`;const logFn = ...` 直接写在顶层，会在页面全局词法环境创建 `logFn` 绑定。宿主页面任何其他脚本若也在顶层声明 `const logFn` / `let logFn`，浏览器抛 `SyntaxError: Identifier 'logFn' has already been declared`，整段脚本不执行。
 - 建议：把 setup 调用和 log 逻辑包进 IIFE。顺带说明：`logVersion` 传函数时是 `fn.toString()` 后原样写入，函数体里引用的闭包变量 / import 在浏览器里不存在，文档应提示这个限制。
 
-#### B17. `checkOnLoadFileError` 触发的检查没有节流
+#### [Done] B17. `checkOnLoadFileError` 触发的检查没有节流
 
 - 位置：`packages/core/src/injectScript.ts:170`
 - 现象：捕获阶段的 `error` 监听里直接调用 `checkSystemUpdate()`，而不是 `limitCheckSystemUpdate`。一次部署切换时若多个 chunk 同时 404，会瞬间并发多次 `version.json` 请求。
