@@ -140,7 +140,7 @@
 - 位置：根 `package.json:21-39`
 - 影响：误执行 `npm publish` 会发布一个空壳包；`files: ["dist"]` 在根目录没有意义。
 
-#### B20. 根脚本与 AGENTS.md 描述不一致
+#### [Done] B20. 根脚本与 AGENTS.md 描述不一致
 
 - `dev:umi` 实际过滤的是 `core` 包（`package.json:42`），不是 umijs。
 - AGENTS.md 列出的 `pnpm dev:rspack`、`pnpm example:vue-rspack` 在 `package.json` 中不存在。
