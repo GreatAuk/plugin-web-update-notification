@@ -96,14 +96,14 @@
 - 现象：`Options.logVersion` 类型是 `boolean | ((version: string) => void)`，README 也示范了传函数，但 Umi 的 schema 只允许 boolean，传函数时配置校验报错。
 - 建议：改为 `Joi.alternatives(Joi.boolean(), Joi.function())`，并补上 `versionType` 的枚举校验。
 
-#### B13. webpack 插件在 dev / watch 模式也会执行，且每次都尝试改写磁盘上的 `index.html`
+#### [Done] B13. webpack 插件在 dev / watch 模式也会执行，且每次都尝试改写磁盘上的 `index.html`
 
 - 位置：`packages/webpack-plugin/src/index.ts:85`、`:122`
 - 现象：插件没有任何 `mode === 'production'` 判断。配合 `webpack-dev-server` 时，产物在内存里，`afterEmit` 读取 `compiler.outputPath/index.html` 失败，每次增量编译都打印一段错误堆栈。
 - 影响：开发体验差；README 也没有提示「只在生产环境注册」。Rspack 插件存在同样问题。
 - 建议：`apply` 中判断 `compiler.options.mode !== 'production'` 或 `compiler.watchMode` 时直接返回，并在文档中说明。
 
-#### B14. webpack 插件使用已废弃的 `emit` 钩子和裸对象资源
+#### [Done] B14. webpack 插件使用已废弃的 `emit` 钩子和裸对象资源
 
 - 位置：`packages/webpack-plugin/src/index.ts:85-120`
 - 现象：直接给 `compilation.assets[...]` 赋值 `{ source, size }`，需要三处 `@ts-expect-error` 绕过类型检查；`size()` 用的是 `string.length`，对包含中文（locale 文案）的 JS / CSS 内容返回的是字符数而不是字节数，webpack stats 中的资源大小不准。webpack 5 推荐 `compilation.hooks.processAssets` + `webpack.sources.RawSource`。
