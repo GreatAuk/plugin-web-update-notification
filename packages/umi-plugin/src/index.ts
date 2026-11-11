@@ -18,18 +18,27 @@ import {
 
 export type { Options } from '@plugin-web-update-notification/core'
 
+/** keyed by VersionType so the compiler flags any version type missing here */
+const VERSION_TYPES = Object.keys({
+  git_commit_hash: true,
+  svn_revision_number: true,
+  pkg_version: true,
+  build_timestamp: true,
+  custom: true,
+} satisfies Record<NonNullable<Options['versionType']>, true>)
+
 export default (api: IApi) => {
   api.describe({
     key: 'webUpdateNotification',
     config: {
       schema(Joi) {
         return Joi.object({
-          versionType: Joi.string(),
+          versionType: Joi.string().valid(...VERSION_TYPES),
           customVersion: Joi.string(),
           /** polling interval（ms）, default 10*60*1000 */
           checkInterval: Joi.number(),
-          /** whether to output version in console */
-          logVersion: Joi.boolean(),
+          /** whether to output version in console, or a custom logger */
+          logVersion: Joi.alternatives().try(Joi.boolean(), Joi.function()),
           checkOnWindowFocus: Joi.boolean(),
           checkImmediately: Joi.boolean(),
           checkOnLoadFileError: Joi.boolean(),
