@@ -467,7 +467,7 @@ export interface Options {
    * Base public path for inject file, Valid values include:
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
-   * * Empty string(default) or ./
+   * * Empty string(default) or ./ (not recommended, see FAQ)
    *
    * !!! Don't forget / at the end of the path
    */
@@ -604,6 +604,8 @@ interface Window {
    ```
 
    > After version 1.2.0, in most case, you not need to set injectFileBase, it will be automatically detected from the base of vite config、publicPath of webpack config or publicPath of umi config
+
+   > **Relative paths (e.g. `base: './'`) are not recommended.** The inject script resolves a relative base against its own URL, so the version check keeps working after client-side navigation to nested routes. However, when a nested route such as `/user/profile` is opened directly in a history-mode SPA, the browser resolves the `./` script tags in `index.html` against `/user/`, so both the inject script and your app's own assets return 404. Use an absolute path that matches the deployment (e.g. `'/'` or `'/folder/'`) instead. If you must use a relative path, use hash routing or add `<base href="/">` to `index.html`.
 
 3. Custom notification button event.
 

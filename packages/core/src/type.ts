@@ -87,7 +87,7 @@ export interface Options {
    * Base public path for inject file, Valid values include:
    * * Absolute URL pathname, e.g. /foo/
    * * Full URL, e.g. https://foo.com/
-   * * Empty string(default) or ./
+   * * Empty string(default) or ./ (not recommended, see FAQ)
    *
    * !!! Don't forget / at the end of the path
    */

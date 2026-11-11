@@ -78,6 +78,30 @@ function getLocaleVersion() {
 }
 
 /**
+ * Resolve the URL of the version JSON file once, at setup time.
+ *
+ * A relative `injectFileBase` (e.g. Vite `base: './'`) would otherwise be resolved by `fetch`
+ * against the *current* page URL, which changes after client-side navigation in history-mode
+ * SPAs (`/user/profile` -> `/user/pluginWebUpdateNotice/...` 404). The JSON file always sits next
+ * to the inject script, so we resolve it against the script's own (already absolute) `src`.
+ */
+function getVersionFileUrl(injectFileBase: string) {
+  const path = `${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json`
+  // root-relative path, protocol-relative or absolute URL: independent of the page URL
+  if (injectFileBase.startsWith('/') || /^[a-z][a-z\d+.-]*:/i.test(injectFileBase)) return path
+
+  const script = document.querySelector<HTMLScriptElement>(
+    `script[data-id="${INJECT_SCRIPT_TAG_ID}"]`,
+  )
+  try {
+    if (script?.src) return new URL(`${JSON_FILE_NAME}.json`, script.src).href
+    return new URL(path, document.baseURI).href
+  } catch {
+    return path
+  }
+}
+
+/**
  * It checks whether the system has been updated and if so, it shows a notification.
  * @param {Options} options - Options
  */
@@ -90,6 +114,7 @@ function __checkUpdateSetup__(options: Options) {
     checkImmediately = true,
     checkOnLoadFileError = true,
   } = options
+  const versionFileUrl = getVersionFileUrl(injectFileBase)
   const checkSystemUpdate = () => {
     const localeVersion = getLocaleVersion()
     if (!localeVersion) {
@@ -98,7 +123,7 @@ function __checkUpdateSetup__(options: Options) {
     }
 
     window
-      .fetch(`${injectFileBase}${DIRECTORY_NAME}/${JSON_FILE_NAME}.json?t=${Date.now()}`)
+      .fetch(`${versionFileUrl}?t=${Date.now()}`)
       .then((response) => {
         if (!response.ok) throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
 

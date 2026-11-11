@@ -62,3 +62,48 @@ describe('injectScript polling', () => {
     expect(window.fetch).toHaveBeenCalledTimes(3)
   })
 })
+
+describe('injectScript version file url', () => {
+  let listeners: Parameters<typeof window.addEventListener>[] = []
+
+  beforeEach(() => {
+    listeners = []
+    const add = window.addEventListener.bind(window)
+    vi.spyOn(window, 'addEventListener').mockImplementation((...args: Parameters<typeof add>) => {
+      listeners.push(args)
+      add(...args)
+    })
+    vi.resetModules()
+    vi.useFakeTimers()
+    window.fetch = vi.fn(() => new Promise(() => {})) as unknown as typeof fetch
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+    listeners.forEach(args => window.removeEventListener(...args))
+    vi.clearAllTimers()
+    vi.useRealTimers()
+    window.history.replaceState(null, '', '/')
+  })
+
+  async function setupWithBase(injectFileBase: string, scriptSrc: string) {
+    window.history.replaceState(null, '', '/')
+    document.body.innerHTML = `<script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="v1" src="${scriptSrc}"></script>`
+    await import('./injectScript')
+    window.__checkUpdateSetup__({ injectFileBase, checkImmediately: false, checkOnWindowFocus: false })
+    // client-side navigation to a nested route after the script has loaded
+    window.history.pushState(null, '', '/user/profile')
+    window.pluginWebUpdateNotice_.checkUpdate()
+    return String(vi.mocked(window.fetch).mock.calls[0][0]).split('?')[0]
+  }
+
+  it('resolves a relative base against the inject script, not the current route', async () => {
+    const url = await setupWithBase('./', './pluginWebUpdateNotice/webUpdateNoticeInjectScript.abc.js')
+    expect(url).toBe(`${window.location.origin}/pluginWebUpdateNotice/web_version_by_plugin.json`)
+  })
+
+  it('keeps an absolute base unchanged', async () => {
+    const url = await setupWithBase('/app/', '/app/pluginWebUpdateNotice/webUpdateNoticeInjectScript.abc.js')
+    expect(url).toBe('/app/pluginWebUpdateNotice/web_version_by_plugin.json')
+  })
+})

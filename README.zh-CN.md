@@ -456,7 +456,7 @@ export interface Options {
    * 注入文件的公共基础路径，可取：
    * - 绝对路径，如 /foo/。
    * - 完整 URL，如 https://foo.com/。
-   * - 空字符串（默认值）或 ./。
+   * - 空字符串（默认值）或 ./（不推荐，见常见问题）。
    *
    * 路径末尾必须保留 /。
    */
@@ -602,6 +602,8 @@ interface Window {
    ```
 
    > 自 1.2.0 版本起，通常无需设置 `injectFileBase`。插件会自动读取 Vite 的 base、Webpack 的 publicPath 或 Umi 的 publicPath。
+
+   > **不推荐使用相对路径（如 `base: './'`）。** 注入脚本会基于自身 URL 解析相对路径，所以在 history 路由中跳转到嵌套路由后，版本检测仍能正常工作。但如果直接打开 `/user/profile` 这样的嵌套路由，浏览器会把 `index.html` 中 `./` 开头的脚本按 `/user/` 解析，注入脚本和应用自身的资源都会返回 404。建议按实际部署位置使用绝对路径（如 `'/'` 或 `'/folder/'`）。如必须使用相对路径，请改用 hash 路由，或在 `index.html` 中添加 `<base href="/">`。
 
 3. 如何自定义通知的“刷新”和“忽略”按钮事件？
 
