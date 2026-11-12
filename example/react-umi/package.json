@@ -1,0 +1,21 @@
+{
+  "name": "react-umi-example",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "start": "npm run dev",
+    "preview": "pnpm build && vite preview --port=4176"
+  },
+  "dependencies": {
+    "umi": "^4.0.2"
+  },
+  "devDependencies": {
+    "@plugin-web-update-notification/umijs": "workspace:*",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^4.1.2"
+  }
+}
