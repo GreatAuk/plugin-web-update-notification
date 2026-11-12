@@ -309,6 +309,8 @@ function showNotification(options: Options) {
     }
 
     const notificationWrap = document.createElement('div')
+    notificationWrap.setAttribute('role', 'alert')
+    notificationWrap.setAttribute('aria-live', 'polite')
     let notificationInnerHTML = ''
 
     if (customNotificationHTML) {
@@ -325,7 +327,7 @@ function showNotification(options: Options) {
         getLocaleText(currentLocale, 'dismissButtonText', localeData)
       const dismissButtonHtml = hiddenDismissButton
         ? ''
-        : `<a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn" style="color:${secondaryColor}">${dismissButtonText}</a>`
+        : `<button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn" style="color:${secondaryColor}">${dismissButtonText}</button>`
 
       notificationWrap.classList.add('plugin-web-update-notice')
       notificationWrap.style.cssText = `${NOTIFICATION_POSITION_MAP[placement]}`
@@ -339,9 +341,9 @@ function showNotification(options: Options) {
       </div>
       <div class="plugin-web-update-notice-tools">
         ${dismissButtonHtml}
-        <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn" style="color:${primaryColor}">
+        <button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn" style="color:${primaryColor}">
           ${buttonText}
-        </a>
+        </button>
       </div>
     </div>`
     }
@@ -358,4 +360,4 @@ function showNotification(options: Options) {
 }
 
 // meaningless export, in order to let tsup bundle these functions
-export { __checkUpdateSetup__ }
+// export { __checkUpdateSetup__ }

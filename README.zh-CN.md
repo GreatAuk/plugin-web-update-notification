@@ -639,17 +639,17 @@ interface Window {
    <!-- 通知 HTML 结构 -->
 
    <div class="plugin-web-update-notice-anchor">
-     <div class="plugin-web-update-notice">
+     <div class="plugin-web-update-notice" role="alert" aria-live="polite">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
          <div class="plugin-web-update-notice-content-title">📢 system update</div>
          <div class="plugin-web-update-notice-content-desc">
            System update, please refresh the page
          </div>
          <div class="plugin-web-update-notice-tools">
-           <a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</a>
-           <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+           <button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</button>
+           <button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
              refresh
-           </a>
+           </button>
          </div>
        </div>
      </div>

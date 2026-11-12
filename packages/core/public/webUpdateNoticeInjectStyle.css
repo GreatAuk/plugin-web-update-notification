@@ -33,6 +33,10 @@
   text-align: right;
 }
 .plugin-web-update-notice-btn {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
   padding: 3px 8px;
   line-height: 1;
   border-radius: 4px;
