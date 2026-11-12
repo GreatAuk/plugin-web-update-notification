@@ -62,7 +62,7 @@
 - 影响：三个操作系统矩阵的测试任务全部红。
 - 建议：添加 `"test": "pnpm test:unit"`，或把 CI 改为分别运行 `test:unit` 和 `test:e2e`。
 
-#### B8. `pnpm typecheck` 失败（41 个错误），CI 的 `typecheck` 任务同样红
+#### B8. [Done] `pnpm typecheck` 失败（41 个错误），CI 的 `typecheck` 任务同样红
 
 - 位置：根 `tsconfig.json`（没有 `include` / `exclude`，也没有 `jsx`）、`example/nuxt/nuxt.config.ts:9`、`example/react-umi/tests/e2e/plugin.spec.ts:7`
 - 现象：根 `tsc --noEmit` 把所有 `example/**` 一并检查，遇到：示例里的 JSX 没有 `--jsx` 配置；`example/vue-vite3` 使用 vite 3 的 `Plugin` 类型与插件包依赖的 vite 5 类型冲突；`nuxt.config.ts` 里 `webUpdateNotification` 键不被识别（示例没有拿到包内 `declare module '@nuxt/schema'` 增强，与 B1 同源）；umi 示例的 e2e 引用了早已改名的 `web-update-notification-core`。
@@ -75,9 +75,16 @@
 - 影响：`getVersion` 的降级逻辑、`generateJsFileContent` 的序列化、注入脚本的节流与定时器逻辑都没有任何自动化保护，上面 B2 到 B5 都是本应被单测拦住的问题。
 - 建议：至少为 `core` 添加 `getVersion`（mock `execSync` / 环境变量）、`generateJSONFileContent`、`generateJsFileContent`、`getFileHash` 的单测；用 `happy-dom` / `jsdom` 为 `injectScript.ts` 写定时器与 `fetch` 的单测。
 
+#### B24. 版本检查早于通知锚点进入 DOM 时，通知挂载失败且本次更新不会再提示
+
+- 位置：`packages/core/src/injectScript.ts:277`、`:332`
+- 现象：各插件都把注入脚本以同步 `<script>` 放在 `<head>`，锚点 `<div>` 则追加在 `</body>` 前。`checkImmediately` 在脚本执行时立刻请求版本 JSON，响应若在 body 解析完成前返回，`querySelector(锚点)` 为 `null`，`appendChild` 抛错，控制台输出 `Failed to show notification TypeError: Cannot read properties of null (reading 'appendChild')`。`hasShowSystemUpdateNotice` 在挂载前就已置为 `true`，之后的轮询也不会再显示通知。
+- 复现：umi 示例 e2e 中，先执行 `should has a web_version_by_plugin.json file`（预热了预览服务器），紧接着的 `should show a notification after system update` 稳定失败；单独执行则通过。
+- 建议：锚点不存在且 `document.readyState === 'loading'` 时，等 `DOMContentLoaded` 后再挂载；并且挂载成功后再设置 `hasShowSystemUpdateNotice`。
+
 ### 1.2 中影响
 
-#### B10. Vite / Umi 示例的 e2e 测试与当前产物不匹配，无法通过
+#### B10. [Done] Vite / Umi 示例的 e2e 测试与当前产物不匹配，无法通过
 
 - 位置：`example/vue-vite3/tests/e2e/plugin.spec.ts:18-27`、`example/react-umi/tests/e2e/plugin.spec.ts`
 - 现象：vue-vite3 断言 `script[src="/pluginWebUpdateNotice/webUpdateNoticeInjectScript.iife.js"]`，但实际文件名含内容哈希（`...iife.f6970a8e.js`），选择器永远匹配不到（`example/nuxt/tests/e2e/shared.ts` 的注释已经指出了这一点）。umi 的 e2e 还在引用旧包名 `web-update-notification-core`，并断言 JSON 里有 `hash` 字段（现在是 `version`）。

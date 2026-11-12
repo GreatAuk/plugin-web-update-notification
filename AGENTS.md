@@ -24,6 +24,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `vue-cli` → `vue-cli`（Webpack 示例）
   - `vue-rspack` → `vue-rspack`
   - `nuxt` → `nuxt-example`
+- **e2e/**: 所有 example 的 E2E 测试（Playwright），example 内不放测试；说明见 `e2e/README.md`
 
 各插件包依赖 core 包（通过 `workspace:*`），共享核心功能。
 
@@ -60,7 +61,7 @@ pnpm example:nuxt          # 运行 Nuxt 示例
 ```bash
 pnpm test         # 单次运行单元测试（vitest run）
 pnpm test:unit    # 以 watch 模式运行单元测试（vitest）
-pnpm test:e2e     # 运行 E2E 测试（vue-vite-example 与 nuxt-example）
+pnpm test:e2e     # 运行全部 example 的 E2E 测试（需先 pnpm build），单个目标加 --project=<name>
 pnpm lint         # 代码检查（oxlint）
 pnpm format       # 代码格式化（oxfmt），只检查不改写用 pnpm format:check
 pnpm typecheck    # 类型检查

@@ -4,9 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
-    "preview": "pnpm build && vite preview --port 4173",
+    "preview": "pnpm build-only && vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
-    "test:e2e": "start-server-and-test preview http://localhost:4173/ 'PW_EXPERIMENTAL_TS_ESM=1 npx playwright test'",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
@@ -16,8 +15,6 @@
     "vue-router": "^4.0.15"
   },
   "devDependencies": {
-    "@playwright/test": "^1.28.1",
-    "@plugin-web-update-notification/core": "workspace:*",
     "@plugin-web-update-notification/vite": "workspace:*",
     "@rushstack/eslint-patch": "^1.1.0",
     "@types/jsdom": "^16.2.14",
@@ -32,7 +29,6 @@
     "jsdom": "^19.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.5.1",
-    "start-server-and-test": "^1.14.0",
     "typescript": "~4.7.2",
     "vite": "3.2.8",
     "vitest": "^0.13.0",

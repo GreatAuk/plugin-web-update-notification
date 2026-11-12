@@ -10,4 +10,5 @@ lib-cov
 logs
 node_modules
 temp
-example/react-umi
+e2e/test-results
+e2e/playwright-report

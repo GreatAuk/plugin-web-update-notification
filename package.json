@@ -36,7 +36,7 @@
     "release": "bumpp package.json packages/**/package.json",
     "publish": "pnpm --filter=./packages/** publish --access public --no-git-checks --registry=https://registry.npmjs.org/",
     "test": "vitest run",
-    "test:e2e": "pnpm --filter vue-vite-example test:e2e && pnpm --filter nuxt-example test:e2e",
+    "test:e2e": "playwright test -c e2e",
     "test:unit": "vitest",
     "typecheck": "tsc --noEmit",
     "logCIVersion": "echo \"Node version: $(node -v)\" && echo \"pnpm version: $(pnpm -v)\""
@@ -44,6 +44,7 @@
   "devDependencies": {
     "@antfu/ni": "^0.18.8",
     "@antfu/utils": "^0.6.3",
+    "@playwright/test": "^1.65.0",
     "@types/md5": "^2.3.2",
     "@types/node": "^18.11.9",
     "bumpp": "^9.0.0",
@@ -52,6 +53,7 @@
     "oxfmt": "^0.42.0",
     "oxlint": "^1.57.0",
     "rimraf": "^3.0.2",
+    "sirv": "^3.0.2",
     "tsdown": "^0.21.4",
     "tsx": "^3.12.5",
     "turbo": "^1.10.12",
