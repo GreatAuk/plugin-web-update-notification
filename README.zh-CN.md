@@ -515,7 +515,7 @@ export type LocaleData = Record<string, NotificationProps>
 | `window.pluginWebUpdateNotice_.setLocale`         | `locale`：`zh_CN`、`zh_TW` 或 `en_US` | 设置通知语言。                                                                          |
 | `window.pluginWebUpdateNotice_.closeNotification` | —                                     | 关闭通知。                                                                              |
 | `window.pluginWebUpdateNotice_.dismissUpdate`     | —                                     | 忽略当前更新并关闭通知，行为与“忽略”按钮一致。                                          |
-| `window.pluginWebUpdateNotice_.checkUpdate`       | —                                     | 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用会被忽略。 |
+| `window.pluginWebUpdateNotice_.checkUpdate`       | —                                     | 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用不会发起新请求。返回 `Promise<{ updated, version }>`。 |
 
 ```ts
 interface Window {
@@ -526,9 +526,10 @@ interface Window {
      */
     setLocale: (locale: string) => void
     /**
-     * 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用会被忽略。
+     * 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用不会发起新请求，并返回该次检测的结果。
+     * 返回的 Promise 不会 reject，检测失败时 `updated` 为 `false`。
      */
-    checkUpdate: () => void
+    checkUpdate: () => Promise<{ updated: boolean; version: string }>
     /** 忽略当前更新并关闭通知，行为与“忽略”按钮一致。 */
     dismissUpdate: () => void
     /** 关闭通知。 */

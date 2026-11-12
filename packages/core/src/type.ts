@@ -141,6 +141,13 @@ export interface VersionJSON {
   silence?: boolean
 }
 
+export interface CheckUpdateResult {
+  /** whether the server has a newer version than the loaded page */
+  updated: boolean
+  /** latest version from server; the local version if the check failed or is silenced */
+  version: string
+}
+
 declare global {
   interface Window {
     /** version number */
@@ -157,9 +164,10 @@ declare global {
        */
       setLocale: (locale: string) => void
       /**
-       * manual check update. Throttled: calls within 5000ms after a check are ignored
+       * manual check update. Throttled: calls within 5000ms after a check are ignored and
+       * resolve with the result of that check. The promise never rejects.
        */
-      checkUpdate: () => void
+      checkUpdate: () => Promise<CheckUpdateResult>
       /** dismiss current update and close notification, same behavior as dismiss the button */
       dismissUpdate: () => void
       /** close notification */

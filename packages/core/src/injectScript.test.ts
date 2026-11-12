@@ -262,6 +262,7 @@ describe('fetch', () => {
     window.pluginWebUpdateNotice_.checkUpdate()
     expect(window.fetch).toHaveBeenCalledWith(
       `/app/pluginWebUpdateNotice/web_version_by_plugin.json?t=${NOW}`,
+      { cache: 'no-store' },
     )
   })
 
@@ -272,6 +273,53 @@ describe('fetch', () => {
     expect(console.error).toHaveBeenCalledWith(
       '[pluginWebUpdateNotice] Failed to get locale version',
     )
+  })
+
+  describe('checkUpdate() result', () => {
+    it('resolves updated: true with the server version when versions differ', async () => {
+      serverFetch({ version: 'v2' })
+      await setup({ checkInterval: 0, hiddenDefaultNotification: true })
+      await expect(window.pluginWebUpdateNotice_.checkUpdate()).resolves.toEqual({
+        updated: true,
+        version: 'v2',
+      })
+    })
+
+    it('resolves updated: false when versions match', async () => {
+      serverFetch({ version: 'v1' })
+      await setup({ checkInterval: 0 })
+      await expect(window.pluginWebUpdateNotice_.checkUpdate()).resolves.toEqual({
+        updated: false,
+        version: 'v1',
+      })
+    })
+
+    it('resolves updated: false when silenced', async () => {
+      serverFetch({ version: 'v2', silence: true })
+      await setup({ checkInterval: 0 })
+      await expect(window.pluginWebUpdateNotice_.checkUpdate()).resolves.toEqual({
+        updated: false,
+        version: 'v1',
+      })
+    })
+
+    it('resolves instead of rejecting when the request fails', async () => {
+      serverFetch({}, false)
+      await setup({ checkInterval: 0 })
+      await expect(window.pluginWebUpdateNotice_.checkUpdate()).resolves.toEqual({
+        updated: false,
+        version: 'v1',
+      })
+    })
+
+    it('resolves with the previous result for a throttled call', async () => {
+      serverFetch({ version: 'v2' })
+      await setup({ checkInterval: 0, hiddenDefaultNotification: true })
+      const first = window.pluginWebUpdateNotice_.checkUpdate()
+      const second = window.pluginWebUpdateNotice_.checkUpdate()
+      expect(second).toBe(first)
+      expect(fetchCount()).toBe(1)
+    })
   })
 
   it('exposes the local version on window', async () => {

@@ -231,7 +231,7 @@
 2. **自动刷新策略**：`autoReload: 'none' | 'onIdle' | 'onRouteChange' | 'countdown'`。`onRouteChange` 配合 `checkUpdate()` 在路由切换时刷新，用户无感；`onIdle` 在页面无操作一段时间后刷新。
 3. **把 `hiddenDefaultNotification` 与回调整合成 `onUpdate` 选项**
    目前只能监听 `document.body` 上的自定义事件。提供 `onUpdate(ctx)`（`ctx` 含 `version`、`releaseTime`、`reload()`、`dismiss()`），和 `window.pluginWebUpdateNotice_.on('update', fn)` 这类显式 API，减少对 DOM 事件的依赖。
-4. **`checkUpdate()` 返回 Promise**：`Promise<{ updated: boolean; version: string }>`，让路由守卫、业务代码能等待结果决定是否跳转。
+4. ~~**`checkUpdate()` 返回 Promise**~~：已完成，返回 `Promise<{ updated: boolean; version: string }>`，不会 reject。
 5. **可配置的文件名与目录**：`DIRECTORY_NAME` / `JSON_FILE_NAME` 目前是常量；提供 `outputDir`、`versionFileName` 选项，便于多应用共用一个 CDN 目录或避免与已有路径冲突。
 6. **unplugin 版本**（见 2.1 第 3 条）：一次性覆盖 rollup / esbuild / farm / rolldown。
 

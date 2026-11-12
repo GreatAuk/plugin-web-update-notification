@@ -1,4 +1,4 @@
-import type { LocaleData, Options, VersionJSON } from './type'
+import type { CheckUpdateResult, LocaleData, Options, VersionJSON } from './type'
 import {
   CUSTOM_UPDATE_EVENT_NAME,
   DIRECTORY_NAME,
@@ -19,20 +19,23 @@ let currentLocale = ''
 let intervalTimer: ReturnType<typeof setInterval> | undefined
 
 /**
- * limit function
+ * limit function: calls within `delay` after an execution are ignored and get the result of that
+ * execution instead
  * @param {Function} fn - The function to be called.
  * @param {number} delay - The amount of time to wait before calling the function.
  * @returns A function that called limit
  */
-function limit(fn: Function, delay: number) {
+function limit<T>(fn: () => T, delay: number) {
   let pending = false
-  return function (this: unknown, ...args: unknown[]) {
-    if (pending) return
+  let lastResult: T
+  return function () {
+    if (pending) return lastResult
     pending = true
-    fn.apply(this, args)
+    lastResult = fn()
     setTimeout(() => {
       pending = false
     }, delay)
+    return lastResult
   }
 }
 
@@ -55,7 +58,7 @@ function querySelector<E extends Element = Element>(selector: string) {
 }
 
 window.pluginWebUpdateNotice_ = {
-  checkUpdate: () => {},
+  checkUpdate: () => Promise.resolve({ updated: false, version: '' }),
   dismissUpdate,
   closeNotification,
   setLocale: (locale: string) => {
@@ -113,55 +116,61 @@ function __checkUpdateSetup__(options: Options) {
     checkOnLoadFileError = true,
   } = options
   const versionFileUrl = getVersionFileUrl(injectFileBase)
-  const checkSystemUpdate = () => {
+  const checkSystemUpdate = (): Promise<CheckUpdateResult> => {
     const localeVersion = getLocaleVersion()
     if (!localeVersion) {
       console.error('[pluginWebUpdateNotice] Failed to get locale version')
-      return
+      return Promise.resolve({ updated: false, version: '' })
     }
 
-    window
-      .fetch(`${versionFileUrl}?t=${Date.now()}`, { cache: 'no-store' })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
+    return (
+      window
+        .fetch(`${versionFileUrl}?t=${Date.now()}`, { cache: 'no-store' })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
 
-        return response.json()
-      })
-      // the inject script runs in <head>, so the response may arrive while the parser is still
-      // blocked before <body> or the notification anchor (e.g. by a synchronous app bundle)
-      .then((versionJSON: VersionJSON) =>
-        document.readyState === 'loading'
-          ? new Promise<VersionJSON>((resolve) => {
-              document.addEventListener('DOMContentLoaded', () => resolve(versionJSON), {
-                once: true,
+          return response.json()
+        })
+        // the inject script runs in <head>, so the response may arrive while the parser is still
+        // blocked before <body> or the notification anchor (e.g. by a synchronous app bundle)
+        .then((versionJSON: VersionJSON) =>
+          document.readyState === 'loading'
+            ? new Promise<VersionJSON>((resolve) => {
+                document.addEventListener('DOMContentLoaded', () => resolve(versionJSON), {
+                  once: true,
+                })
               })
-            })
-          : versionJSON,
-      )
-      .then(({ version: versionFromServer, silence }: VersionJSON) => {
-        if (silence) return
-        latestVersion = versionFromServer
-        if (localeVersion !== versionFromServer) {
-          // dispatch custom event
-          document.body.dispatchEvent(
-            new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
-              detail: {
-                options,
-                version: versionFromServer,
-              },
-              bubbles: true,
-            }),
-          )
+            : versionJSON,
+        )
+        .then(({ version: versionFromServer, silence }: VersionJSON): CheckUpdateResult => {
+          if (silence) return { updated: false, version: localeVersion }
+          latestVersion = versionFromServer
+          const updated = localeVersion !== versionFromServer
+          if (updated) {
+            // dispatch custom event
+            document.body.dispatchEvent(
+              new CustomEvent(CUSTOM_UPDATE_EVENT_NAME, {
+                detail: {
+                  options,
+                  version: versionFromServer,
+                },
+                bubbles: true,
+              }),
+            )
 
-          const dismiss =
-            localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
-          if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
-            showNotification(options)
-        }
-      })
-      .catch((err) => {
-        console.error('[pluginWebUpdateNotice] Failed to check system update', err)
-      })
+            const dismiss =
+              localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${versionFromServer}`) === 'true'
+            if (!hasShowSystemUpdateNotice && !hiddenDefaultNotification && !dismiss)
+              showNotification(options)
+          }
+          return { updated, version: versionFromServer }
+        })
+        // never rejects, so `await checkUpdate()` in a route guard can't break navigation
+        .catch((err) => {
+          console.error('[pluginWebUpdateNotice] Failed to check system update', err)
+          return { updated: false, version: localeVersion }
+        })
+    )
   }
 
   if (checkImmediately) {

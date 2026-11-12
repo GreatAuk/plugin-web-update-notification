@@ -529,7 +529,7 @@ export type LocaleData = Record<string, NotificationProps>
 | window.pluginWebUpdateNotice\_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                                    |
 | window.pluginWebUpdateNotice\_.closeNotification |                                     | close notification                                                            |
 | window.pluginWebUpdateNotice\_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
-| window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, throttled: calls within 5000ms after a check are ignored |
+| window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, throttled: calls within 5000ms after a check reuse its result. Returns `Promise<{ updated, version }>`, never rejects |
 
 ```ts
 interface Window {
@@ -540,9 +540,10 @@ interface Window {
      */
     setLocale: (locale: string) => void
     /**
-     * manual check update. Throttled: calls within 5000ms after a check are ignored
+     * manual check update. Throttled: calls within 5000ms after a check reuse its result.
+     * The promise never rejects; `updated` is false if the check failed.
      */
-    checkUpdate: () => void
+    checkUpdate: () => Promise<{ updated: boolean; version: string }>
     /** dismiss current update and close notification, same behavior as dismiss the button */
     dismissUpdate: () => void
     /** close notification */
