@@ -75,11 +75,11 @@
 - 影响：`getVersion` 的降级逻辑、`generateJsFileContent` 的序列化、注入脚本的节流与定时器逻辑都没有任何自动化保护，上面 B2 到 B5 都是本应被单测拦住的问题。
 - 建议：至少为 `core` 添加 `getVersion`（mock `execSync` / 环境变量）、`generateJSONFileContent`、`generateJsFileContent`、`getFileHash` 的单测；用 `happy-dom` / `jsdom` 为 `injectScript.ts` 写定时器与 `fetch` 的单测。
 
-#### B24. 版本检查早于通知锚点进入 DOM 时，通知挂载失败且本次更新不会再提示
+#### [Done] B24. 版本检查早于通知锚点进入 DOM 时，通知挂载失败且本次更新不会再提示
 
 - 位置：`packages/core/src/injectScript.ts:277`、`:332`
 - 现象：各插件都把注入脚本以同步 `<script>` 放在 `<head>`，锚点 `<div>` 则追加在 `</body>` 前。`checkImmediately` 在脚本执行时立刻请求版本 JSON，响应若在 body 解析完成前返回，`querySelector(锚点)` 为 `null`，`appendChild` 抛错，控制台输出 `Failed to show notification TypeError: Cannot read properties of null (reading 'appendChild')`。`hasShowSystemUpdateNotice` 在挂载前就已置为 `true`，之后的轮询也不会再显示通知。
-- 复现：umi 示例 e2e 中，先执行 `should has a web_version_by_plugin.json file`（预热了预览服务器），紧接着的 `should show a notification after system update` 稳定失败；单独执行则通过。
+- 复现：umi 产物在锚点前有同步的 `<script src="/umi.js">`，让 `umi.js` 晚于版本 JSON 返回即可稳定复现。e2e 用例「版本响应早于通知锚点解析时仍显示通知」在锚点前插入慢速同步脚本覆盖了该场景。
 - 建议：锚点不存在且 `document.readyState === 'loading'` 时，等 `DOMContentLoaded` 后再挂载；并且挂载成功后再设置 `hasShowSystemUpdateNotice`。
 
 ### 1.2 中影响
@@ -195,7 +195,6 @@
 
 ### 2.2 运行时脚本
 
-1. **把注入 `<script>` 改为 `defer`**：目前是放在 `<head>` 最前面的同步脚本，会阻塞首屏渲染。脚本本身只依赖 `document.body` 在回调里存在，加 `defer` 没有副作用。
 2. **`fetch` 加 `cache: 'no-store'`**：现在只靠 `?t=` 查询参数破缓存，部分 CDN 会忽略查询串；两者叠加更稳。
 3. **离线与失败退避**：`navigator.onLine === false` 时跳过检查；连续失败时指数退避并在恢复后重置，避免服务不可用期间每 5 秒一次控制台错误。
 4. **页面 `hidden` 时中止进行中的请求**：用 `AbortController`，避免后台标签页堆积请求。

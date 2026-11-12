@@ -332,6 +332,46 @@ describe('fetch', () => {
       expect(document.querySelectorAll('.plugin-web-update-notice')).toHaveLength(1)
     })
 
+    it('waits for DOMContentLoaded when the response arrives before the anchor is parsed', async () => {
+      serverFetch({ version: 'v2' })
+      await setup({ checkInterval: 0 })
+      const anchor = document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!
+      anchor.remove()
+      Object.defineProperty(document, 'readyState', { configurable: true, value: 'loading' })
+      try {
+        await check()
+        expect(onUpdate).not.toHaveBeenCalled()
+        expect(console.error).not.toHaveBeenCalled()
+
+        document.body.append(anchor)
+        Object.defineProperty(document, 'readyState', { configurable: true, value: 'interactive' })
+        document.dispatchEvent(new Event('DOMContentLoaded'))
+        await vi.advanceTimersByTimeAsync(0)
+        expect(onUpdate).toHaveBeenCalledTimes(1)
+        expect(notification()).not.toBeNull()
+      } finally {
+        // drop the own property so the prototype getter applies again
+        delete (document as { readyState?: DocumentReadyState }).readyState
+      }
+    })
+
+    it('shows the notification on a later check when mounting failed', async () => {
+      serverFetch({ version: 'v2' })
+      await setup({ checkInterval: 1000 })
+      const anchor = document.querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!
+      anchor.remove()
+      await vi.advanceTimersByTimeAsync(1000)
+      expect(notification()).toBeNull()
+      expect(console.error).toHaveBeenCalledWith(
+        '[pluginWebUpdateNotice] Failed to show notification',
+        expect.any(TypeError),
+      )
+
+      document.body.append(anchor)
+      await vi.advanceTimersByTimeAsync(1000)
+      expect(notification()).not.toBeNull()
+    })
+
     it('ignores a silent version', async () => {
       serverFetch({ version: 'v2', silence: true })
       await setup({ checkInterval: 0 })

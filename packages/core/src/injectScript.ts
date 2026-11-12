@@ -127,6 +127,17 @@ function __checkUpdateSetup__(options: Options) {
 
         return response.json()
       })
+      // the inject script runs in <head>, so the response may arrive while the parser is still
+      // blocked before <body> or the notification anchor (e.g. by a synchronous app bundle)
+      .then((versionJSON: VersionJSON) =>
+        document.readyState === 'loading'
+          ? new Promise<VersionJSON>((resolve) => {
+              document.addEventListener('DOMContentLoaded', () => resolve(versionJSON), {
+                once: true,
+              })
+            })
+          : versionJSON,
+      )
       .then(({ version: versionFromServer, silence }: VersionJSON) => {
         if (silence) return
         latestVersion = versionFromServer
@@ -274,8 +285,6 @@ function getLocaleText(locale: string, key: keyof LocaleData[string], localeData
  */
 function showNotification(options: Options) {
   try {
-    hasShowSystemUpdateNotice = true
-
     const {
       notificationProps,
       notificationConfig,
@@ -330,6 +339,8 @@ function showNotification(options: Options) {
 
     notificationWrap.innerHTML = notificationInnerHTML
     querySelector(`.${NOTIFICATION_ANCHOR_CLASS_NAME}`)!.appendChild(notificationWrap)
+    // only after a successful mount, so a failed one is retried by the next check
+    hasShowSystemUpdateNotice = true
 
     bindBtnEvent()
   } catch (err) {

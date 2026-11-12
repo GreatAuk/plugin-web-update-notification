@@ -65,6 +65,30 @@ test('版本变化后显示通知', async ({ page, target }) => {
   await expect(notification).toContainText(target.texts.buttonText)
 })
 
+test('版本响应早于通知锚点解析时仍显示通知', async ({ page, target }) => {
+  await mockNewVersion(page)
+  // 在锚点前插入一个慢速同步脚本阻塞解析，模拟同步加载的大体积入口（如 umi.js）
+  const blockScript = '/__e2e_block_parser__.js'
+  await page.route(
+    (url) => url.pathname === '/',
+    async (route) => {
+      const response = await route.fetch()
+      const html = (await response.text()).replace(
+        `<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"`,
+        `<script src="${blockScript}"></script>$&`,
+      )
+      expect(html).toContain(blockScript)
+      await route.fulfill({ response, body: html })
+    },
+  )
+  await page.route(`**${blockScript}`, async (route) => {
+    await new Promise((r) => setTimeout(r, 500))
+    await route.fulfill({ contentType: 'text/javascript', body: '' })
+  })
+  await page.goto('/')
+  await expect(page.locator(NOTIFICATION_SELECTOR)).toContainText(target.texts.title)
+})
+
 test('点击忽略后通知消失', async ({ page, target }) => {
   await mockNewVersion(page)
   await page.goto('/')
