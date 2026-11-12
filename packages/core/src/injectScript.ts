@@ -121,7 +121,7 @@ function __checkUpdateSetup__(options: Options) {
     }
 
     window
-      .fetch(`${versionFileUrl}?t=${Date.now()}`)
+      .fetch(`${versionFileUrl}?t=${Date.now()}`, { cache: 'no-store' })
       .then((response) => {
         if (!response.ok) throw new Error(`Failed to fetch ${JSON_FILE_NAME}.json`)
 
