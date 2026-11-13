@@ -29,8 +29,8 @@ export default defineNuxtModule<Options>({
   },
   defaults: {},
   setup(options, nuxt) {
-    // 仅生产构建生效
-    if (nuxt.options.dev) return
+    // 仅生产构建生效（`nuxi prepare` 阶段 dev 为 false，需用 _prepare 排除）
+    if (nuxt.options.dev || nuxt.options._prepare) return
 
     const { versionType, customVersion, silence } = options
 
