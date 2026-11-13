@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "@antfu/ni": "^0.18.8",
-    "@antfu/utils": "^0.6.3",
     "@playwright/test": "^1.65.0",
     "@types/md5": "^2.3.2",
     "@types/node": "^18.11.9",
@@ -52,7 +51,6 @@
     "md5": "^2.3.0",
     "oxfmt": "^0.78.0",
     "oxlint": "^1.93.0",
-    "rimraf": "^3.0.2",
     "sirv": "^3.0.2",
     "tsdown": "^0.23.7",
     "tsx": "^3.12.5",

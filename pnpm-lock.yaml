@@ -11,9 +11,6 @@ importers:
       '@antfu/ni':
         specifier: ^0.18.8
         version: 0.18.8
-      '@antfu/utils':
-        specifier: ^0.6.3
-        version: 0.6.3
       '@playwright/test':
         specifier: ^1.65.0
         version: 1.65.0
@@ -41,9 +38,6 @@ importers:
       oxlint:
         specifier: ^1.93.0
         version: 1.93.0
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
       sirv:
         specifier: ^3.0.2
         version: 3.0.2
@@ -401,9 +395,6 @@ packages:
   '@antfu/ni@0.18.8':
     resolution: {integrity: sha512-0m++AudwQq+wWAz/Ax7g+sh/wFW51HHQ6BtPLsuTAsFIzWB/bv/0COwZE7BRS+u0nqMb6Ks6nlk6cY1TpPDwHg==}
     hasBin: true
-
-  '@antfu/utils@0.6.3':
-    resolution: {integrity: sha512-sEYpyyKUPOew9QsXZ8feRVMzW6DWLviwOl+/ap06UQW02A8Srbc95CPHVm4eUbiBzBgD46eyIT+przv//KSSlQ==}
 
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
@@ -13879,8 +13870,6 @@ snapshots:
       find-up: 5.0.0
 
   '@antfu/ni@0.18.8': {}
-
-  '@antfu/utils@0.6.3': {}
 
   '@antfu/utils@0.7.10': {}
 
