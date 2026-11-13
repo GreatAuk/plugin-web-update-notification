@@ -11,6 +11,7 @@
     "no-debugger": "error",
     "no-duplicate-imports": ["error", { "allowSeparateTypeImports": true }],
     "eqeqeq": ["error", "smart"],
+    "no-underscore-dangle": "off",
     "no-var": "error",
     "prefer-const": "error",
     "prefer-template": "warn",
