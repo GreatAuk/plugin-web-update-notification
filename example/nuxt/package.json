@@ -8,8 +8,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "preview:spa": "NUXT_SSR=false nuxt preview",
-    "postinstall": "nuxt prepare"
+    "preview:spa": "NUXT_SSR=false nuxt preview"
   },
   "dependencies": {
     "nuxt": "^4.4.8",
