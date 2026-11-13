@@ -16,7 +16,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "turbo run build --filter='./packages/*'",
+    "build": "turbo run build --filter=./packages/*",
     "dev:vite": "pnpm --filter=@plugin-web-update-notification/vite dev",
     "dev:umi": "pnpm --filter=@plugin-web-update-notification/umijs dev",
     "dev:webpack": "pnpm --filter=@plugin-web-update-notification/webpack dev",
