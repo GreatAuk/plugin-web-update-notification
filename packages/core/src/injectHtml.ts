@@ -83,11 +83,20 @@ export function injectPluginHtml(
       ? ''
       : `<link rel="stylesheet" href="${injectFileBase}${DIRECTORY_NAME}/${INJECT_STYLE_FILE_NAME}.${cssFileHash}.css">`
 
+  // `version` may come from `customVersion` and is written into a double-quoted attribute.
+  // An unescaped `"` would end `data-v` early and truncate the version the client reads back,
+  // and `<` / `>` / `&` could be parsed as markup or entities instead of literal text.
+  const escapedVersion = version
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+
   let res = prependToHead(
     html,
     `
     ${cssLinkHtml}
-    <script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="${version}" src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>`,
+    <script data-id="${INJECT_SCRIPT_TAG_ID}" data-v="${escapedVersion}" src="${injectFileBase}${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js"></script>`,
   )
 
   if (!hiddenDefaultNotification)

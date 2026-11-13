@@ -200,9 +200,12 @@ export function generateJsFileContent(fileSource: string, version: string, optio
   window.__checkUpdateSetup__(${JSON.stringify(options)});`
   if (logVersion) {
     const fn = typeof logVersion === 'function' ? logVersion : logVersionDefault
+    // `version` may come from `customVersion`, so it is serialized as a JS string literal.
+    // Interpolating it inside quotes would let a `'` or `\` end the literal early and make
+    // the whole injected script throw a SyntaxError, which disables the plugin entirely.
     body += `
   const logFn = ${fn.toString()};
-  logFn('${version}', ${Date.now()});`
+  logFn(${JSON.stringify(version)}, ${Date.now()});`
   }
   return `${fileSource}
 ;(function () {${body}

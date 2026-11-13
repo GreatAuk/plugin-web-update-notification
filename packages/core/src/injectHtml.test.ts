@@ -72,6 +72,11 @@ describe('injectPluginHtml', () => {
     expect(res).toContain('src="/$&/')
   })
 
+  it('escapes HTML special characters in the version attribute', () => {
+    const res = inject('<html><head></head><body></body></html>', {}, `a"b'c<d>&e`)
+    expect(res).toContain(`data-v="a&quot;b'c&lt;d&gt;&amp;e"`)
+  })
+
   it('skips the stylesheet and the anchor when the default notification is hidden', () => {
     const res = inject('<html><head></head><body></body></html>', {
       hiddenDefaultNotification: true,

@@ -251,7 +251,7 @@ describe('generateJsFileContent', () => {
     const log = vi.spyOn(console, 'log').mockImplementation(() => {})
     const content = generateJsFileContent(fileSource, 'abc1234', {})
 
-    expect(content).toContain(`logFn('abc1234', ${NOW})`)
+    expect(content).toContain(`logFn("abc1234", ${NOW})`)
     run(content)
     expect(log).toHaveBeenCalledWith('version: %cabc1234', 'color: #1677ff')
     expect(log).toHaveBeenCalledWith(
@@ -278,6 +278,15 @@ describe('generateJsFileContent', () => {
     expect(context.__checkUpdateSetup__).toHaveBeenCalledWith({})
     expect(log).toHaveBeenCalledWith('version: %cv3', 'color: #1677ff')
     expect(runInContext('logFn', context)).toBe('host')
+  })
+
+  it('escapes quotes and backslashes in the version so the script stays valid', () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {})
+    const version = `it's "v1"\\n</script>`
+    const content = generateJsFileContent(fileSource, version, {})
+
+    expect(() => run(content)).not.toThrow()
+    expect(log).toHaveBeenCalledWith(`version: %c${version}`, 'color: #1677ff')
   })
 
   it('does not log when logVersion is false', () => {
