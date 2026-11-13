@@ -39,8 +39,8 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@plugin-web-update-notification/core": "workspace:*",
-    "@nuxt/kit": "^3.0.0 || ^4.0.0"
+    "@nuxt/kit": "^3.0.0 || ^4.0.0",
+    "@plugin-web-update-notification/core": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/schema": "^3.0.0",

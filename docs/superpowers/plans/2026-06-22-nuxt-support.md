@@ -36,12 +36,14 @@
 ## Task 1: 搭建 `packages/nuxt` 包骨架
 
 **Files:**
+
 - Create: `packages/nuxt/package.json`
 - Create: `packages/nuxt/tsdown.config.ts`
 - Create: `packages/nuxt/src/index.ts`（临时最小占位，Task 2 填充）
 - Modify: `package.json`（根，新增 `dev:nuxt` 脚本）
 
 **Interfaces:**
+
 - Consumes: 无（首个任务）。
 - Produces: 可被 pnpm workspace 识别的包 `@plugin-web-update-notification/nuxt`，依赖 `@plugin-web-update-notification/core: workspace:*`，可执行 `pnpm --filter @plugin-web-update-notification/nuxt build`。
 
@@ -69,9 +71,7 @@
     "url": "https://github.com/GreatAuk/plugin-web-update-notification",
     "directory": "packages/nuxt"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "type": "module",
   "sideEffects": false,
   "main": "dist/index.mjs",
@@ -161,9 +161,11 @@ git commit -m "feat(nuxt): scaffold @plugin-web-update-notification/nuxt package
 ## Task 2: 实现 Nuxt module 主体逻辑
 
 **Files:**
+
 - Modify: `packages/nuxt/src/index.ts`（替换 Task 1 的占位实现）
 
 **Interfaces:**
+
 - Consumes（来自 core，已发布的导出）：
   - `getVersion(): string` / `getVersion('custom', customVersion: string): string` / `getVersion(versionType): string`
   - `generateJsFileContent(fileSource: string, version: string, options: Options): string`
@@ -254,10 +256,10 @@ export default defineNuxtModule<Options>({
     nuxt.options.app.head.link = nuxt.options.app.head.link || []
 
     nuxt.options.app.head.script.push({
-      'src': `${injectFileBase}${jsFileName}`,
+      src: `${injectFileBase}${jsFileName}`,
       'data-id': INJECT_SCRIPT_TAG_ID,
       'data-v': version,
-      'tagPriority': 'high',
+      tagPriority: 'high',
     })
 
     if (showDefaultNotification) {
@@ -282,8 +284,7 @@ export default defineNuxtModule<Options>({
 
       writeFileSafe(resolve(publicDir, jsonFileName), generateJSONFileContent(version, silence))
       writeFileSafe(resolve(publicDir, jsFileName), jsFileSource)
-      if (showDefaultNotification)
-        writeFileSafe(resolve(publicDir, cssFileName), cssFileSource)
+      if (showDefaultNotification) writeFileSafe(resolve(publicDir, cssFileName), cssFileSource)
     })
   },
 })
@@ -307,6 +308,7 @@ declare module '@nuxt/schema' {
 ```
 
 > 实现要点：
+>
 > - `tagPriority: 'high'` 让检测脚本在 head 中尽量靠前。
 > - body 锚点用 Nitro `render:html` 的 `bodyAppend`，SSR 运行时、SSG/SPA 预渲染时都会带上。
 > - 静态资源写入 `nitro.options.output.publicDir`，Nitro 在三模式下都从该目录对外提供，轮询路径与 head 注入路径一致。
@@ -360,17 +362,19 @@ git commit -m "feat(nuxt): implement nuxt module for web update notification"
 ## Task 3: 文档（包 README + 根 README）
 
 **Files:**
+
 - Create: `packages/nuxt/README.md`
 - Modify: `README.md`（根）
 - Modify: `README.zh-CN.md`（根）
 
 **Interfaces:**
+
 - Consumes: Task 2 完成的 module（包名、configKey、配置项）。
 - Produces: 安装与接入文档。
 
 - [ ] **Step 1: 创建 `packages/nuxt/README.md`**
 
-```markdown
+````markdown
 # @plugin-web-update-notification/nuxt
 
 Nuxt module for detecting web page updates and notifying users to reload. Supports Nuxt 3+ in SSG, SPA, and SSR modes.
@@ -380,6 +384,7 @@ Nuxt module for detecting web page updates and notifying users to reload. Suppor
 ```bash
 pnpm add @plugin-web-update-notification/nuxt -D
 ```
+````
 
 ## Usage
 
@@ -405,7 +410,8 @@ The module only runs in production builds. It reuses the shared options from
 
 > Types: add `/// <reference types="@plugin-web-update-notification/nuxt" />` to get
 > `window.pluginWebUpdateNotice_` typings.
-```
+
+````
 
 - [ ] **Step 2: 根 `README.md` — 支持列表与安装段加入 Nuxt**
 
@@ -414,11 +420,11 @@ The module only runs in production builds. It reuses the shared options from
 ```bash
 # nuxt module
 pnpm add @plugin-web-update-notification/nuxt -D
-```
+````
 
 在 Usage 导航行（`[Vite](#vite) | [UmiJS](#umijs) | ...`）追加 `| [Nuxt](#nuxt)`，并在 Rspack 用法小节后新增：
 
-```markdown
+````markdown
 ### Nuxt
 
 ```ts
@@ -430,10 +436,12 @@ export default defineNuxtConfig({
   },
 })
 ```
+````
 
 Supports SSG (`nuxt generate`), SPA (`ssr: false`) and SSR (`nuxt build`). The module
 only takes effect in production builds.
-```
+
+````
 
 - [ ] **Step 3: `README.zh-CN.md` — 同步中文版**
 
@@ -449,7 +457,7 @@ Expected: 三处文件均出现 Nuxt 安装、Usage 小节与导航锚点 `#nuxt
 ```bash
 git add packages/nuxt/README.md README.md README.zh-CN.md
 git commit -m "docs(nuxt): add nuxt module usage docs"
-```
+````
 
 ---
 

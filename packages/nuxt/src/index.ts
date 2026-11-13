@@ -104,7 +104,7 @@ export default defineNuxtModule<Options>({
         getContents: () =>
           [
             'export default (nitroApp) => {',
-            '  nitroApp.hooks.hook(\'render:html\', (html) => {',
+            "  nitroApp.hooks.hook('render:html', (html) => {",
             `    html.bodyAppend.push('<div class="${NOTIFICATION_ANCHOR_CLASS_NAME}"></div>')`,
             '  })',
             '}',

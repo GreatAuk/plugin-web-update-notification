@@ -510,11 +510,11 @@ export type LocaleData = Record<string, NotificationProps>
 
 ## 运行时方法
 
-| 方法                                              | 参数                                  | 说明                                                                                    |
-| ------------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------- |
-| `window.pluginWebUpdateNotice_.setLocale`         | `locale`：`zh_CN`、`zh_TW` 或 `en_US` | 设置通知语言。                                                                          |
-| `window.pluginWebUpdateNotice_.closeNotification` | —                                     | 关闭通知。                                                                              |
-| `window.pluginWebUpdateNotice_.dismissUpdate`     | —                                     | 忽略当前更新并关闭通知，行为与“忽略”按钮一致。                                          |
+| 方法                                              | 参数                                  | 说明                                                                                                                                |
+| ------------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `window.pluginWebUpdateNotice_.setLocale`         | `locale`：`zh_CN`、`zh_TW` 或 `en_US` | 设置通知语言。                                                                                                                      |
+| `window.pluginWebUpdateNotice_.closeNotification` | —                                     | 关闭通知。                                                                                                                          |
+| `window.pluginWebUpdateNotice_.dismissUpdate`     | —                                     | 忽略当前更新并关闭通知，行为与“忽略”按钮一致。                                                                                      |
 | `window.pluginWebUpdateNotice_.checkUpdate`       | —                                     | 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用不会发起新请求。返回 `Promise<{ updated, version }>`。 |
 
 ```ts
@@ -659,8 +659,16 @@ interface Window {
            System update, please refresh the page
          </div>
          <div class="plugin-web-update-notice-tools">
-           <button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</button>
-           <button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn"
+           >
+             dismiss
+           </button>
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn"
+           >
              refresh
            </button>
          </div>

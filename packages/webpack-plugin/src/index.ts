@@ -79,7 +79,10 @@ class WebUpdateNotificationPlugin {
         this.options,
       )
       jsFileHash = getFileHash(injectScriptContent)
-      assets.push([`${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`, injectScriptContent])
+      assets.push([
+        `${DIRECTORY_NAME}/${INJECT_SCRIPT_FILE_NAME}.${jsFileHash}.js`,
+        injectScriptContent,
+      ])
 
       return assets
     }
@@ -97,7 +100,9 @@ class WebUpdateNotificationPlugin {
             // `minimized` keeps minimizers (e.g. terser) from processing these files again, so
             // they are emitted as generated, like they were before when added in `emit`
             for (const [name, content] of generateAssets())
-              compilation.emitAsset(name, new webpack.sources.RawSource(content), { minimized: true })
+              compilation.emitAsset(name, new webpack.sources.RawSource(content), {
+                minimized: true,
+              })
           },
         )
       })

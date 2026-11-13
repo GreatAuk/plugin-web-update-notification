@@ -524,11 +524,11 @@ export type LocaleData = Record<string, NotificationProps>
 
 ## export Functions
 
-| name                                             | params                              | describe                                                                      |
-| ------------------------------------------------ | ----------------------------------- | ----------------------------------------------------------------------------- |
-| window.pluginWebUpdateNotice\_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                                    |
-| window.pluginWebUpdateNotice\_.closeNotification |                                     | close notification                                                            |
-| window.pluginWebUpdateNotice\_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
+| name                                             | params                              | describe                                                                                                                                   |
+| ------------------------------------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| window.pluginWebUpdateNotice\_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                                                                                                 |
+| window.pluginWebUpdateNotice\_.closeNotification |                                     | close notification                                                                                                                         |
+| window.pluginWebUpdateNotice\_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button                                                              |
 | window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, throttled: calls within 5000ms after a check reuse its result. Returns `Promise<{ updated, version }>`, never rejects |
 
 ```ts
@@ -669,8 +669,16 @@ interface Window {
            System update, please refresh the page
          </div>
          <div class="plugin-web-update-notice-tools">
-           <button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</button>
-           <button type="button" class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn"
+           >
+             dismiss
+           </button>
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn"
+           >
              refresh
            </button>
          </div>

@@ -31,7 +31,6 @@
     "example:nuxt": "pnpm --filter nuxt-example preview",
     "lint": "oxlint",
     "format": "oxfmt",
-    "format:check": "oxfmt --check",
     "synchronous-doc": "tsx scripts/copyFile.ts",
     "release": "bumpp package.json packages/**/package.json",
     "publish": "pnpm --filter=./packages/** publish --access public --no-git-checks --registry=https://registry.npmjs.org/",
