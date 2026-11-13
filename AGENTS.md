@@ -1,147 +1,21 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+检测网页更新并通知用户刷新的插件 monorepo（pnpm workspace + turbo）。构建时把版本号（默认 git commit hash）写入 JSON 文件，注入页面的客户端脚本轮询这个文件，与页面内的版本号比较。
 
-## 项目概述
+## 目录
 
-这是一个用于检测网页更新并通知用户刷新的插件系统，支持 Vite、UmiJS、Webpack、Rspack 和 Nuxt。核心原理是：通过 git commit hash（也支持 svn revision、package.json version、build timestamp、custom）作为版本号，打包时将版本号写入 JSON 文件，客户端轮询服务器上的版本号并与本地比较，如果不同则通知用户刷新。
+- `packages/core`：版本获取、注入文件生成，以及客户端注入脚本 `src/injectScript.ts`（单独打包为 IIFE，产物后缀是 `.iife`）
+- `packages/{vite,umi,webpack,rspack}-plugin`、`packages/nuxt`：各框架适配，通过 `workspace:*` 依赖 core。rspack 插件同时支持 Rsbuild
+- `example/*`：示例项目。目录名和包名不同，`--filter` 要用包名：`vue-vite3` → `vue-vite-example`、`react-vite` → `react-vite-example`、`svelte-vite` → `svelte-vite-example`、`react-umi` → `react-umi-example`、`vue-cli` → `vue-cli`（Webpack）、`vue-rspack` → `vue-rspack`、`nuxt` → `nuxt-example`。`vue-vite5`、`vue-vite7` 没有对应的根脚本
+- `e2e/`：所有 example 的 Playwright 测试，example 内不放测试，说明见 `e2e/README.md`。单个目标加 `--project=<name>`，取值见 `e2e/targets.ts`
 
-## Monorepo 架构
+## 构建依赖
 
-项目使用 pnpm workspace + turbo 管理 monorepo：
+core 的 `main`、`types` 都指向 `dist`。插件包的单测、`pnpm typecheck`、`pnpm test:e2e` 都要先 `pnpm build`；只改了 core 时，可以只跑 `pnpm --filter=@plugin-web-update-notification/core build`。
 
-- **packages/core**: 核心逻辑库，包含版本获取、文件生成等通用功能
-- **packages/vite-plugin**: Vite 插件实现
-- **packages/umi-plugin**: UmiJS 插件实现
-- **packages/webpack-plugin**: Webpack 插件实现
-- **packages/rspack-plugin**: Rspack 插件实现（同时支持 Rsbuild）
-- **packages/nuxt**: Nuxt module 实现
-- **example/**: 各种框架的示例项目（目录名 → 包名）：
-  - `vue-vite3` → `vue-vite-example`（另有 `vue-vite5`、`vue-vite7` 两个 Vite 版本示例，没有对应的根脚本）
-  - `react-vite` → `react-vite-example`
-  - `svelte-vite` → `svelte-vite-example`
-  - `react-umi` → `react-umi-example`
-  - `vue-cli` → `vue-cli`（Webpack 示例）
-  - `vue-rspack` → `vue-rspack`
-  - `nuxt` → `nuxt-example`
-- **e2e/**: 所有 example 的 E2E 测试（Playwright），example 内不放测试；说明见 `e2e/README.md`
+CI 从干净的 clone 开始，没有 `dist`。本地留着旧产物时，安装钩子、包入口、构建脚本出的问题在本地不会暴露。
 
-各插件包依赖 core 包（通过 `workspace:*`），共享核心功能。
-
-## 常用命令
-
-### 构建
-
-```bash
-# 构建所有包
-pnpm build
-
-# 开发特定包
-pnpm dev:vite      # 开发 vite 插件
-pnpm dev:umi       # 开发 umi 插件
-pnpm dev:webpack   # 开发 webpack 插件
-pnpm dev:rspack    # 开发 rspack 插件
-pnpm dev:nuxt      # 开发 nuxt module
-```
-
-### 示例运行
-
-```bash
-pnpm example:vue-vite      # 运行 Vue + Vite 示例
-pnpm example:react-vite    # 运行 React + Vite 示例
-pnpm example:svelte-vite   # 运行 Svelte + Vite 示例
-pnpm example:react-umi     # 运行 React + Umi 示例
-pnpm example:vue-webpack   # 运行 Vue + Webpack 示例
-pnpm example:vue-rspack    # 运行 Vue + Rspack 示例
-pnpm example:nuxt          # 运行 Nuxt 示例
-```
-
-### 测试和检查
-
-```bash
-pnpm test         # 单次运行单元测试（vitest run）
-pnpm test:unit    # 以 watch 模式运行单元测试（vitest）
-pnpm test:e2e     # 运行全部 example 的 E2E 测试（需先 pnpm build），单个目标加 --project=<name>
-pnpm lint         # 代码检查（oxlint）
-pnpm format       # 代码格式化（oxfmt），只检查不改写用 pnpm format:check
-pnpm typecheck    # 类型检查
-```
-
-### 发布
-
-```bash
-pnpm release      # 使用 bumpp 更新版本号
-pnpm publish      # 发布所有包到 npm
-```
-
-## 核心架构设计
-
-### 版本获取策略（packages/core/src/index.ts）
-
-通过策略模式实现多种版本类型：
-
-- `git_commit_hash`: 执行 `git rev-parse --short HEAD`
-- `svn_revision_number`: 执行 `svnversion`
-- `pkg_version`: 读取 `process.env.npm_package_version`
-- `build_timestamp`: 使用 `Date.now()`
-- `custom`: 自定义版本号
-
-如果获取失败会自动降级到 `build_timestamp`。仓库类型自动检测（通过查找 .git 或 .svn 目录）。
-
-### 插件工作流程
-
-1. **构建时**：
-   - 获取版本号
-   - 生成 `version.json` 文件（包含版本号和 silence 标志）
-   - 生成并注入检测脚本（`webUpdateNoticeInjectScript.js`）
-   - 生成并注入样式文件（`webUpdateNoticeInjectStyle.css`）
-   - 在 HTML 中注入 script 标签、link 标签和通知锚点元素
-
-2. **运行时**（客户端）：
-   - 注入的脚本会在以下时机检查更新：
-     - 首次加载页面
-     - 轮询（默认 10 分钟）
-     - script 资源加载失败（404）
-     - 标签页重新获得焦点或可见
-   - 对比本地版本和服务器版本
-   - 如不同则显示通知或触发自定义事件
-
-### Vite 插件实现要点（packages/vite-plugin/src/index.ts）
-
-- 使用 `apply: 'build'` 仅在构建时生效
-- 使用 `enforce: 'post'` 确保在其他插件之后执行
-- 在 `configResolved` 钩子中：自动获取 `viteConfig.base` 作为 `injectFileBase`
-- 在 `generateBundle` 钩子中：使用 `emitFile` API 生成 JSON、CSS、JS 文件
-- 在 `transformIndexHtml` 钩子中：注入 script/link 标签和通知锚点
-
-### 文件哈希机制
-
-所有注入的文件都带有内容哈希（MD5 前 8 位），确保缓存更新：
-
-- `webUpdateNoticeInjectScript.[hash].js`
-- `webUpdateNoticeInjectStyle.[hash].css`
-
-注意：IIFE 输出后缀为 `.iife`（由 tsdown 生成）。
-
-## 开发注意事项
-
-### 修改核心逻辑
-
-如果修改 `packages/core` 的代码，需要重新构建才能被其他包使用：
-
-```bash
-pnpm --filter=@plugin-web-update-notification/core build
-```
-
-### 修改注入脚本
-
-注入脚本源码在 `packages/core/src/injectScript.ts`，通过 tsdown 构建为独立的 bundle。修改后需要重新构建 core 包。
-
-### 添加新的版本类型
-
-在 `packages/core/src/index.ts` 的 `getVersionStrategies` 对象中添加新策略，并更新 `VersionType` 类型定义。
-
-### 修改文档
+## 修改文档
 
 只编辑根目录的 `README.md` 和 `README.zh-CN.md`，不要直接改 `packages/*/README*.md`。子包文档是根目录文档的副本，改完后运行以下命令同步（`LICENSE` 也会一并复制）：
 
@@ -149,24 +23,12 @@ pnpm --filter=@plugin-web-update-notification/core build
 pnpm synchronous-doc
 ```
 
-### 国际化
+## 排查 CI 与查询 registry
 
-默认语言配置在 `packages/core/src/locale.ts`，支持 `zh_CN`、`zh_TW`、`en_US`。
+- CI 或发布失败时，先用 `gh run list` 和 `gh run view <id> --log-failed` 读完整日志，截图通常只有部分内容。日志过期后会返回 HTTP 410。
+- 在仓库内查询包版本用 `pnpm view`。`npm view` 会因 `devEngines` 锁定的 Node 版本与本机不符而报 `EBADDEVENGINES`。
 
-### TypeScript 类型
+## 工具链
 
-如果用户需要 `window.pluginWebUpdateNotice_` 的类型提示，需要在项目中添加：
-
-```ts
-/// <reference types="@plugin-web-update-notification/vite" />
-```
-
-## 技术栈
-
-- **构建工具**: tsdown（基于 Rolldown）
-- **包管理器**: pnpm (v11.24.0)，由根 `package.json` 的 `packageManager` 字段锁定
-- **Node.js**: 23.11.0，由根 `package.json` 的 `devEngines.runtime` 锁定（`onFail: download`），pnpm 会下载该版本并用它运行所有脚本，包括 workspace 包的 lifecycle 脚本；本机 Node 只需满足 pnpm 11 自身的要求（>= 22.13）
-- **pnpm 配置**: pnpm 11 只从 `.npmrc` 读取 registry 与认证设置，其余设置（如 `ignoreWorkspaceRootCheck`、依赖构建脚本白名单 `allowBuilds`）都写在 `pnpm-workspace.yaml`。新增带构建脚本的依赖时，需要在 `allowBuilds` 中显式声明 `true` 或 `false`，否则安装会报 `ERR_PNPM_IGNORED_BUILDS`
-- **Monorepo**: Turborepo
-- **测试**: Vitest + Playwright (E2E)
-- **代码规范**: oxlint（`.oxlintrc.json`）+ oxfmt（`.oxfmtrc.json`）
+- **Node.js**：23.11.0，由根 `package.json` 的 `devEngines.runtime` 锁定（`onFail: download`）。pnpm 会下载该版本并用它运行所有脚本，包括 workspace 包的 lifecycle 脚本；本机 Node 只需满足 pnpm 11 自身的要求（>= 22.13）
+- **pnpm 配置**：pnpm 11 只从 `.npmrc` 读取 registry 与认证设置，其余设置（如 `ignoreWorkspaceRootCheck`、依赖构建脚本白名单 `allowBuilds`）都写在 `pnpm-workspace.yaml`。新增带构建脚本的依赖时，需要在 `allowBuilds` 中显式声明 `true` 或 `false`，否则安装会报 `ERR_PNPM_IGNORED_BUILDS`
