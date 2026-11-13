@@ -4,9 +4,12 @@ on:
   push:
     tags:
       - 'v*'
-  # 手动触发
-  # 允许手动从 Actions tab 运行这个 workflows
+  # 手动触发，用于补发某个 tag 的 release
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release, e.g. v2.2.0'
+        required: true
 
 jobs:
   release:
@@ -23,6 +26,8 @@ jobs:
           # 但该 job 未安装 pnpm，需关闭
           package-manager-cache: false
 
-      - run: npx changelogithub
+      # 手动触发时 github.ref_name 是分支名，changelogithub 会因其不是 tag 而跳过并报错，因此显式指定 tag
+      - run: npx changelogithub --to "$RELEASE_TAG"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
