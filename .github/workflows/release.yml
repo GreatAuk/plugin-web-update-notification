@@ -1,4 +1,4 @@
-name: release and publish-npm
+name: release
 
 on:
   push:
@@ -26,34 +26,3 @@ jobs:
       - run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-  publish-npm:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      # 版本由根 package.json 的 packageManager 字段决定
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 23.11.0
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm --filter=!./example/** install
-
-      - name: PNPM build
-        run: pnpm build
-
-      # pnpm 11 不再读取 npm_config_* 环境变量，setup-node 通过 NPM_CONFIG_USERCONFIG 注入的 .npmrc 不会生效，
-      # 因此直接把 token 写进 ~/.npmrc
-      - name: Setup npm auth
-        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-
-      - name: Publish to NPM
-        run: pnpm --filter=./packages/** publish --access public --no-git-checks
