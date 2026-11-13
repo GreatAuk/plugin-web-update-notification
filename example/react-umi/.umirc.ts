@@ -1,7 +1,7 @@
 import { defineConfig } from 'umi'
 
 export default defineConfig({
-  outputPath: 'dist',
+  // outputPath: 'dist',
   plugins: ['@plugin-web-update-notification/umijs'],
   webUpdateNotification: {
     notificationConfig: {

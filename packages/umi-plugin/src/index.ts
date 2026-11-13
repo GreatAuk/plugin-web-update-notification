@@ -113,7 +113,7 @@ export default (api: IApi) => {
   })
 
   api.onBuildComplete(() => {
-    const outputPath = resolve(api.userConfig.outputPath || 'dist')
+    const outputPath = api.paths.absOutputPath
     mkdirSync(`${outputPath}/${DIRECTORY_NAME}`, { recursive: true })
 
     // copy file from @plugin-web-update-notification/core/dist/??.css */ to dist/
