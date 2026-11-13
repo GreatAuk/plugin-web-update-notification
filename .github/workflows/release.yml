@@ -12,11 +12,11 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v5
         with:
           node-version: 23.11.0
           registry-url: 'https://registry.npmjs.org'
@@ -28,33 +28,17 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      # 版本由根 package.json 的 packageManager 字段决定
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
         with:
           node-version: 23.11.0
-          registry-url: 'https://registry.npmjs.org'
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          run_install: false
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: |
-          echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm --filter=!./example/** install
@@ -62,7 +46,12 @@ jobs:
       - name: PNPM build
         run: pnpm build
 
+      # pnpm 11 不再读取 npm_config_* 环境变量，setup-node 通过 NPM_CONFIG_USERCONFIG 注入的 .npmrc 不会生效，
+      # 因此直接把 token 写进 ~/.npmrc
+      - name: Setup npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+
       - name: Publish to NPM
         run: pnpm --filter=./packages/** publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
