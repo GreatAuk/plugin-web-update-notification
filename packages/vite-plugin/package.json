@@ -1,6 +1,6 @@
 {
   "name": "@plugin-web-update-notification/vite",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "description": "Vite plugin for detect web page updates and notify.",
   "keywords": [
     "@plugin-web-update-notification/vite",
