@@ -3,7 +3,7 @@
     "target": "es2020",
     "module": "esnext",
     "lib": ["esnext", "DOM"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "strict": true,
     "strictNullChecks": true,
