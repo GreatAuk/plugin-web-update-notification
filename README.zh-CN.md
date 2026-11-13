@@ -635,6 +635,19 @@ interface Window {
 
    可通过更高优先级的 CSS 覆盖默认样式。参见[默认样式文件](https://github.com/GreatAuk/plugin-web-update-notification/blob/main/packages/core/public/webUpdateNoticeInjectStyle.css)。
 
+   默认样式通过 `prefers-color-scheme` 自动适配暗色模式，颜色由 `.plugin-web-update-notice` 上的 CSS 变量控制，可直接覆盖变量：
+
+   ```css
+   .plugin-web-update-notice {
+     --plugin-web-update-notice-bg: #fff;
+     --plugin-web-update-notice-color: #000000d9;
+     --plugin-web-update-notice-shadow: 0 6px 16px #00000014;
+     --plugin-web-update-notice-btn-hover-bg: rgba(64, 87, 109, 0.1);
+     --plugin-web-update-notice-refresh-color: #1677ff;
+     --plugin-web-update-notice-dismiss-color: rgba(0, 0, 0, 0.25);
+   }
+   ```
+
    ```html
    <!-- 通知 HTML 结构 -->
 

@@ -1,17 +1,34 @@
 .plugin-web-update-notice {
+  --plugin-web-update-notice-bg: #fff;
+  --plugin-web-update-notice-color: #000000d9;
+  --plugin-web-update-notice-shadow:
+    0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+  --plugin-web-update-notice-btn-hover-bg: rgba(64, 87, 109, 0.1);
+  --plugin-web-update-notice-refresh-color: #1677ff;
+  --plugin-web-update-notice-dismiss-color: rgba(0, 0, 0, 0.25);
+
   position: fixed;
   user-select: none;
   z-index: 99999;
 }
 
+@media (prefers-color-scheme: dark) {
+  .plugin-web-update-notice {
+    --plugin-web-update-notice-bg: #1f1f1f;
+    --plugin-web-update-notice-color: #ffffffd9;
+    --plugin-web-update-notice-shadow:
+      0 3px 6px -4px #0000007a, 0 6px 16px #00000052, 0 9px 28px 8px #00000038;
+    --plugin-web-update-notice-btn-hover-bg: rgba(255, 255, 255, 0.12);
+    --plugin-web-update-notice-refresh-color: #4096ff;
+    --plugin-web-update-notice-dismiss-color: rgba(255, 255, 255, 0.35);
+  }
+}
+
 .plugin-web-update-notice-content {
-  background-color: #fff;
+  background-color: var(--plugin-web-update-notice-bg);
   border-radius: 4px;
-  color: #000000d9;
-  box-shadow:
-    0 3px 6px -4px #0000001f,
-    0 6px 16px #00000014,
-    0 9px 28px 8px #0000000d;
+  color: var(--plugin-web-update-notice-color);
+  box-shadow: var(--plugin-web-update-notice-shadow);
   padding: 8px 16px;
   line-height: 1.5715;
   width: 280px;
@@ -45,11 +62,11 @@
   font-size: 14px;
 }
 .plugin-web-update-notice-btn:hover {
-  background-color: rgba(64, 87, 109, 0.1);
+  background-color: var(--plugin-web-update-notice-btn-hover-bg);
 }
 .plugin-web-update-notice-refresh-btn {
-  color: #1677ff;
+  color: var(--plugin-web-update-notice-refresh-color);
 }
 .plugin-web-update-notice-dismiss-btn {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--plugin-web-update-notice-dismiss-color);
 }

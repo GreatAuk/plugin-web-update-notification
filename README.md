@@ -645,6 +645,19 @@ interface Window {
 
    you can cover css styles with higher weights. ([default css file](https://github.com/GreatAuk/plugin-web-update-notification/blob/main/packages/core/public/webUpdateNoticeInjectStyle.css))
 
+   The default style follows `prefers-color-scheme` for dark mode. Colors are driven by CSS variables on `.plugin-web-update-notice`, which you can override directly:
+
+   ```css
+   .plugin-web-update-notice {
+     --plugin-web-update-notice-bg: #fff;
+     --plugin-web-update-notice-color: #000000d9;
+     --plugin-web-update-notice-shadow: 0 6px 16px #00000014;
+     --plugin-web-update-notice-btn-hover-bg: rgba(64, 87, 109, 0.1);
+     --plugin-web-update-notice-refresh-color: #1677ff;
+     --plugin-web-update-notice-dismiss-color: rgba(0, 0, 0, 0.25);
+   }
+   ```
+
    ```html
    <!-- notification html content -->
 
