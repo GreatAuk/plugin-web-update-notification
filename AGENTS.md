@@ -32,3 +32,7 @@ pnpm synchronous-doc
 
 - **Node.js**：23.11.0，由根 `package.json` 的 `devEngines.runtime` 锁定（`onFail: download`）。pnpm 会下载该版本并用它运行所有脚本，包括 workspace 包的 lifecycle 脚本；本机 Node 只需满足 pnpm 11 自身的要求（>= 22.13）
 - **pnpm 配置**：pnpm 11 只从 `.npmrc` 读取 registry 与认证设置，其余设置（如 `ignoreWorkspaceRootCheck`、依赖构建脚本白名单 `allowBuilds`）都写在 `pnpm-workspace.yaml`。新增带构建脚本的依赖时，需要在 `allowBuilds` 中显式声明 `true` 或 `false`，否则安装会报 `ERR_PNPM_IGNORED_BUILDS`
+
+## 注意事项
+
+!git commit 使用英文描述

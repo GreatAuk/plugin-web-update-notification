@@ -510,12 +510,12 @@ export type LocaleData = Record<string, NotificationProps>
 
 ## 运行时方法
 
-| 方法                                              | 参数                                  | 说明                                                                                    |
-| ------------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------- |
-| `window.pluginWebUpdateNotice_.setLocale`         | `locale`：`zh_CN`、`zh_TW` 或 `en_US` | 设置通知语言。                                                                          |
-| `window.pluginWebUpdateNotice_.closeNotification` | —                                     | 关闭通知。                                                                              |
-| `window.pluginWebUpdateNotice_.dismissUpdate`     | —                                     | 忽略当前更新并关闭通知，行为与“忽略”按钮一致。                                          |
-| `window.pluginWebUpdateNotice_.checkUpdate`       | —                                     | 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用会被忽略。 |
+| 方法                                              | 参数                                  | 说明                                                                                                                                |
+| ------------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `window.pluginWebUpdateNotice_.setLocale`         | `locale`：`zh_CN`、`zh_TW` 或 `en_US` | 设置通知语言。                                                                                                                      |
+| `window.pluginWebUpdateNotice_.closeNotification` | —                                     | 关闭通知。                                                                                                                          |
+| `window.pluginWebUpdateNotice_.dismissUpdate`     | —                                     | 忽略当前更新并关闭通知，行为与“忽略”按钮一致。                                                                                      |
+| `window.pluginWebUpdateNotice_.checkUpdate`       | —                                     | 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用不会发起新请求。返回 `Promise<{ updated, version }>`。 |
 
 ```ts
 interface Window {
@@ -526,9 +526,10 @@ interface Window {
      */
     setLocale: (locale: string) => void
     /**
-     * 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用会被忽略。
+     * 手动检测更新。该方法内置 5,000 ms 节流：执行一次检测后，5,000 ms 内的再次调用不会发起新请求，并返回该次检测的结果。
+     * 返回的 Promise 不会 reject，检测失败时 `updated` 为 `false`。
      */
-    checkUpdate: () => void
+    checkUpdate: () => Promise<{ updated: boolean; version: string }>
     /** 忽略当前更新并关闭通知，行为与“忽略”按钮一致。 */
     dismissUpdate: () => void
     /** 关闭通知。 */
@@ -634,21 +635,42 @@ interface Window {
 
    可通过更高优先级的 CSS 覆盖默认样式。参见[默认样式文件](https://github.com/GreatAuk/plugin-web-update-notification/blob/main/packages/core/public/webUpdateNoticeInjectStyle.css)。
 
+   默认样式通过 `prefers-color-scheme` 自动适配暗色模式，颜色由 `.plugin-web-update-notice` 上的 CSS 变量控制，可直接覆盖变量：
+
+   ```css
+   .plugin-web-update-notice {
+     --plugin-web-update-notice-bg: #fff;
+     --plugin-web-update-notice-color: #000000d9;
+     --plugin-web-update-notice-shadow: 0 6px 16px #00000014;
+     --plugin-web-update-notice-btn-hover-bg: rgba(64, 87, 109, 0.1);
+     --plugin-web-update-notice-refresh-color: #1677ff;
+     --plugin-web-update-notice-dismiss-color: rgba(0, 0, 0, 0.25);
+   }
+   ```
+
    ```html
    <!-- 通知 HTML 结构 -->
 
    <div class="plugin-web-update-notice-anchor">
-     <div class="plugin-web-update-notice">
+     <div class="plugin-web-update-notice" role="alert" aria-live="polite">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
          <div class="plugin-web-update-notice-content-title">📢 system update</div>
          <div class="plugin-web-update-notice-content-desc">
            System update, please refresh the page
          </div>
          <div class="plugin-web-update-notice-tools">
-           <a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</a>
-           <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn"
+           >
+             dismiss
+           </button>
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn"
+           >
              refresh
-           </a>
+           </button>
          </div>
        </div>
      </div>
@@ -675,6 +697,29 @@ interface Window {
      silence: true
    })
    ```
+
+7. 部署到 CDN 后检测不到更新，如何处理？
+
+   版本文件 `pluginWebUpdateNotice/web_version_by_plugin.json` 的文件名固定。注入脚本请求时会附加时间戳参数 `?t=`，并跳过浏览器缓存。但如果 CDN 忽略 URL 参数并缓存了该文件，页面拿到的仍是旧版本号，无法发现更新。
+
+   版本文件不能像其他资源一样在文件名中加 hash：已打开的旧页面只知道旧文件名，请求不到新版本的文件。可以选择以下任一方式：
+
+   - 在 CDN 中关闭“忽略参数”，或为 `pluginWebUpdateNotice/web_version_by_plugin.json` 设置 `Cache-Control: no-cache`。
+   - 每次发版后刷新该文件的 CDN 缓存。
+   - 无法修改 CDN 配置时，如果源站也部署了构建产物且不缓存该文件，可以将 `injectFileBase` 设为源站地址，从源站请求版本文件。注入的脚本和样式也会改为从源站加载，其他资源仍走 CDN：
+
+     ```ts
+     // vite.config.ts
+     export default defineConfig({
+       base: 'https://cdn.foo.com/',
+       plugins: [
+         vue(),
+         webUpdateNotice({
+           injectFileBase: 'https://foo.com/',
+         }),
+       ],
+     })
+     ```
 
 ## 相关文章
 

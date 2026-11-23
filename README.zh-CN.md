@@ -698,6 +698,29 @@ interface Window {
    })
    ```
 
+7. 部署到 CDN 后检测不到更新，如何处理？
+
+   版本文件 `pluginWebUpdateNotice/web_version_by_plugin.json` 的文件名固定。注入脚本请求时会附加时间戳参数 `?t=`，并跳过浏览器缓存。但如果 CDN 忽略 URL 参数并缓存了该文件，页面拿到的仍是旧版本号，无法发现更新。
+
+   版本文件不能像其他资源一样在文件名中加 hash：已打开的旧页面只知道旧文件名，请求不到新版本的文件。可以选择以下任一方式：
+
+   - 在 CDN 中关闭“忽略参数”，或为 `pluginWebUpdateNotice/web_version_by_plugin.json` 设置 `Cache-Control: no-cache`。
+   - 每次发版后刷新该文件的 CDN 缓存。
+   - 无法修改 CDN 配置时，如果源站也部署了构建产物且不缓存该文件，可以将 `injectFileBase` 设为源站地址，从源站请求版本文件。注入的脚本和样式也会改为从源站加载，其他资源仍走 CDN：
+
+     ```ts
+     // vite.config.ts
+     export default defineConfig({
+       base: 'https://cdn.foo.com/',
+       plugins: [
+         vue(),
+         webUpdateNotice({
+           injectFileBase: 'https://foo.com/',
+         }),
+       ],
+     })
+     ```
+
 ## 相关文章
 
 - https://juejin.cn/post/7209234917288886331

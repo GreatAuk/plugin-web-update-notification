@@ -524,12 +524,12 @@ export type LocaleData = Record<string, NotificationProps>
 
 ## export Functions
 
-| name                                             | params                              | describe                                                                      |
-| ------------------------------------------------ | ----------------------------------- | ----------------------------------------------------------------------------- |
-| window.pluginWebUpdateNotice\_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                                    |
-| window.pluginWebUpdateNotice\_.closeNotification |                                     | close notification                                                            |
-| window.pluginWebUpdateNotice\_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button |
-| window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, throttled: calls within 5000ms after a check are ignored |
+| name                                             | params                              | describe                                                                                                                                   |
+| ------------------------------------------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| window.pluginWebUpdateNotice\_.setLocale         | locale(preset: zh_CN、zh_TW、en_US) | set locale                                                                                                                                 |
+| window.pluginWebUpdateNotice\_.closeNotification |                                     | close notification                                                                                                                         |
+| window.pluginWebUpdateNotice\_.dismissUpdate     |                                     | dismiss current update and close notification,same behavior as dismiss button                                                              |
+| window.pluginWebUpdateNotice\_.checkUpdate       |                                     | manual check update, throttled: calls within 5000ms after a check reuse its result. Returns `Promise<{ updated, version }>`, never rejects |
 
 ```ts
 interface Window {
@@ -540,9 +540,10 @@ interface Window {
      */
     setLocale: (locale: string) => void
     /**
-     * manual check update. Throttled: calls within 5000ms after a check are ignored
+     * manual check update. Throttled: calls within 5000ms after a check reuse its result.
+     * The promise never rejects; `updated` is false if the check failed.
      */
-    checkUpdate: () => void
+    checkUpdate: () => Promise<{ updated: boolean; version: string }>
     /** dismiss current update and close notification, same behavior as dismiss the button */
     dismissUpdate: () => void
     /** close notification */
@@ -644,21 +645,42 @@ interface Window {
 
    you can cover css styles with higher weights. ([default css file](https://github.com/GreatAuk/plugin-web-update-notification/blob/main/packages/core/public/webUpdateNoticeInjectStyle.css))
 
+   The default style follows `prefers-color-scheme` for dark mode. Colors are driven by CSS variables on `.plugin-web-update-notice`, which you can override directly:
+
+   ```css
+   .plugin-web-update-notice {
+     --plugin-web-update-notice-bg: #fff;
+     --plugin-web-update-notice-color: #000000d9;
+     --plugin-web-update-notice-shadow: 0 6px 16px #00000014;
+     --plugin-web-update-notice-btn-hover-bg: rgba(64, 87, 109, 0.1);
+     --plugin-web-update-notice-refresh-color: #1677ff;
+     --plugin-web-update-notice-dismiss-color: rgba(0, 0, 0, 0.25);
+   }
+   ```
+
    ```html
    <!-- notification html content -->
 
    <div class="plugin-web-update-notice-anchor">
-     <div class="plugin-web-update-notice">
+     <div class="plugin-web-update-notice" role="alert" aria-live="polite">
        <div class="plugin-web-update-notice-content" data-cy="notification-content">
          <div class="plugin-web-update-notice-content-title">📢 system update</div>
          <div class="plugin-web-update-notice-content-desc">
            System update, please refresh the page
          </div>
          <div class="plugin-web-update-notice-tools">
-           <a class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn">dismiss</a>
-           <a class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn">
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-dismiss-btn"
+           >
+             dismiss
+           </button>
+           <button
+             type="button"
+             class="plugin-web-update-notice-btn plugin-web-update-notice-refresh-btn"
+           >
              refresh
-           </a>
+           </button>
          </div>
        </div>
      </div>
@@ -683,6 +705,29 @@ interface Window {
      silence: true
    })
    ```
+
+7. Updates are not detected after deploying to a CDN.
+
+   The version file `pluginWebUpdateNotice/web_version_by_plugin.json` has a fixed name. The inject script requests it with a `?t=` timestamp and bypasses the browser cache, but if the CDN ignores query parameters and caches the file, the page keeps getting the old version and never detects the update.
+
+   The version file can't have a hash in its name like other assets: an already opened page only knows the old file name and would never request the new one. Use one of the following instead:
+
+   - Turn off "ignore query parameters" on the CDN, or set `Cache-Control: no-cache` for `pluginWebUpdateNotice/web_version_by_plugin.json`.
+   - Purge the CDN cache of this file after each release.
+   - If you can't change the CDN settings, and the origin server also hosts the build output without caching this file, set `injectFileBase` to the origin URL so the version file is requested from the origin. The inject script and style are loaded from the origin as well, while other assets still go through the CDN:
+
+     ```ts
+     // vite.config.ts
+     export default defineConfig({
+       base: 'https://cdn.foo.com/',
+       plugins: [
+         vue(),
+         webUpdateNotice({
+           injectFileBase: 'https://foo.com/',
+         }),
+       ],
+     })
+     ```
 
 ## License
 

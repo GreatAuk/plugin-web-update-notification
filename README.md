@@ -706,6 +706,29 @@ interface Window {
    })
    ```
 
+7. Updates are not detected after deploying to a CDN.
+
+   The version file `pluginWebUpdateNotice/web_version_by_plugin.json` has a fixed name. The inject script requests it with a `?t=` timestamp and bypasses the browser cache, but if the CDN ignores query parameters and caches the file, the page keeps getting the old version and never detects the update.
+
+   The version file can't have a hash in its name like other assets: an already opened page only knows the old file name and would never request the new one. Use one of the following instead:
+
+   - Turn off "ignore query parameters" on the CDN, or set `Cache-Control: no-cache` for `pluginWebUpdateNotice/web_version_by_plugin.json`.
+   - Purge the CDN cache of this file after each release.
+   - If you can't change the CDN settings, and the origin server also hosts the build output without caching this file, set `injectFileBase` to the origin URL so the version file is requested from the origin. The inject script and style are loaded from the origin as well, while other assets still go through the CDN:
+
+     ```ts
+     // vite.config.ts
+     export default defineConfig({
+       base: 'https://cdn.foo.com/',
+       plugins: [
+         vue(),
+         webUpdateNotice({
+           injectFileBase: 'https://foo.com/',
+         }),
+       ],
+     })
+     ```
+
 ## License
 
 [MIT](./LICENSE)
